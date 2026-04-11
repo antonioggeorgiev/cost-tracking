@@ -1,6 +1,11 @@
 import { MemberRoleBadge } from "@/components/member-role-badge";
 import { isResendConfigured } from "@/lib/resend";
-import { createWorkspaceInviteAction } from "@/app/(app)/app/[workspaceSlug]/members/actions";
+import {
+  createWorkspaceInviteAction,
+  removeWorkspaceMemberAction,
+  revokeWorkspaceInviteAction,
+  updateWorkspaceMemberRoleAction,
+} from "@/app/(app)/app/[workspaceSlug]/members/actions";
 import { getServerCaller } from "@/server/trpc-caller";
 
 type MembersPageProps = {
@@ -91,7 +96,28 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
                 <p className="font-medium text-white">{item.user.name || item.user.email}</p>
                 <p className="mt-1 text-sm text-slate-400">{item.user.email}</p>
               </div>
-              <MemberRoleBadge role={item.role} />
+              <div className="flex items-center gap-3">
+                <MemberRoleBadge role={item.role} />
+                {canManage && item.role !== "owner" ? (
+                  <div className="flex items-center gap-2">
+                    <form action={updateWorkspaceMemberRoleAction}>
+                      <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
+                      <input type="hidden" name="membershipId" value={item.id} />
+                      <input type="hidden" name="role" value={item.role === "editor" ? "viewer" : "editor"} />
+                      <button className="rounded-xl border border-white/10 px-3 py-2 text-xs text-slate-200 hover:bg-white/5">
+                        Make {item.role === "editor" ? "viewer" : "editor"}
+                      </button>
+                    </form>
+                    <form action={removeWorkspaceMemberAction}>
+                      <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
+                      <input type="hidden" name="membershipId" value={item.id} />
+                      <button className="rounded-xl border border-rose-300/20 px-3 py-2 text-xs text-rose-100 hover:bg-rose-300/10">
+                        Remove
+                      </button>
+                    </form>
+                  </div>
+                ) : null}
+              </div>
             </div>
           ))}
         </div>
@@ -117,6 +143,15 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
                 <p className="mt-3 break-all text-sm text-slate-400">
                   Accept link: <span className="text-slate-200">{process.env.APP_BASE_URL}/accept-invite/{invite.token}</span>
                 </p>
+                {canManage ? (
+                  <form action={revokeWorkspaceInviteAction} className="mt-4">
+                    <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
+                    <input type="hidden" name="inviteId" value={invite.id} />
+                    <button className="rounded-xl border border-rose-300/20 px-3 py-2 text-xs text-rose-100 hover:bg-rose-300/10">
+                      Revoke invite
+                    </button>
+                  </form>
+                ) : null}
               </div>
             ))
           ) : (

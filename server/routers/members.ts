@@ -41,6 +41,50 @@ export const membersRouter = createTRPCRouter({
       return invite;
     }),
 
+  updateRole: workspaceOwnerProcedure
+    .input(
+      z.object({
+        workspaceSlug: z.string().min(1),
+        membershipId: z.string().cuid(),
+        role: z.enum(["editor", "viewer"]),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return memberService.updateWorkspaceMemberRole({
+        workspaceId: ctx.membership.workspaceId,
+        membershipId: input.membershipId,
+        role: input.role,
+      });
+    }),
+
+  removeMember: workspaceOwnerProcedure
+    .input(
+      z.object({
+        workspaceSlug: z.string().min(1),
+        membershipId: z.string().cuid(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return memberService.removeWorkspaceMember({
+        workspaceId: ctx.membership.workspaceId,
+        membershipId: input.membershipId,
+      });
+    }),
+
+  revokeInvite: workspaceOwnerProcedure
+    .input(
+      z.object({
+        workspaceSlug: z.string().min(1),
+        inviteId: z.string().cuid(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return inviteService.revokeWorkspaceInvite({
+        workspaceId: ctx.membership.workspaceId,
+        inviteId: input.inviteId,
+      });
+    }),
+
   inviteByToken: protectedProcedure
     .input(z.object({ token: z.string().min(1) }))
     .query(({ input }) => inviteService.getInviteByToken(input.token)),
