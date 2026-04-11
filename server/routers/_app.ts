@@ -2,6 +2,7 @@ import { createTRPCRouter } from "@/server/trpc";
 import { categoriesRouter } from "@/server/routers/categories";
 import { expensesRouter } from "@/server/routers/expenses";
 import { membersRouter } from "@/server/routers/members";
+import { recurringRouter } from "@/server/routers/recurring";
 import { workspacesRouter } from "@/server/routers/workspaces";
 
 export const appRouter = createTRPCRouter({
@@ -9,6 +10,7 @@ export const appRouter = createTRPCRouter({
   members: membersRouter,
   categories: categoriesRouter,
   expenses: expensesRouter,
+  recurring: recurringRouter,
 });
 
 export type AppRouter = typeof appRouter;
