@@ -1,0 +1,20 @@
+model Category {
+  id                 String                     @id @default(cuid())
+  workspaceId        String
+  name               String
+  slug               String
+  parentCategoryId   String?
+  isArchived         Boolean                    @default(false)
+  sortOrder          Int                        @default(0)
+  color              String?
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  workspace          Workspace                  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  parentCategory     Category?                  @relation("CategoryTree", fields: [parentCategoryId], references: [id], onDelete: SetNull)
+  childCategories    Category[]                 @relation("CategoryTree")
+  expenses           Expense[]
+  recurringTemplates RecurringExpenseTemplate[]
+
+  @@unique([workspaceId, parentCategoryId, slug])
+  @@index([workspaceId, parentCategoryId, isArchived])
+}

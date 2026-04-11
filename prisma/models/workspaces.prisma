@@ -1,0 +1,50 @@
+model Workspace {
+  id                 String                     @id @default(cuid())
+  name               String
+  slug               String                     @unique
+  baseCurrencyCode   String
+  createdByUserId    String
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  createdByUser      User                       @relation("WorkspaceCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  memberships        WorkspaceMembership[]
+  invites            WorkspaceInvite[]
+  categories         Category[]
+  expenses           Expense[]
+  recurringTemplates RecurringExpenseTemplate[]
+  debtAccounts       DebtAccount[]
+  debtPayments       DebtPayment[]
+}
+
+model WorkspaceMembership {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        WorkspaceRole
+  createdAt   DateTime      @default(now())
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+}
+
+model WorkspaceInvite {
+  id               String        @id @default(cuid())
+  workspaceId      String
+  email            String
+  role             WorkspaceRole
+  token            String        @unique
+  status           InviteStatus  @default(pending)
+  expiresAt        DateTime
+  invitedByUserId  String
+  acceptedByUserId String?
+  acceptedAt       DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invitedByUser    User          @relation("InviteSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+  acceptedByUser   User?         @relation("InviteAcceptor", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, email, status])
+}

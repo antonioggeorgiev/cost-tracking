@@ -1,0 +1,32 @@
+enum WorkspaceRole {
+  owner
+  editor
+  viewer
+}
+
+enum ExpenseStatus {
+  planned
+  pending
+  posted
+  cancelled
+}
+
+enum ExpenseType {
+  one_time
+  recurring_generated
+  debt_payment
+  manual_adjustment
+}
+
+enum InviteStatus {
+  pending
+  accepted
+  revoked
+  expired
+}
+
+enum RecurringFrequency {
+  weekly
+  monthly
+  yearly
+}
