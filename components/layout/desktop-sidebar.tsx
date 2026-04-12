@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
 import { isClerkConfigured } from "@/lib/clerk";
-import { LayoutDashboard, Receipt, RefreshCw, Landmark, Users, FolderTree, Settings, LogOut, ChevronDown, ChevronUp, User, Check } from "lucide-react";
+import { LayoutDashboard, Receipt, RefreshCw, Landmark, Users, FolderTree, Settings, LogOut, ChevronDown, ChevronUp, User, Check, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routes, WORKSPACE_SLUG_PATTERN } from "@/lib/routes";
 
@@ -26,7 +26,8 @@ type DesktopSidebarProps = {
 };
 
 const workspaceNavItems = [
-  { label: "Dashboard", icon: LayoutDashboard, segment: "" },
+  { label: "Quick Add", icon: PlusCircle, segment: "" },
+  { label: "Dashboard", icon: LayoutDashboard, segment: "/dashboard" },
   { label: "Expenses", icon: Receipt, segment: "/expenses" },
   { label: "Categories", icon: FolderTree, segment: "/categories" },
   { label: "Recurring", icon: RefreshCw, segment: "/recurring" },

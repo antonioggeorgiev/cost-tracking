@@ -1,186 +1,83 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { StatusCard } from "@/components/ui/status-card";
-import { SpendingChart } from "@/components/charts/spending-chart";
-import { formatMoney } from "@/lib/money";
-import { routes } from "@/lib/routes";
+import { createExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/actions";
+import { QuickAddExpenseForm } from "@/components/quick-add/quick-add-expense-form";
+import { RecentExpensesTable } from "@/components/quick-add/recent-expenses-table";
+import { TypeSelector } from "@/components/quick-add/type-selector";
+import { supportedCurrencies } from "@/lib/currency";
 import { getServerCaller } from "@/server/trpc-caller";
-import { FolderTree, Receipt, RefreshCw, Landmark } from "lucide-react";
 
 type WorkspacePageProps = {
   params: Promise<{ workspaceSlug: string }>;
+  searchParams: Promise<{ error?: string }>;
 };
 
-const categoryIcons: Record<string, typeof Receipt> = {
-  default: Receipt,
-};
-
-function timeAgo(date: Date) {
-  const now = new Date();
-  const diffMs = now.getTime() - new Date(date).getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 1) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24) return `${diffHr}h ago`;
-  const diffDay = Math.floor(diffHr / 24);
-  if (diffDay === 1) return "yesterday";
-  return `${diffDay}d ago`;
-}
-
-export default async function WorkspacePage({ params }: WorkspacePageProps) {
+export default async function WorkspacePage({ params, searchParams }: WorkspacePageProps) {
   const { workspaceSlug } = await params;
+  const sp = await searchParams;
   const caller = await getServerCaller();
-  const [workspace, dashboard] = await Promise.all([
+
+  const [workspace, categories, recentResult] = await Promise.all([
     caller.workspaces.bySlug({ workspaceSlug }),
-    caller.reporting.dashboard({ workspaceSlug }),
+    caller.categories.list({ workspaceSlug }),
+    caller.expenses.list({ workspaceSlug, page: 1, perPage: 5 }),
   ]);
 
   if (!workspace) {
     notFound();
   }
 
-  const heroAmount = formatMoney(dashboard.currentMonthTotal, dashboard.baseCurrencyCode);
+  const categoryOptions = categories.flatMap((category) => [
+    { id: category.id, label: category.name },
+    ...category.children.map((child) => ({ id: child.id, label: `${category.name} / ${child.name}` })),
+  ]);
 
   return (
-    <>
-      {/* Desktop: bento grid */}
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* Hero + Chart — spans 8 cols on desktop */}
-        <div className="space-y-6 lg:col-span-8">
-          {/* Hero amount */}
-          <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Current Month Ledger</p>
-            <div className="mt-3 flex items-baseline gap-3">
-              <span className="font-heading text-5xl font-extrabold tracking-tight text-heading lg:text-6xl">
-                {heroAmount}
-              </span>
-            </div>
-            <p className="mt-2 text-sm text-muted">
-              {dashboard.currentMonthExpenseCount} posted expenses · Previous month {formatMoney(dashboard.previousMonthTotal, dashboard.baseCurrencyCode)}
-            </p>
-          </section>
+    <div className="space-y-6">
+      {sp.error ? (
+        <section className="rounded-lg border border-danger/20 bg-danger-bg px-4 py-3 text-sm text-danger">
+          {decodeURIComponent(sp.error)}
+        </section>
+      ) : null}
 
-          {/* Spending chart */}
-          <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <h2 className="font-heading text-base font-semibold text-heading">Weekly Spending</h2>
-            <div className="mt-4">
-              <SpendingChart data={dashboard.weeklySpending} currencyCode={dashboard.baseCurrencyCode} />
-            </div>
-          </section>
-        </div>
-
-        {/* Sidebar — spans 4 cols on desktop */}
-        <div className="space-y-6 lg:col-span-4">
-          {/* Status cards */}
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
-            <StatusCard
-              label="Pending"
-              value={formatMoney(dashboard.pendingTotal, dashboard.baseCurrencyCode)}
-              helpText="Awaiting confirmation"
-              variant="pending"
-            />
-            <StatusCard
-              label="Planned"
-              value={formatMoney(dashboard.plannedTotal, dashboard.baseCurrencyCode)}
-              helpText="Future expenses"
-              variant="planned"
-            />
-          </div>
-
-          {/* Top Categories */}
-          <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-            <h2 className="font-heading text-base font-semibold text-heading">Top Categories</h2>
-            <div className="mt-4 space-y-3">
-              {dashboard.categoryPercentages.length > 0 ? (
-                dashboard.categoryPercentages.slice(0, 5).map((entry) => (
-                  <div key={entry.label}>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-body">{entry.label}</span>
-                      <span className="font-medium text-heading">{entry.percentage}%</span>
-                    </div>
-                    <div className="mt-1.5 h-1.5 rounded-full bg-surface-secondary">
-                      <div
-                        className="h-1.5 rounded-full bg-gradient-to-r from-primary to-primary-dark"
-                        style={{ width: `${entry.percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-muted">No category data this month.</p>
-              )}
-            </div>
-          </section>
-        </div>
+      {/* Header */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">{workspace.name}</p>
+        <h1 className="mt-1 font-heading text-2xl font-bold text-heading">Quick Add</h1>
       </div>
 
-      {/* Recent Activity */}
+      {/* Type selector */}
+      <TypeSelector />
+
+      {/* Quick add form */}
       <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Recent Activity</h2>
-          <Link
-            href={routes.workspaceExpenses(workspace.slug)}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            View all
-          </Link>
+        <div className="mb-6">
+          <h2 className="font-heading text-xl font-bold text-heading">New Expense</h2>
+          <p className="mt-1 text-sm text-muted">Record a new expense entry</p>
         </div>
-
-        <div className="mt-4 divide-y divide-border">
-          {dashboard.recentExpenses.length > 0 ? (
-            dashboard.recentExpenses.map((expense) => (
-              <div key={expense.id} className="flex items-center gap-4 py-3.5 first:pt-0 last:pb-0">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-primary">
-                  <FolderTree size={18} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate font-medium text-heading">{expense.title}</p>
-                    <StatusBadge status={expense.status} />
-                  </div>
-                  <p className="mt-0.5 text-xs text-muted">
-                    {expense.categoryPath} · {timeAgo(expense.expenseDate)}
-                  </p>
-                </div>
-                <p className="shrink-0 font-medium text-heading">
-                  {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
-                </p>
-              </div>
-            ))
-          ) : (
-            <div className="py-6 text-center text-sm text-muted">No activity yet.</div>
-          )}
-        </div>
+        <QuickAddExpenseForm
+          workspaceSlug={workspaceSlug}
+          baseCurrencyCode={workspace.baseCurrencyCode}
+          categories={categoryOptions}
+          currencies={supportedCurrencies}
+          formAction={createExpenseAction}
+        />
       </section>
 
-      {/* Quick links */}
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          { title: "Expenses", desc: "Track purchases and costs", href: routes.workspaceExpenses(workspace.slug), icon: Receipt },
-          { title: "Recurring", desc: "Manage recurring templates", href: routes.workspaceRecurring(workspace.slug), icon: RefreshCw },
-          { title: "Debts", desc: "Track debt accounts", href: routes.workspaceDebts(workspace.slug), icon: Landmark },
-          { title: "Categories", desc: "Manage categories", href: routes.workspaceCategories(workspace.slug), icon: FolderTree },
-        ].map((link) => {
-          const Icon = link.icon;
-          return (
-            <Link
-              key={link.title}
-              href={link.href}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-4 transition hover:border-primary-light hover:shadow-md"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-lighter text-primary">
-                <Icon size={18} />
-              </div>
-              <div>
-                <h3 className="font-medium text-heading">{link.title}</h3>
-                <p className="text-sm text-muted">{link.desc}</p>
-              </div>
-            </Link>
-          );
-        })}
-      </section>
-    </>
+      {/* Recent expenses table */}
+      <RecentExpensesTable
+        expenses={recentResult.items.map((e) => ({
+          id: e.id,
+          title: e.title,
+          categoryPath: e.categoryPath,
+          expenseDate: e.expenseDate.toISOString(),
+          originalAmountMinor: e.originalAmountMinor,
+          originalCurrencyCode: e.originalCurrencyCode,
+          workspaceAmountMinor: e.workspaceAmountMinor,
+          workspaceCurrencyCode: e.workspaceCurrencyCode,
+          status: e.status,
+        }))}
+        workspaceSlug={workspaceSlug}
+      />
+    </div>
   );
 }

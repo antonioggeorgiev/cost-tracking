@@ -18,6 +18,7 @@ const createExpenseSchema = z.object({
   status: z.nativeEnum(ExpenseStatus),
   description: z.string().max(500).optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
+  redirectOnError: z.string().optional(),
 });
 
 export async function createExpenseAction(formData: FormData) {
@@ -44,6 +45,7 @@ export async function createExpenseAction(formData: FormData) {
     revalidatePath(routes.workspace(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create expense.";
-    redirect(`${routes.workspaceExpenses(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
+    const errorRedirect = input.redirectOnError ?? routes.workspaceExpenses(input.workspaceSlug);
+    redirect(`${errorRedirect}?error=${encodeURIComponent(message)}`);
   }
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Receipt, RefreshCw, Landmark, Settings } from "lucide-react";
+import { LayoutDashboard, Receipt, RefreshCw, Landmark, Settings, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routes } from "@/lib/routes";
 
@@ -11,7 +11,8 @@ type BottomNavProps = {
 };
 
 const tabs = [
-  { label: "DASHBOARD", icon: LayoutDashboard, segment: "" },
+  { label: "ADD", icon: PlusCircle, segment: "" },
+  { label: "DASHBOARD", icon: LayoutDashboard, segment: "/dashboard" },
   { label: "EXPENSES", icon: Receipt, segment: "/expenses" },
   { label: "RECURRING", icon: RefreshCw, segment: "/recurring" },
   { label: "DEBTS", icon: Landmark, segment: "/debts" },
