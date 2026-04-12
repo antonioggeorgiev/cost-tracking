@@ -531,28 +531,12 @@ export type CategoryUncheckedCreateNestedManyWithoutParentCategoryInput = {
   connect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type CategoryUpdateOneWithoutChildCategoriesNestedInput = {
@@ -599,10 +583,12 @@ export type CategoryCreateNestedOneWithoutExpensesInput = {
   connect?: Prisma.CategoryWhereUniqueInput
 }
 
-export type CategoryUpdateOneRequiredWithoutExpensesNestedInput = {
+export type CategoryUpdateOneWithoutExpensesNestedInput = {
   create?: Prisma.XOR<Prisma.CategoryCreateWithoutExpensesInput, Prisma.CategoryUncheckedCreateWithoutExpensesInput>
   connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutExpensesInput
   upsert?: Prisma.CategoryUpsertWithoutExpensesInput
+  disconnect?: Prisma.CategoryWhereInput | boolean
+  delete?: Prisma.CategoryWhereInput | boolean
   connect?: Prisma.CategoryWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutExpensesInput, Prisma.CategoryUpdateWithoutExpensesInput>, Prisma.CategoryUncheckedUpdateWithoutExpensesInput>
 }

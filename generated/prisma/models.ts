@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/ExpenseAttachment'
 export type * from './models/Category'
 export type * from './models/DebtAccount'
 export type * from './models/DebtPayment'

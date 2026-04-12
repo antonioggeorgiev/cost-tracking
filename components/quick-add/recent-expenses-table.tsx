@@ -36,7 +36,7 @@ const columns = [
     cell: (info) => (
       <div className="min-w-0">
         <p className="truncate font-medium text-heading">{info.getValue()}</p>
-        <p className="mt-0.5 truncate text-xs text-muted">{info.row.original.categoryPath}</p>
+        <p className="mt-0.5 truncate text-xs text-muted-foreground">{info.row.original.categoryPath}</p>
       </div>
     ),
   }),
@@ -59,7 +59,7 @@ const columns = [
           {formatMoney(info.getValue(), info.row.original.originalCurrencyCode)}
         </p>
         {info.row.original.originalCurrencyCode !== info.row.original.workspaceCurrencyCode && (
-          <p className="text-xs text-muted">
+          <p className="text-xs text-muted-foreground">
             {formatMoney(info.row.original.workspaceAmountMinor, info.row.original.workspaceCurrencyCode)}
           </p>
         )}
@@ -101,7 +101,7 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
           headerGroup.headers.map((header) => (
             <span
               key={header.id}
-              className={`text-xs font-semibold uppercase tracking-widest text-muted ${
+              className={`text-xs font-semibold uppercase tracking-widest text-muted-foreground ${
                 header.id === "originalAmountMinor" || header.id === "status" ? "text-right" : ""
               }`}
             >
@@ -114,20 +114,21 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
       {table.getRowModel().rows.length > 0 ? (
         <div className="divide-y divide-border border-t border-border">
           {table.getRowModel().rows.map((row) => (
-            <div
+            <Link
               key={row.id}
-              className="px-6 py-3.5 sm:grid sm:grid-cols-[1fr_100px_120px_80px] sm:items-center sm:gap-4"
+              href={routes.workspaceExpense(workspaceSlug, row.original.id)}
+              className="block px-6 py-3.5 transition hover:bg-surface-secondary sm:grid sm:grid-cols-[1fr_100px_120px_80px] sm:items-center sm:gap-4"
             >
               {row.getVisibleCells().map((cell) => (
                 <div key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </div>
               ))}
-            </div>
+            </Link>
           ))}
         </div>
       ) : (
-        <div className="border-t border-border px-6 py-8 text-center text-sm text-muted">
+        <div className="border-t border-border px-6 py-8 text-center text-sm text-muted-foreground">
           No expenses yet. Add your first expense above.
         </div>
       )}

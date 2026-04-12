@@ -1,7 +1,7 @@
 model Expense {
   id                    String                    @id @default(cuid())
   workspaceId           String
-  categoryId            String
+  categoryId            String?
   createdByUserId       String
   title                 String
   description           String?
@@ -20,11 +20,12 @@ model Expense {
   createdAt             DateTime                  @default(now())
   updatedAt             DateTime                  @updatedAt
   workspace             Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  category              Category                  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  category              Category?                 @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   createdByUser         User                      @relation("ExpenseCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
   recurringTemplate     RecurringExpenseTemplate? @relation(fields: [recurringTemplateId], references: [id], onDelete: SetNull)
   debtAccount           DebtAccount?              @relation(fields: [debtAccountId], references: [id], onDelete: SetNull)
   debtPayment           DebtPayment?
+  attachments           ExpenseAttachment[]
 
   @@index([workspaceId, expenseDate])
   @@index([workspaceId, status, expenseDate])

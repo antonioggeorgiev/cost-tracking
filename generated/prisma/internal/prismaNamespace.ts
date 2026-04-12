@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  ExpenseAttachment: 'ExpenseAttachment',
   Category: 'Category',
   DebtAccount: 'DebtAccount',
   DebtPayment: 'DebtPayment',
@@ -408,10 +409,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "debtAccount" | "debtPayment" | "expense" | "recurringExpenseTemplate" | "user" | "workspace" | "workspaceMembership" | "workspaceInvite"
+    modelProps: "expenseAttachment" | "category" | "debtAccount" | "debtPayment" | "expense" | "recurringExpenseTemplate" | "user" | "workspace" | "workspaceMembership" | "workspaceInvite"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    ExpenseAttachment: {
+      payload: Prisma.$ExpenseAttachmentPayload<ExtArgs>
+      fields: Prisma.ExpenseAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExpenseAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExpenseAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.ExpenseAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExpenseAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.ExpenseAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.ExpenseAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.ExpenseAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExpenseAttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.ExpenseAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        update: {
+          args: Prisma.ExpenseAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExpenseAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExpenseAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExpenseAttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExpenseAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.ExpenseAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExpenseAttachment>
+        }
+        groupBy: {
+          args: Prisma.ExpenseAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpenseAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExpenseAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpenseAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
     Category: {
       payload: Prisma.$CategoryPayload<ExtArgs>
       fields: Prisma.CategoryFieldRefs
@@ -1117,6 +1192,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ExpenseAttachmentScalarFieldEnum = {
+  id: 'id',
+  expenseId: 'expenseId',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  contentType: 'contentType',
+  url: 'url',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ExpenseAttachmentScalarFieldEnum = (typeof ExpenseAttachmentScalarFieldEnum)[keyof typeof ExpenseAttachmentScalarFieldEnum]
+
+
 export const CategoryScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -1327,13 +1418,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1358,6 +1442,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1553,6 +1644,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  expenseAttachment?: Prisma.ExpenseAttachmentOmit
   category?: Prisma.CategoryOmit
   debtAccount?: Prisma.DebtAccountOmit
   debtPayment?: Prisma.DebtPaymentOmit

@@ -82,7 +82,9 @@ export const reportingService = {
     // Spending by category with percentages
     const spendingByCategoryMap = new Map<string, { label: string; amountMinor: number }>();
     for (const expense of currentMonthExpenses) {
-      const label = expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name;
+      const label = expense.category
+        ? (expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name)
+        : "Uncategorized";
       const existing = spendingByCategoryMap.get(label);
       spendingByCategoryMap.set(label, { label, amountMinor: (existing?.amountMinor ?? 0) + expense.workspaceAmountMinor });
     }
@@ -105,8 +107,12 @@ export const reportingService = {
       recentExpenses: recentExpenses.map((expense) => ({
         id: expense.id,
         title: expense.title,
-        categoryPath: expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name,
-        categoryName: expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name,
+        categoryPath: expense.category
+          ? (expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name)
+          : "Uncategorized",
+        categoryName: expense.category
+          ? (expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name)
+          : "Uncategorized",
         createdByLabel: expense.createdByUser.name || expense.createdByUser.email,
         expenseDate: expense.expenseDate,
         workspaceAmountMinor: expense.workspaceAmountMinor,

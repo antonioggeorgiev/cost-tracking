@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { createExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/actions";
 import { QuickAddExpenseForm } from "@/components/quick-add/quick-add-expense-form";
 import { RecentExpensesTable } from "@/components/quick-add/recent-expenses-table";
@@ -26,10 +27,11 @@ export default async function WorkspacePage({ params, searchParams }: WorkspaceP
     notFound();
   }
 
-  const categoryOptions = categories.flatMap((category) => [
-    { id: category.id, label: category.name },
-    ...category.children.map((child) => ({ id: child.id, label: `${category.name} / ${child.name}` })),
-  ]);
+  const categoryTree = categories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    children: c.children.map((child) => ({ id: child.id, name: child.name })),
+  }));
 
   return (
     <div className="space-y-6">
@@ -52,14 +54,15 @@ export default async function WorkspacePage({ params, searchParams }: WorkspaceP
       <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
         <div className="mb-6">
           <h2 className="font-heading text-xl font-bold text-heading">New Expense</h2>
-          <p className="mt-1 text-sm text-muted">Record a new expense entry</p>
+          <p className="mt-1 text-sm text-muted-foreground">Record a new expense entry</p>
         </div>
         <QuickAddExpenseForm
           workspaceSlug={workspaceSlug}
           baseCurrencyCode={workspace.baseCurrencyCode}
-          categories={categoryOptions}
+          categories={categoryTree}
           currencies={supportedCurrencies}
-          formAction={createExpenseAction}
+          createExpense={createExpenseAction}
+          createCategory={createCategoryAction}
         />
       </section>
 

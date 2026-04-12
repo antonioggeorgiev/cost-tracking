@@ -9,6 +9,7 @@ export const routes = {
   workspace: (slug: string) => `/workspaces/${slug}`,
   workspaceDashboard: (slug: string) => `/workspaces/${slug}/dashboard`,
   workspaceExpenses: (slug: string) => `/workspaces/${slug}/expenses`,
+  workspaceExpense: (slug: string, expenseId: string) => `/workspaces/${slug}/expenses/${expenseId}`,
   workspaceCategories: (slug: string) => `/workspaces/${slug}/categories`,
   workspaceRecurring: (slug: string) => `/workspaces/${slug}/recurring`,
   workspaceDebts: (slug: string) => `/workspaces/${slug}/debts`,

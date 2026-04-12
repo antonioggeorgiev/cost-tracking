@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ExpenseAttachment: 'ExpenseAttachment',
   Category: 'Category',
   DebtAccount: 'DebtAccount',
   DebtPayment: 'DebtPayment',
@@ -76,6 +77,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const ExpenseAttachmentScalarFieldEnum = {
+  id: 'id',
+  expenseId: 'expenseId',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  contentType: 'contentType',
+  url: 'url',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ExpenseAttachmentScalarFieldEnum = (typeof ExpenseAttachmentScalarFieldEnum)[keyof typeof ExpenseAttachmentScalarFieldEnum]
 
 
 export const CategoryScalarFieldEnum = {

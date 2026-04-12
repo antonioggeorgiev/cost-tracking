@@ -853,10 +853,6 @@ export type EnumRecurringFrequencyFieldUpdateOperationsInput = {
   set?: $Enums.RecurringFrequency
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput = {
   create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutCreatedByUserInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutCreatedByUserInput> | Prisma.RecurringExpenseTemplateCreateWithoutCreatedByUserInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutCreatedByUserInput[]
   connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutCreatedByUserInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutCreatedByUserInput[]
