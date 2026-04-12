@@ -1,0 +1,43 @@
+model DebtAccount {
+  id                  String        @id @default(cuid())
+  workspaceId         String
+  name                String
+  provider            String?
+  originalAmountMinor Int
+  currencyCode        String
+  currentBalanceMinor Int
+  openedAt            DateTime
+  isActive            Boolean       @default(true)
+  notes               String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  workspace           Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  expenses            Expense[]
+  payments            DebtPayment[]
+
+  @@index([workspaceId, isActive])
+}
+
+model DebtPayment {
+  id                    String      @id @default(cuid())
+  workspaceId           String
+  debtAccountId         String
+  expenseId             String?     @unique
+  paidByUserId          String
+  originalAmountMinor   Int
+  originalCurrencyCode  String
+  workspaceAmountMinor  Int
+  workspaceCurrencyCode String
+  exchangeRate          Decimal     @db.Decimal(18, 8)
+  exchangeRateDate      DateTime
+  paymentDate           DateTime
+  notes                 String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  workspace             Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  debtAccount           DebtAccount @relation(fields: [debtAccountId], references: [id], onDelete: Cascade)
+  expense               Expense?    @relation(fields: [expenseId], references: [id], onDelete: SetNull)
+  paidByUser            User        @relation("DebtPaymentCreator", fields: [paidByUserId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId, paymentDate])
+}

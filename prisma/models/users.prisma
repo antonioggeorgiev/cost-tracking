@@ -1,0 +1,16 @@
+model User {
+  id                 String                     @id @default(cuid())
+  clerkUserId        String                     @unique
+  email              String                     @unique
+  name               String?
+  imageUrl           String?
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  createdWorkspaces  Workspace[]                @relation("WorkspaceCreator")
+  memberships        WorkspaceMembership[]
+  sentInvites        WorkspaceInvite[]          @relation("InviteSender")
+  acceptedInvites    WorkspaceInvite[]          @relation("InviteAcceptor")
+  expenses           Expense[]                  @relation("ExpenseCreator")
+  recurringTemplates RecurringExpenseTemplate[] @relation("RecurringTemplateCreator")
+  debtPayments       DebtPayment[]              @relation("DebtPaymentCreator")
+}
