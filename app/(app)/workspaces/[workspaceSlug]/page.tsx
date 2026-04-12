@@ -73,6 +73,7 @@ export default async function WorkspacePage({ params, searchParams }: WorkspaceP
           title: e.title,
           categoryPath: e.categoryPath,
           expenseDate: e.expenseDate.toISOString(),
+          createdAt: e.createdAt.toISOString(),
           originalAmountMinor: e.originalAmountMinor,
           originalCurrencyCode: e.originalCurrencyCode,
           workspaceAmountMinor: e.workspaceAmountMinor,

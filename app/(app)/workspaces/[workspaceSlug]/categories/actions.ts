@@ -19,8 +19,14 @@ export async function createCategoryAction(formData: FormData) {
   });
 
   const caller = await getServerCaller();
-  await caller.categories.create(input);
+  const category = await caller.categories.create(input);
 
   revalidatePath(routes.workspaceCategories(input.workspaceSlug));
   revalidatePath(routes.workspace(input.workspaceSlug));
+
+  return { id: category.id };
+}
+
+export async function createCategoryFormAction(formData: FormData) {
+  await createCategoryAction(formData);
 }

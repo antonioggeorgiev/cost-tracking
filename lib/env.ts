@@ -7,6 +7,7 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().min(1).optional(),
   OPEN_EXCHANGE_RATES_APP_ID: z.string().min(1).optional(),
   APP_BASE_URL: z.string().url().optional(),
+  GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1).optional(),
 });
 
 export const env = envSchema.parse({
@@ -16,4 +17,5 @@ export const env = envSchema.parse({
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   OPEN_EXCHANGE_RATES_APP_ID: process.env.OPEN_EXCHANGE_RATES_APP_ID,
   APP_BASE_URL: process.env.APP_BASE_URL,
+  GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });

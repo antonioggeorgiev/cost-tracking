@@ -19,8 +19,10 @@ type CreateCategoryDialogProps = {
   type: "category" | "subcategory";
   workspaceSlug: string;
   parentCategoryId?: string;
-  createCategory: (formData: FormData) => Promise<void>;
-  onCreated?: () => void;
+  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  onCreated?: (id: string) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export function CreateCategoryDialog({
@@ -29,13 +31,18 @@ export function CreateCategoryDialog({
   parentCategoryId,
   createCategory,
   onCreated,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: CreateCategoryDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = controlledOnOpenChange ?? setUncontrolledOpen;
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const label = type === "category" ? "Category" : "Subcategory";
+  const isControlled = controlledOpen !== undefined;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,10 +62,10 @@ export function CreateCategoryDialog({
 
     startTransition(async () => {
       try {
-        await createCategory(formData);
+        const result = await createCategory(formData);
         setName("");
         setOpen(false);
-        onCreated?.();
+        onCreated?.(result.id);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to create");
       }
@@ -67,17 +74,19 @@ export function CreateCategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition hover:bg-accent hover:text-accent-foreground"
-          />
-        }
-      >
-        <Plus className="size-4" />
-        Create {label.toLowerCase()}
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger
+          render={
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition hover:bg-accent hover:text-accent-foreground"
+            />
+          }
+        >
+          <Plus className="size-4" />
+          Create {label.toLowerCase()}
+        </DialogTrigger>
+      )}
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>

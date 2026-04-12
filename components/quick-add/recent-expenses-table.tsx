@@ -16,6 +16,7 @@ type Expense = {
   title: string;
   categoryPath: string;
   expenseDate: string | Date;
+  createdAt: string | Date;
   originalAmountMinor: number;
   originalCurrencyCode: string;
   workspaceAmountMinor: number;
@@ -42,6 +43,17 @@ const columns = [
   }),
   columnHelper.accessor("expenseDate", {
     header: "Date",
+    cell: (info) => (
+      <span className="text-sm text-body">
+        {new Date(info.getValue()).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })}
+      </span>
+    ),
+  }),
+  columnHelper.accessor("createdAt", {
+    header: "Created",
     cell: (info) => (
       <span className="text-sm text-body">
         {new Date(info.getValue()).toLocaleDateString("en-US", {
@@ -96,7 +108,7 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
       </div>
 
       {/* Table header (desktop) */}
-      <div className="hidden border-t border-border px-6 py-3 sm:grid sm:grid-cols-[1fr_100px_120px_80px] sm:gap-4">
+      <div className="hidden border-t border-border px-6 py-3 sm:grid sm:grid-cols-[1fr_100px_100px_120px_80px] sm:gap-4">
         {table.getHeaderGroups().map((headerGroup) =>
           headerGroup.headers.map((header) => (
             <span
@@ -117,7 +129,7 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
             <Link
               key={row.id}
               href={routes.workspaceExpense(workspaceSlug, row.original.id)}
-              className="block px-6 py-3.5 transition hover:bg-surface-secondary sm:grid sm:grid-cols-[1fr_100px_120px_80px] sm:items-center sm:gap-4"
+              className="block px-6 py-3.5 transition hover:bg-surface-secondary sm:grid sm:grid-cols-[1fr_100px_100px_120px_80px] sm:items-center sm:gap-4"
             >
               {row.getVisibleCells().map((cell) => (
                 <div key={cell.id}>

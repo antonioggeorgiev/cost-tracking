@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronsUpDown, CheckIcon } from "lucide-react";
+import { ChevronsUpDown, CheckIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -29,6 +29,8 @@ type SearchableSelectProps = {
   disabled?: boolean;
   className?: string;
   footerAction?: React.ReactNode;
+  onCreateNew?: () => void;
+  createNewLabel?: string;
 };
 
 export function SearchableSelect({
@@ -41,6 +43,8 @@ export function SearchableSelect({
   disabled = false,
   className,
   footerAction,
+  onCreateNew,
+  createNewLabel,
 }: SearchableSelectProps) {
   const [open, setOpen] = useState(false);
 
@@ -68,7 +72,8 @@ export function SearchableSelect({
               {items.map((item) => (
                 <CommandItem
                   key={item.value}
-                  value={item.label}
+                  value={item.value}
+                  keywords={[item.label]}
                   data-checked={value === item.value}
                   onSelect={() => {
                     onValueChange(item.value);
@@ -80,9 +85,22 @@ export function SearchableSelect({
               ))}
             </CommandGroup>
           </CommandList>
-          {footerAction && (
+          {(footerAction || onCreateNew) && (
             <div className="border-t p-1">
               {footerAction}
+              {onCreateNew && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onCreateNew();
+                  }}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition hover:bg-accent hover:text-accent-foreground"
+                >
+                  <Plus className="size-4" />
+                  {createNewLabel ?? "Create new"}
+                </button>
+              )}
             </div>
           )}
         </Command>

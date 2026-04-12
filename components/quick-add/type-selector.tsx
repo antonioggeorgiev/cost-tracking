@@ -19,13 +19,13 @@ export function TypeSelector() {
               "flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm font-medium",
               type.enabled
                 ? "border-primary bg-primary-lighter text-primary shadow-sm"
-                : "cursor-not-allowed border-border bg-surface-secondary text-muted opacity-50"
+                : "cursor-not-allowed border-border bg-surface-secondary text-muted-foreground/60"
             )}
           >
             <Icon size={16} />
             {type.label}
             {!type.enabled && (
-              <span className="rounded-full bg-surface px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
+              <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Soon
               </span>
             )}

@@ -2,7 +2,7 @@ import { ExpenseStatus, ExpenseType } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { toMinorUnits } from "@/lib/money";
 import { expenseService } from "@/server/services/expense-service";
-import { fxService } from "@/server/services/fx-service";
+import { fxService } from "@/server/services/fx";
 
 async function getDebtPaymentCategoryId(
   tx: Omit<typeof db, "$connect" | "$disconnect" | "$on" | "$transaction" | "$extends">,

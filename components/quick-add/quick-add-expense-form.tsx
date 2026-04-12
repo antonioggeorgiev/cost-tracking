@@ -1,11 +1,12 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { useStore } from "@tanstack/react-store";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Paperclip, X } from "lucide-react";
+import { CalendarIcon, Loader2, Paperclip, ScanLine, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +29,7 @@ type QuickAddExpenseFormProps = {
   categories: Category[];
   currencies: readonly string[];
   createExpense: (formData: FormData) => Promise<{ id: string } | { error: string }>;
-  createCategory: (formData: FormData) => Promise<void>;
+  createCategory: (formData: FormData) => Promise<{ id: string }>;
 };
 
 const expenseFormSchema = z.object({
@@ -98,30 +99,74 @@ export function QuickAddExpenseForm({
           return;
         }
 
-        // Upload files to Vercel Blob via API route
-        if (files.length > 0) {
-          const attachments = await Promise.all(
-            files.map(async (file) => {
-              const body = new FormData();
-              body.set("file", file);
-              const res = await fetch("/api/upload", { method: "POST", body });
-              return res.json() as Promise<{ url: string; fileName: string; fileSize: number; contentType: string }>;
-            }),
-          );
-          await saveAttachmentsAction(result.id, attachments);
+        // Upload file to Vercel Blob via API route
+        if (file) {
+          const body = new FormData();
+          body.set("file", file);
+          const res = await fetch("/api/upload", { method: "POST", body });
+          const attachment = await res.json() as { url: string; fileName: string; fileSize: number; contentType: string };
+          await saveAttachmentsAction(result.id, [attachment]);
         }
 
         form.reset();
-        setSelectedParentId("");
-        setFiles([]);
+
+        setFile(null);
         router.refresh();
       });
     },
   });
 
-  const [selectedParentId, setSelectedParentId] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
+  const selectedParentId = useStore(form.store, (state) => state.values.parentCategoryId);
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  const [subcategoryDialogOpen, setSubcategoryDialogOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const receiptInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleReceiptScan(scannedFile: File) {
+    setIsScanning(true);
+    setFormError(null);
+    try {
+      const body = new FormData();
+      body.set("file", scannedFile);
+      body.set("workspaceSlug", workspaceSlug);
+      const res = await fetch("/api/scan-receipt", { method: "POST", body });
+      const result = await res.json();
+
+      if (result.error) {
+        setFormError(result.error);
+        return;
+      }
+
+      // Reset form for a fresh expense from the scan
+      form.reset();
+
+      if (result.title) form.setFieldValue("title", result.title);
+      if (result.description) form.setFieldValue("description", result.description);
+      if (result.amount) form.setFieldValue("amount", result.amount);
+      if (result.currencyCode) form.setFieldValue("currencyCode", result.currencyCode);
+      if (result.expenseDate) form.setFieldValue("expenseDate", result.expenseDate);
+
+      if (result.parentCategoryId && categories.some((c) => c.id === result.parentCategoryId)) {
+        form.setFieldValue("parentCategoryId", result.parentCategoryId);
+
+        if (result.categoryId) {
+          const parent = categories.find((c) => c.id === result.parentCategoryId);
+          if (parent?.children.some((ch) => ch.id === result.categoryId)) {
+            form.setFieldValue("categoryId", result.categoryId);
+          }
+        }
+      }
+
+      // Replace any existing file with the scanned receipt
+      setFile(scannedFile);
+    } catch {
+      setFormError("Failed to scan receipt. Please try again or fill in manually.");
+    } finally {
+      setIsScanning(false);
+    }
+  }
   const selectedParent = categories.find((c) => c.id === selectedParentId);
   const childCategories = selectedParent?.children ?? [];
 
@@ -130,6 +175,7 @@ export function QuickAddExpenseForm({
   const currencyItems = currencies.map((c) => ({ value: c, label: c }));
 
   return (
+    <>
     <form
       onSubmit={(e) => {
         e.preventDefault();
@@ -138,6 +184,40 @@ export function QuickAddExpenseForm({
       }}
       className="space-y-4"
     >
+      {/* Receipt scan */}
+      <div className="grid gap-1.5">
+        <input
+          ref={receiptInputRef}
+          type="file"
+          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleReceiptScan(file);
+            e.target.value = "";
+          }}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isScanning || isPending}
+          onClick={() => receiptInputRef.current?.click()}
+          className="h-12 w-full border-2 border-dashed border-primary/30 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10"
+        >
+          {isScanning ? (
+            <>
+              <Loader2 className="size-5 animate-spin" />
+              Scanning receipt...
+            </>
+          ) : (
+            <>
+              <ScanLine className="size-5" />
+              Scan Receipt / Invoice
+            </>
+          )}
+        </Button>
+      </div>
+
       {formError && (
         <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {formError}
@@ -253,19 +333,14 @@ export function QuickAddExpenseForm({
                 value={field.state.value}
                 onValueChange={(val) => {
                   field.handleChange(val);
-                  setSelectedParentId(val);
+
                   form.setFieldValue("categoryId", "");
                 }}
                 placeholder="Select category"
                 searchPlaceholder="Search categories..."
                 emptyMessage="No categories found."
-                footerAction={
-                  <CreateCategoryDialog
-                    type="category"
-                    workspaceSlug={workspaceSlug}
-                    createCategory={createCategory}
-                  />
-                }
+                onCreateNew={() => setCategoryDialogOpen(true)}
+                createNewLabel="Create category"
               />
               {field.state.meta.errors.length > 0 && (
                 <span className="text-xs text-destructive">{field.state.meta.errors[0]?.message}</span>
@@ -282,20 +357,12 @@ export function QuickAddExpenseForm({
                 items={subcategoryItems}
                 value={field.state.value}
                 onValueChange={field.handleChange}
-                placeholder={childCategories.length === 0 ? "Select category first" : "Select subcategory"}
+                placeholder={!selectedParentId ? "Select category first" : "Select subcategory"}
                 searchPlaceholder="Search subcategories..."
                 emptyMessage="No subcategories found."
-                disabled={childCategories.length === 0}
-                footerAction={
-                  selectedParentId ? (
-                    <CreateCategoryDialog
-                      type="subcategory"
-                      workspaceSlug={workspaceSlug}
-                      parentCategoryId={selectedParentId}
-                      createCategory={createCategory}
-                    />
-                  ) : undefined
-                }
+                disabled={!selectedParentId}
+                onCreateNew={selectedParentId ? () => setSubcategoryDialogOpen(true) : undefined}
+                createNewLabel="Create subcategory"
               />
               {field.state.meta.errors.length > 0 && (
                 <span className="text-xs text-destructive">{field.state.meta.errors[0]?.message}</span>
@@ -335,48 +402,45 @@ export function QuickAddExpenseForm({
         )}
       </form.Field>
 
-      {/* File attachments */}
+      {/* File attachment */}
       <div className="grid gap-1.5">
-        <Label>Attachments</Label>
+        <Label>Attachment</Label>
         <input
           ref={fileInputRef}
           type="file"
-          multiple
-          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv"
+          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt"
           className="hidden"
           onChange={(e) => {
-            if (e.target.files) {
-              setFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
-            }
+            const selected = e.target.files?.[0];
+            if (selected) setFile(selected);
             e.target.value = "";
           }}
         />
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-dashed border-input text-sm text-muted-foreground transition hover:border-ring hover:text-foreground"
-        >
-          <Paperclip className="size-4" />
-          Attach files
-        </button>
-        {files.length > 0 && (
-          <div className="space-y-1.5">
-            {files.map((file, i) => (
-              <div
-                key={`${file.name}-${i}`}
-                className="flex items-center justify-between rounded-lg border border-input bg-muted/50 px-3 py-1.5 text-sm"
-              >
-                <span className="truncate text-foreground">{file.name}</span>
-                <button
-                  type="button"
-                  onClick={() => setFiles((prev) => prev.filter((_, idx) => idx !== i))}
-                  className="ml-2 shrink-0 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="size-3.5" />
-                </button>
-              </div>
-            ))}
+        {file ? (
+          <div className="flex items-center justify-between rounded-lg border border-input bg-muted/50 px-3 py-2 text-sm">
+            <div className="flex items-center gap-2 truncate">
+              <Paperclip className="size-4 shrink-0 text-muted-foreground" />
+              <span className="truncate text-foreground">{file.name}</span>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => setFile(null)}
+            >
+              <X className="size-3.5" />
+            </Button>
           </div>
+        ) : (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full border-dashed"
+          >
+            <Paperclip className="size-4" />
+            Attach file
+          </Button>
         )}
       </div>
 
@@ -385,6 +449,31 @@ export function QuickAddExpenseForm({
           {isPending ? "Adding..." : "Add Expense"}
         </Button>
       </div>
+
     </form>
+
+      <CreateCategoryDialog
+        type="category"
+        workspaceSlug={workspaceSlug}
+        createCategory={createCategory}
+        open={categoryDialogOpen}
+        onOpenChange={setCategoryDialogOpen}
+        onCreated={(id) => {
+          form.setFieldValue("parentCategoryId", id);
+          form.setFieldValue("categoryId", "");
+        }}
+      />
+      <CreateCategoryDialog
+        type="subcategory"
+        workspaceSlug={workspaceSlug}
+        parentCategoryId={selectedParentId}
+        createCategory={createCategory}
+        open={subcategoryDialogOpen}
+        onOpenChange={setSubcategoryDialogOpen}
+        onCreated={(id) => {
+          form.setFieldValue("categoryId", id);
+        }}
+      />
+    </>
   );
 }

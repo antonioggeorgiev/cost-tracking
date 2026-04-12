@@ -1,7 +1,7 @@
 import { ExpenseStatus, ExpenseType } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { toMinorUnits } from "@/lib/money";
-import { fxService } from "@/server/services/fx-service";
+import { fxService } from "@/server/services/fx";
 
 export const expenseService = {
   async listWorkspaceExpenses(workspaceId: string, options?: {
@@ -34,7 +34,7 @@ export const expenseService = {
           category: { include: { parentCategory: true } },
           createdByUser: { select: { name: true, email: true } },
         },
-        orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
+        orderBy: [{ createdAt: "desc" }],
         skip,
         take: perPage,
       }),
