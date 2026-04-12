@@ -39,7 +39,7 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
         <WorkspaceOverviewCard label="Members" value={String(workspace._count.memberships)} help="Everyone in the workspace can view all workspace data." />
         <WorkspaceOverviewCard label="Categories" value={String(workspace._count.categories)} help="Parent and child categories now structure workspace spending." />
         <WorkspaceOverviewCard label="Expenses" value={String(workspace._count.expenses)} help="One-time expenses are now tracked inside the workspace." />
-        <WorkspaceOverviewCard label="Recurring" value={String(workspace._count.recurringTemplates)} help="Recurring templates will land in a follow-up branch." />
+        <WorkspaceOverviewCard label="Recurring" value={String(workspace._count.recurringTemplates)} help="Recurring templates now generate concrete due expense entries." />
         <WorkspaceOverviewCard label="Debts" value={String(workspace._count.debtAccounts)} help="Debt tracking will land in a follow-up branch." />
       </section>
 
@@ -50,6 +50,7 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
             ["Members", "Invite users into the workspace and review current members.", `/app/${workspace.slug}/members`],
             ["Categories", "Manage parent and child categories.", `/app/${workspace.slug}/categories`],
             ["Expenses", "Track one-time purchases and daily costs.", `/app/${workspace.slug}/expenses`],
+            ["Recurring", "Manage recurring templates and generated entries.", `/app/${workspace.slug}/recurring`],
           ].map(([title, body, href]) => (
             <Link key={title} href={href} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4 transition hover:border-emerald-300/30 hover:bg-slate-950/40">
               <h3 className="font-medium text-white">{title}</h3>
