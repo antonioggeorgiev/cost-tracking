@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createInviteSchema = z.object({
@@ -37,10 +38,10 @@ export async function createWorkspaceInviteAction(formData: FormData) {
   try {
     const caller = await getServerCaller();
     await caller.members.createInvite(input);
-    revalidatePath(`/app/${input.workspaceSlug}/members`);
+    revalidatePath(routes.workspaceMembers(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create invite.";
-    redirect(`/app/${input.workspaceSlug}/members?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceMembers(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }
 
@@ -54,10 +55,10 @@ export async function updateWorkspaceMemberRoleAction(formData: FormData) {
   try {
     const caller = await getServerCaller();
     await caller.members.updateRole(input);
-    revalidatePath(`/app/${input.workspaceSlug}/members`);
+    revalidatePath(routes.workspaceMembers(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to update member role.";
-    redirect(`/app/${input.workspaceSlug}/members?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceMembers(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }
 
@@ -70,10 +71,10 @@ export async function removeWorkspaceMemberAction(formData: FormData) {
   try {
     const caller = await getServerCaller();
     await caller.members.removeMember(input);
-    revalidatePath(`/app/${input.workspaceSlug}/members`);
+    revalidatePath(routes.workspaceMembers(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to remove member.";
-    redirect(`/app/${input.workspaceSlug}/members?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceMembers(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }
 
@@ -86,9 +87,9 @@ export async function revokeWorkspaceInviteAction(formData: FormData) {
   try {
     const caller = await getServerCaller();
     await caller.members.revokeInvite(input);
-    revalidatePath(`/app/${input.workspaceSlug}/members`);
+    revalidatePath(routes.workspaceMembers(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to revoke invite.";
-    redirect(`/app/${input.workspaceSlug}/members?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceMembers(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }

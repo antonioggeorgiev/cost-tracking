@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ExpenseStatus, RecurringFrequency } from "@/generated/prisma/enums";
 import { supportedCurrencies } from "@/lib/currency";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createRecurringSchema = z.object({
@@ -42,10 +43,10 @@ export async function createRecurringTemplateAction(formData: FormData) {
       ...input,
       startDate: new Date(input.startDate),
     });
-    revalidatePath(`/app/${input.workspaceSlug}/recurring`);
-    revalidatePath(`/app/${input.workspaceSlug}`);
+    revalidatePath(routes.workspaceRecurring(input.workspaceSlug));
+    revalidatePath(routes.workspace(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create recurring template.";
-    redirect(`/app/${input.workspaceSlug}/recurring?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceRecurring(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }

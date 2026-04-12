@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ExpenseStatus } from "@/generated/prisma/enums";
 import { supportedCurrencies } from "@/lib/currency";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createExpenseSchema = z.object({
@@ -39,10 +40,10 @@ export async function createExpenseAction(formData: FormData) {
       expenseDate: new Date(input.expenseDate),
     });
 
-    revalidatePath(`/app/${input.workspaceSlug}/expenses`);
-    revalidatePath(`/app/${input.workspaceSlug}`);
+    revalidatePath(routes.workspaceExpenses(input.workspaceSlug));
+    revalidatePath(routes.workspace(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create expense.";
-    redirect(`/app/${input.workspaceSlug}/expenses?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceExpenses(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }

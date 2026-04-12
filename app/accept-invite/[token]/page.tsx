@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { isClerkConfigured } from "@/lib/clerk";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 type AcceptInvitePageProps = {
@@ -17,10 +18,10 @@ async function AcceptInviteForm({ token }: { token: string }) {
       const caller = await getServerCaller();
       const workspace = await caller.members.acceptInvite({ token });
 
-      redirect(`/app/${workspace.slug}`);
+      redirect(routes.workspace(workspace.slug));
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unable to accept invite.";
-      redirect(`/accept-invite/${token}?error=${encodeURIComponent(message)}`);
+      redirect(`${routes.acceptInvite(token)}?error=${encodeURIComponent(message)}`);
     }
   }
 
@@ -64,12 +65,12 @@ export default async function AcceptInvitePage({ params, searchParams }: AcceptI
           <>
             <SignedOut>
               <div className="mt-6 flex flex-wrap gap-3">
-                <SignInButton forceRedirectUrl={`/accept-invite/${token}`}>
+                <SignInButton forceRedirectUrl={routes.acceptInvite(token)}>
                   <button className="rounded-2xl bg-emerald-300 px-5 py-3 font-medium text-slate-950">
                     Sign in to accept
                   </button>
                 </SignInButton>
-                <SignUpButton forceRedirectUrl={`/accept-invite/${token}`}>
+                <SignUpButton forceRedirectUrl={routes.acceptInvite(token)}>
                   <button className="rounded-2xl border border-white/10 px-5 py-3 font-medium text-white">
                     Create account
                   </button>
@@ -84,7 +85,7 @@ export default async function AcceptInvitePage({ params, searchParams }: AcceptI
         )}
 
         <div className="mt-6">
-          <Link href="/" className="text-sm text-slate-400 hover:text-slate-200">
+          <Link href={routes.home} className="text-sm text-slate-400 hover:text-slate-200">
             Back to home
           </Link>
         </div>

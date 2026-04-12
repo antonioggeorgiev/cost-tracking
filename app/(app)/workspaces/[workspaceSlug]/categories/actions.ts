@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createCategorySchema = z.object({
@@ -20,6 +21,6 @@ export async function createCategoryAction(formData: FormData) {
   const caller = await getServerCaller();
   await caller.categories.create(input);
 
-  revalidatePath(`/app/${input.workspaceSlug}/categories`);
-  revalidatePath(`/app/${input.workspaceSlug}`);
+  revalidatePath(routes.workspaceCategories(input.workspaceSlug));
+  revalidatePath(routes.workspace(input.workspaceSlug));
 }

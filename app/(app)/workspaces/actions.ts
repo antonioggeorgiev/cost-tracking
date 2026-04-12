@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { supportedCurrencies } from "@/lib/currency";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createWorkspaceSchema = z.object({
@@ -20,6 +21,6 @@ export async function createWorkspaceAction(formData: FormData) {
   const caller = await getServerCaller();
   const workspace = await caller.workspaces.create(input);
 
-  revalidatePath("/app");
-  redirect(`/app/${workspace.slug}`);
+  revalidatePath(routes.workspaces);
+  redirect(routes.workspace(workspace.slug));
 }

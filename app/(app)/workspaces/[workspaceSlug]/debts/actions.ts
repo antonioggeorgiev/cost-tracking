@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { supportedCurrencies } from "@/lib/currency";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createDebtAccountSchema = z.object({
@@ -43,11 +44,11 @@ export async function createDebtAccountAction(formData: FormData) {
       ...input,
       openedAt: new Date(input.openedAt),
     });
-    revalidatePath(`/app/${input.workspaceSlug}/debts`);
-    revalidatePath(`/app/${input.workspaceSlug}`);
+    revalidatePath(routes.workspaceDebts(input.workspaceSlug));
+    revalidatePath(routes.workspace(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create debt account.";
-    redirect(`/app/${input.workspaceSlug}/debts?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceDebts(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }
 
@@ -68,11 +69,11 @@ export async function createDebtPaymentAction(formData: FormData) {
       ...input,
       paymentDate: new Date(input.paymentDate),
     });
-    revalidatePath(`/app/${input.workspaceSlug}/debts`);
-    revalidatePath(`/app/${input.workspaceSlug}/expenses`);
-    revalidatePath(`/app/${input.workspaceSlug}`);
+    revalidatePath(routes.workspaceDebts(input.workspaceSlug));
+    revalidatePath(routes.workspaceExpenses(input.workspaceSlug));
+    revalidatePath(routes.workspace(input.workspaceSlug));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to record debt payment.";
-    redirect(`/app/${input.workspaceSlug}/debts?error=${encodeURIComponent(message)}`);
+    redirect(`${routes.workspaceDebts(input.workspaceSlug)}?error=${encodeURIComponent(message)}`);
   }
 }
