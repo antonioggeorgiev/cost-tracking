@@ -28,7 +28,10 @@ pnpm-debug.log*
 # prisma
 /prisma/dev.db
 /prisma/dev.db-journal
+/generated
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.vercel
+.env*.local
