@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { InviteStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { isResendConfigured } from "@/lib/resend";
+import { routes } from "@/lib/routes";
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
@@ -54,7 +55,7 @@ export const inviteService = {
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const acceptUrl = `${process.env.APP_BASE_URL}/accept-invite/${input.token}`;
+    const acceptUrl = `${process.env.APP_BASE_URL}${routes.acceptInvite(input.token)}`;
 
     await resend.emails.send({
       from: "Cost Tracking <onboarding@resend.dev>",

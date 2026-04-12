@@ -1,5 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { routes } from "@/lib/routes";
 
 export async function getSessionUserId() {
   const session = await auth();
@@ -11,7 +12,7 @@ export async function requireSessionUserId() {
   const userId = await getSessionUserId();
 
   if (!userId) {
-    redirect("/sign-in");
+    redirect(routes.signIn);
   }
 
   return userId;
@@ -21,7 +22,7 @@ export async function getCurrentClerkUser() {
   const user = await currentUser();
 
   if (!user) {
-    redirect("/sign-in");
+    redirect(routes.signIn);
   }
 
   return user;
