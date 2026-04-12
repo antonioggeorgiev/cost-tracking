@@ -37,8 +37,8 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <WorkspaceOverviewCard label="Members" value={String(workspace._count.memberships)} help="Everyone in the workspace can view all workspace data." />
-        <WorkspaceOverviewCard label="Categories" value={String(workspace._count.categories)} help="Category management will land in a follow-up branch." />
-        <WorkspaceOverviewCard label="Expenses" value={String(workspace._count.expenses)} help="Expense tracking will land in a follow-up branch." />
+        <WorkspaceOverviewCard label="Categories" value={String(workspace._count.categories)} help="Parent and child categories now structure workspace spending." />
+        <WorkspaceOverviewCard label="Expenses" value={String(workspace._count.expenses)} help="One-time expenses are now tracked inside the workspace." />
         <WorkspaceOverviewCard label="Recurring" value={String(workspace._count.recurringTemplates)} help="Recurring templates will land in a follow-up branch." />
         <WorkspaceOverviewCard label="Debts" value={String(workspace._count.debtAccounts)} help="Debt tracking will land in a follow-up branch." />
       </section>
@@ -48,8 +48,8 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {[
             ["Members", "Invite users into the workspace and review current members.", `/app/${workspace.slug}/members`],
-            ["Invites", "Accept invite links and create memberships from email tokens.", `/accept-invite/sample-token`],
-            ["Next", "Categories, expenses, recurring, debts, and reporting are split into follow-up review branches.", `/app/${workspace.slug}`],
+            ["Categories", "Manage parent and child categories.", `/app/${workspace.slug}/categories`],
+            ["Expenses", "Track one-time purchases and daily costs.", `/app/${workspace.slug}/expenses`],
           ].map(([title, body, href]) => (
             <Link key={title} href={href} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4 transition hover:border-emerald-300/30 hover:bg-slate-950/40">
               <h3 className="font-medium text-white">{title}</h3>
