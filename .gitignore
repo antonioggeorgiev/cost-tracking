@@ -35,3 +35,4 @@ pnpm-debug.log*
 next-env.d.ts
 .vercel
 .env*.local
+opencode.json
