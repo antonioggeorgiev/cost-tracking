@@ -6,8 +6,21 @@ import { createTRPCRouter, workspaceEditorProcedure, workspaceMemberProcedure } 
 
 export const expensesRouter = createTRPCRouter({
   list: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
-    .query(({ ctx }) => expenseService.listWorkspaceExpenses(ctx.membership.workspaceId)),
+    .input(z.object({
+      workspaceSlug: z.string().min(1),
+      search: z.string().optional(),
+      categoryId: z.string().optional(),
+      status: z.string().optional(),
+      page: z.coerce.number().int().min(1).optional(),
+      perPage: z.coerce.number().int().min(1).max(100).optional(),
+    }))
+    .query(({ ctx, input }) => expenseService.listWorkspaceExpenses(ctx.membership.workspaceId, {
+      search: input.search,
+      categoryId: input.categoryId,
+      status: input.status,
+      page: input.page,
+      perPage: input.perPage,
+    })),
 
   create: workspaceEditorProcedure
     .input(

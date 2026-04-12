@@ -4,21 +4,54 @@ import { toMinorUnits } from "@/lib/money";
 import { fxService } from "@/server/services/fx-service";
 
 export const expenseService = {
-  async listWorkspaceExpenses(workspaceId: string) {
-    const expenses = await db.expense.findMany({
-      where: { workspaceId },
-      include: {
-        category: { include: { parentCategory: true } },
-        createdByUser: { select: { name: true, email: true } },
-      },
-      orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
-    });
+  async listWorkspaceExpenses(workspaceId: string, options?: {
+    search?: string;
+    categoryId?: string;
+    status?: string;
+    page?: number;
+    perPage?: number;
+  }) {
+    const page = options?.page ?? 1;
+    const perPage = options?.perPage ?? 20;
+    const skip = (page - 1) * perPage;
 
-    return expenses.map((expense) => ({
-      ...expense,
-      categoryPath: expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name,
-      createdByLabel: expense.createdByUser.name || expense.createdByUser.email,
-    }));
+    const where: Record<string, unknown> = { workspaceId };
+
+    if (options?.search) {
+      where.title = { contains: options.search, mode: "insensitive" };
+    }
+    if (options?.categoryId) {
+      where.categoryId = options.categoryId;
+    }
+    if (options?.status && options.status !== "all") {
+      where.status = options.status;
+    }
+
+    const [expenses, total] = await Promise.all([
+      db.expense.findMany({
+        where,
+        include: {
+          category: { include: { parentCategory: true } },
+          createdByUser: { select: { name: true, email: true } },
+        },
+        orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
+        skip,
+        take: perPage,
+      }),
+      db.expense.count({ where }),
+    ]);
+
+    return {
+      items: expenses.map((expense) => ({
+        ...expense,
+        categoryPath: expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name,
+        createdByLabel: expense.createdByUser.name || expense.createdByUser.email,
+      })),
+      total,
+      page,
+      perPage,
+      totalPages: Math.ceil(total / perPage),
+    };
   },
 
   async create(input: {
