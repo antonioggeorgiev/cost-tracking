@@ -1,46 +1,39 @@
-import { createWorkspaceAction } from "@/app/(app)/app/actions";
+import { createWorkspaceAction } from "@/app/(app)/workspaces/actions";
 import { supportedCurrencies } from "@/lib/currency";
+import { Plus } from "lucide-react";
 
 export function WorkspaceCreator() {
   return (
-    <section className="card rounded-3xl p-6">
-      <p className="text-sm uppercase tracking-[0.2em] text-emerald-200">Workspace setup</p>
-      <h2 className="mt-3 text-2xl font-semibold text-white">Create your first workspace</h2>
-      <p className="mt-3 max-w-2xl text-slate-300">
-        Start with a workspace for your apartment renovation, shared household spending, or another financial context.
+    <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <h2 className="font-heading text-base font-semibold text-heading">Create a new workspace</h2>
+      <p className="mt-1 text-sm text-muted">
+        Start with a workspace for your renovation, shared household, or another financial context.
       </p>
 
-      <form action={createWorkspaceAction} className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_180px_auto]">
-        <label className="grid gap-2 text-sm text-slate-200">
-          <span>Workspace name</span>
+      <form action={createWorkspaceAction} className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end">
+        <label className="grid flex-1 gap-1.5 text-sm">
+          <span className="font-medium text-heading">Workspace name</span>
           <input
             name="name"
             required
             placeholder="Apartment renovation"
-            className="rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10"
           />
         </label>
 
-        <label className="grid gap-2 text-sm text-slate-200">
-          <span>Base currency</span>
-          <select
-            name="baseCurrencyCode"
-            defaultValue="BGN"
-            className="rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-white outline-none"
-          >
+        <label className="grid w-full sm:w-[160px] gap-1.5 text-sm">
+          <span className="font-medium text-heading">Base currency</span>
+          <select name="baseCurrencyCode" defaultValue="BGN" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
             {supportedCurrencies.map((currency) => (
-              <option key={currency} value={currency}>
-                {currency}
-              </option>
+              <option key={currency} value={currency}>{currency}</option>
             ))}
           </select>
         </label>
 
-        <div className="flex items-end">
-          <button className="w-full rounded-2xl bg-emerald-300 px-5 py-3 font-medium text-slate-950">
-            Create workspace
-          </button>
-        </div>
+        <button className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90">
+          <Plus size={16} />
+          Create
+        </button>
       </form>
     </section>
   );

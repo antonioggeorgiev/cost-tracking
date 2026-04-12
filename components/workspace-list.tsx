@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { MemberRoleBadge } from "@/components/member-role-badge";
+import { routes } from "@/lib/routes";
+import { ChevronRight } from "lucide-react";
 
 type WorkspaceListProps = {
   workspaces: Array<{
@@ -12,34 +15,28 @@ type WorkspaceListProps = {
 
 export function WorkspaceList({ workspaces }: WorkspaceListProps) {
   return (
-    <section className="card rounded-3xl p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-emerald-200">Workspaces</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">Your shared finance spaces</h2>
-        </div>
-        <p className="text-sm text-slate-400">{workspaces.length} total</p>
+    <section className="rounded-2xl border border-border bg-surface shadow-sm">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
+        <h2 className="font-heading text-base font-semibold text-heading">Your Workspaces</h2>
+        <span className="text-sm text-muted">{workspaces.length} total</span>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="divide-y divide-border">
         {workspaces.map((workspace) => (
           <Link
             key={workspace.id}
-            href={`/app/${workspace.slug}`}
-            className="rounded-3xl border border-white/10 bg-slate-950/30 p-5 transition hover:border-emerald-300/30 hover:bg-slate-950/40"
+            href={routes.workspace(workspace.slug)}
+            className="flex items-center gap-4 px-6 py-4 transition hover:bg-surface-secondary"
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-semibold text-white">{workspace.name}</h3>
-                <p className="mt-2 text-sm text-slate-400">/{workspace.slug}</p>
-              </div>
-              <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.15em] text-slate-300">
-                {workspace.role}
-              </span>
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-lighter text-primary font-bold text-sm">
+              {workspace.name.charAt(0).toUpperCase()}
             </div>
-            <p className="mt-4 text-sm text-slate-300">
-              Base currency: <span className="font-medium text-white">{workspace.baseCurrencyCode}</span>
-            </p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-medium text-heading">{workspace.name}</p>
+              <p className="mt-0.5 text-xs text-muted">/{workspace.slug} · {workspace.baseCurrencyCode}</p>
+            </div>
+            <MemberRoleBadge role={workspace.role} />
+            <ChevronRight size={16} className="text-muted" />
           </Link>
         ))}
       </div>
