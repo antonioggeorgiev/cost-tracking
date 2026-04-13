@@ -31,6 +31,7 @@ export type RecurringExpenseTemplateAvgAggregateOutputType = {
   workspaceAmountMinor: number | null
   exchangeRate: runtime.Decimal | null
   interval: number | null
+  anchorDays: number | null
 }
 
 export type RecurringExpenseTemplateSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type RecurringExpenseTemplateSumAggregateOutputType = {
   workspaceAmountMinor: number | null
   exchangeRate: runtime.Decimal | null
   interval: number | null
+  anchorDays: number[]
 }
 
 export type RecurringExpenseTemplateMinAggregateOutputType = {
@@ -45,6 +47,7 @@ export type RecurringExpenseTemplateMinAggregateOutputType = {
   workspaceId: string | null
   categoryId: string | null
   createdByUserId: string | null
+  kind: $Enums.RecurringTemplateKind | null
   title: string | null
   description: string | null
   originalAmountMinor: number | null
@@ -61,6 +64,7 @@ export type RecurringExpenseTemplateMinAggregateOutputType = {
   lastGeneratedAt: Date | null
   defaultStatus: $Enums.ExpenseStatus | null
   isActive: boolean | null
+  paymentUrl: string | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,6 +75,7 @@ export type RecurringExpenseTemplateMaxAggregateOutputType = {
   workspaceId: string | null
   categoryId: string | null
   createdByUserId: string | null
+  kind: $Enums.RecurringTemplateKind | null
   title: string | null
   description: string | null
   originalAmountMinor: number | null
@@ -87,6 +92,7 @@ export type RecurringExpenseTemplateMaxAggregateOutputType = {
   lastGeneratedAt: Date | null
   defaultStatus: $Enums.ExpenseStatus | null
   isActive: boolean | null
+  paymentUrl: string | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -97,6 +103,7 @@ export type RecurringExpenseTemplateCountAggregateOutputType = {
   workspaceId: number
   categoryId: number
   createdByUserId: number
+  kind: number
   title: number
   description: number
   originalAmountMinor: number
@@ -107,12 +114,14 @@ export type RecurringExpenseTemplateCountAggregateOutputType = {
   exchangeRateDate: number
   frequency: number
   interval: number
+  anchorDays: number
   startDate: number
   endDate: number
   nextOccurrenceDate: number
   lastGeneratedAt: number
   defaultStatus: number
   isActive: number
+  paymentUrl: number
   notes: number
   createdAt: number
   updatedAt: number
@@ -125,6 +134,7 @@ export type RecurringExpenseTemplateAvgAggregateInputType = {
   workspaceAmountMinor?: true
   exchangeRate?: true
   interval?: true
+  anchorDays?: true
 }
 
 export type RecurringExpenseTemplateSumAggregateInputType = {
@@ -132,6 +142,7 @@ export type RecurringExpenseTemplateSumAggregateInputType = {
   workspaceAmountMinor?: true
   exchangeRate?: true
   interval?: true
+  anchorDays?: true
 }
 
 export type RecurringExpenseTemplateMinAggregateInputType = {
@@ -139,6 +150,7 @@ export type RecurringExpenseTemplateMinAggregateInputType = {
   workspaceId?: true
   categoryId?: true
   createdByUserId?: true
+  kind?: true
   title?: true
   description?: true
   originalAmountMinor?: true
@@ -155,6 +167,7 @@ export type RecurringExpenseTemplateMinAggregateInputType = {
   lastGeneratedAt?: true
   defaultStatus?: true
   isActive?: true
+  paymentUrl?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -165,6 +178,7 @@ export type RecurringExpenseTemplateMaxAggregateInputType = {
   workspaceId?: true
   categoryId?: true
   createdByUserId?: true
+  kind?: true
   title?: true
   description?: true
   originalAmountMinor?: true
@@ -181,6 +195,7 @@ export type RecurringExpenseTemplateMaxAggregateInputType = {
   lastGeneratedAt?: true
   defaultStatus?: true
   isActive?: true
+  paymentUrl?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -191,6 +206,7 @@ export type RecurringExpenseTemplateCountAggregateInputType = {
   workspaceId?: true
   categoryId?: true
   createdByUserId?: true
+  kind?: true
   title?: true
   description?: true
   originalAmountMinor?: true
@@ -201,12 +217,14 @@ export type RecurringExpenseTemplateCountAggregateInputType = {
   exchangeRateDate?: true
   frequency?: true
   interval?: true
+  anchorDays?: true
   startDate?: true
   endDate?: true
   nextOccurrenceDate?: true
   lastGeneratedAt?: true
   defaultStatus?: true
   isActive?: true
+  paymentUrl?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -304,22 +322,25 @@ export type RecurringExpenseTemplateGroupByOutputType = {
   workspaceId: string
   categoryId: string
   createdByUserId: string
+  kind: $Enums.RecurringTemplateKind
   title: string
   description: string | null
-  originalAmountMinor: number
+  originalAmountMinor: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal
-  exchangeRateDate: Date
+  exchangeRate: runtime.Decimal | null
+  exchangeRateDate: Date | null
   frequency: $Enums.RecurringFrequency
   interval: number
+  anchorDays: number[]
   startDate: Date
   endDate: Date | null
   nextOccurrenceDate: Date
   lastGeneratedAt: Date | null
   defaultStatus: $Enums.ExpenseStatus
   isActive: boolean
+  paymentUrl: string | null
   notes: string | null
   createdAt: Date
   updatedAt: Date
@@ -353,22 +374,25 @@ export type RecurringExpenseTemplateWhereInput = {
   workspaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
+  kind?: Prisma.EnumRecurringTemplateKindFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
   title?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   description?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
-  originalAmountMinor?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  originalAmountMinor?: Prisma.IntNullableFilter<"RecurringExpenseTemplate"> | number | null
   originalCurrencyCode?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  workspaceAmountMinor?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  workspaceAmountMinor?: Prisma.IntNullableFilter<"RecurringExpenseTemplate"> | number | null
   workspaceCurrencyCode?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  exchangeRate?: Prisma.DecimalFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
+  exchangeRate?: Prisma.DecimalNullableFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFilter<"RecurringExpenseTemplate"> | $Enums.RecurringFrequency
   interval?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  anchorDays?: Prisma.IntNullableListFilter<"RecurringExpenseTemplate">
   startDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   endDate?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   lastGeneratedAt?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFilter<"RecurringExpenseTemplate"> | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFilter<"RecurringExpenseTemplate"> | boolean
+  paymentUrl?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   notes?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
@@ -383,22 +407,25 @@ export type RecurringExpenseTemplateOrderByWithRelationInput = {
   workspaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  originalAmountMinor?: Prisma.SortOrder
+  originalAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   originalCurrencyCode?: Prisma.SortOrder
-  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   workspaceCurrencyCode?: Prisma.SortOrder
-  exchangeRate?: Prisma.SortOrder
-  exchangeRateDate?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrderInput | Prisma.SortOrder
   frequency?: Prisma.SortOrder
   interval?: Prisma.SortOrder
+  anchorDays?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   nextOccurrenceDate?: Prisma.SortOrder
   lastGeneratedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultStatus?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  paymentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -416,22 +443,25 @@ export type RecurringExpenseTemplateWhereUniqueInput = Prisma.AtLeast<{
   workspaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
+  kind?: Prisma.EnumRecurringTemplateKindFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
   title?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   description?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
-  originalAmountMinor?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  originalAmountMinor?: Prisma.IntNullableFilter<"RecurringExpenseTemplate"> | number | null
   originalCurrencyCode?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  workspaceAmountMinor?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  workspaceAmountMinor?: Prisma.IntNullableFilter<"RecurringExpenseTemplate"> | number | null
   workspaceCurrencyCode?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  exchangeRate?: Prisma.DecimalFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
+  exchangeRate?: Prisma.DecimalNullableFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFilter<"RecurringExpenseTemplate"> | $Enums.RecurringFrequency
   interval?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  anchorDays?: Prisma.IntNullableListFilter<"RecurringExpenseTemplate">
   startDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   endDate?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   lastGeneratedAt?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFilter<"RecurringExpenseTemplate"> | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFilter<"RecurringExpenseTemplate"> | boolean
+  paymentUrl?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   notes?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
@@ -446,22 +476,25 @@ export type RecurringExpenseTemplateOrderByWithAggregationInput = {
   workspaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  originalAmountMinor?: Prisma.SortOrder
+  originalAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   originalCurrencyCode?: Prisma.SortOrder
-  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   workspaceCurrencyCode?: Prisma.SortOrder
-  exchangeRate?: Prisma.SortOrder
-  exchangeRateDate?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrderInput | Prisma.SortOrder
   frequency?: Prisma.SortOrder
   interval?: Prisma.SortOrder
+  anchorDays?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   nextOccurrenceDate?: Prisma.SortOrder
   lastGeneratedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultStatus?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  paymentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -480,22 +513,25 @@ export type RecurringExpenseTemplateScalarWhereWithAggregatesInput = {
   workspaceId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
+  kind?: Prisma.EnumRecurringTemplateKindWithAggregatesFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
   title?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | string | null
-  originalAmountMinor?: Prisma.IntWithAggregatesFilter<"RecurringExpenseTemplate"> | number
+  originalAmountMinor?: Prisma.IntNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | number | null
   originalCurrencyCode?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
-  workspaceAmountMinor?: Prisma.IntWithAggregatesFilter<"RecurringExpenseTemplate"> | number
+  workspaceAmountMinor?: Prisma.IntNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | number | null
   workspaceCurrencyCode?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
-  exchangeRate?: Prisma.DecimalWithAggregatesFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string
+  exchangeRate?: Prisma.DecimalNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.DateTimeNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyWithAggregatesFilter<"RecurringExpenseTemplate"> | $Enums.RecurringFrequency
   interval?: Prisma.IntWithAggregatesFilter<"RecurringExpenseTemplate"> | number
+  anchorDays?: Prisma.IntNullableListFilter<"RecurringExpenseTemplate">
   startDate?: Prisma.DateTimeWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string
   lastGeneratedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusWithAggregatesFilter<"RecurringExpenseTemplate"> | $Enums.ExpenseStatus
   isActive?: Prisma.BoolWithAggregatesFilter<"RecurringExpenseTemplate"> | boolean
+  paymentUrl?: Prisma.StringNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"RecurringExpenseTemplate"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RecurringExpenseTemplate"> | Date | string
@@ -503,22 +539,25 @@ export type RecurringExpenseTemplateScalarWhereWithAggregatesInput = {
 
 export type RecurringExpenseTemplateCreateInput = {
   id?: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -533,22 +572,25 @@ export type RecurringExpenseTemplateUncheckedCreateInput = {
   workspaceId: string
   categoryId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -557,22 +599,25 @@ export type RecurringExpenseTemplateUncheckedCreateInput = {
 
 export type RecurringExpenseTemplateUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -587,22 +632,25 @@ export type RecurringExpenseTemplateUncheckedUpdateInput = {
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -614,22 +662,25 @@ export type RecurringExpenseTemplateCreateManyInput = {
   workspaceId: string
   categoryId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -637,22 +688,25 @@ export type RecurringExpenseTemplateCreateManyInput = {
 
 export type RecurringExpenseTemplateUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -663,22 +717,25 @@ export type RecurringExpenseTemplateUncheckedUpdateManyInput = {
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -704,6 +761,7 @@ export type RecurringExpenseTemplateCountOrderByAggregateInput = {
   workspaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   originalAmountMinor?: Prisma.SortOrder
@@ -714,12 +772,14 @@ export type RecurringExpenseTemplateCountOrderByAggregateInput = {
   exchangeRateDate?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
   interval?: Prisma.SortOrder
+  anchorDays?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   nextOccurrenceDate?: Prisma.SortOrder
   lastGeneratedAt?: Prisma.SortOrder
   defaultStatus?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  paymentUrl?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -730,6 +790,7 @@ export type RecurringExpenseTemplateAvgOrderByAggregateInput = {
   workspaceAmountMinor?: Prisma.SortOrder
   exchangeRate?: Prisma.SortOrder
   interval?: Prisma.SortOrder
+  anchorDays?: Prisma.SortOrder
 }
 
 export type RecurringExpenseTemplateMaxOrderByAggregateInput = {
@@ -737,6 +798,7 @@ export type RecurringExpenseTemplateMaxOrderByAggregateInput = {
   workspaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   originalAmountMinor?: Prisma.SortOrder
@@ -753,6 +815,7 @@ export type RecurringExpenseTemplateMaxOrderByAggregateInput = {
   lastGeneratedAt?: Prisma.SortOrder
   defaultStatus?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  paymentUrl?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -763,6 +826,7 @@ export type RecurringExpenseTemplateMinOrderByAggregateInput = {
   workspaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   originalAmountMinor?: Prisma.SortOrder
@@ -779,6 +843,7 @@ export type RecurringExpenseTemplateMinOrderByAggregateInput = {
   lastGeneratedAt?: Prisma.SortOrder
   defaultStatus?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  paymentUrl?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -789,6 +854,7 @@ export type RecurringExpenseTemplateSumOrderByAggregateInput = {
   workspaceAmountMinor?: Prisma.SortOrder
   exchangeRate?: Prisma.SortOrder
   interval?: Prisma.SortOrder
+  anchorDays?: Prisma.SortOrder
 }
 
 export type RecurringExpenseTemplateCreateNestedManyWithoutCategoryInput = {
@@ -849,8 +915,29 @@ export type RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateToOneWithWhereWithoutExpensesInput, Prisma.RecurringExpenseTemplateUpdateWithoutExpensesInput>, Prisma.RecurringExpenseTemplateUncheckedUpdateWithoutExpensesInput>
 }
 
+export type RecurringExpenseTemplateCreateanchorDaysInput = {
+  set: number[]
+}
+
+export type EnumRecurringTemplateKindFieldUpdateOperationsInput = {
+  set?: $Enums.RecurringTemplateKind
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type EnumRecurringFrequencyFieldUpdateOperationsInput = {
   set?: $Enums.RecurringFrequency
+}
+
+export type RecurringExpenseTemplateUpdateanchorDaysInput = {
+  set?: number[]
+  push?: number | number[]
 }
 
 export type RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput = {
@@ -939,22 +1026,25 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutWorkspaceNestedInp
 
 export type RecurringExpenseTemplateCreateWithoutCategoryInput = {
   id?: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -967,22 +1057,25 @@ export type RecurringExpenseTemplateUncheckedCreateWithoutCategoryInput = {
   id?: string
   workspaceId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1023,22 +1116,25 @@ export type RecurringExpenseTemplateScalarWhereInput = {
   workspaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
+  kind?: Prisma.EnumRecurringTemplateKindFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
   title?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   description?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
-  originalAmountMinor?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  originalAmountMinor?: Prisma.IntNullableFilter<"RecurringExpenseTemplate"> | number | null
   originalCurrencyCode?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  workspaceAmountMinor?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  workspaceAmountMinor?: Prisma.IntNullableFilter<"RecurringExpenseTemplate"> | number | null
   workspaceCurrencyCode?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  exchangeRate?: Prisma.DecimalFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
+  exchangeRate?: Prisma.DecimalNullableFilter<"RecurringExpenseTemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFilter<"RecurringExpenseTemplate"> | $Enums.RecurringFrequency
   interval?: Prisma.IntFilter<"RecurringExpenseTemplate"> | number
+  anchorDays?: Prisma.IntNullableListFilter<"RecurringExpenseTemplate">
   startDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   endDate?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   lastGeneratedAt?: Prisma.DateTimeNullableFilter<"RecurringExpenseTemplate"> | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFilter<"RecurringExpenseTemplate"> | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFilter<"RecurringExpenseTemplate"> | boolean
+  paymentUrl?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   notes?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
@@ -1046,22 +1142,25 @@ export type RecurringExpenseTemplateScalarWhereInput = {
 
 export type RecurringExpenseTemplateCreateWithoutExpensesInput = {
   id?: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1075,22 +1174,25 @@ export type RecurringExpenseTemplateUncheckedCreateWithoutExpensesInput = {
   workspaceId: string
   categoryId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1114,22 +1216,25 @@ export type RecurringExpenseTemplateUpdateToOneWithWhereWithoutExpensesInput = {
 
 export type RecurringExpenseTemplateUpdateWithoutExpensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1143,22 +1248,25 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutExpensesInput = {
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1166,22 +1274,25 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutExpensesInput = {
 
 export type RecurringExpenseTemplateCreateWithoutCreatedByUserInput = {
   id?: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1194,22 +1305,25 @@ export type RecurringExpenseTemplateUncheckedCreateWithoutCreatedByUserInput = {
   id?: string
   workspaceId: string
   categoryId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1244,22 +1358,25 @@ export type RecurringExpenseTemplateUpdateManyWithWhereWithoutCreatedByUserInput
 
 export type RecurringExpenseTemplateCreateWithoutWorkspaceInput = {
   id?: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1272,22 +1389,25 @@ export type RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput = {
   id?: string
   categoryId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1324,22 +1444,25 @@ export type RecurringExpenseTemplateCreateManyCategoryInput = {
   id?: string
   workspaceId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1347,22 +1470,25 @@ export type RecurringExpenseTemplateCreateManyCategoryInput = {
 
 export type RecurringExpenseTemplateUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1375,22 +1501,25 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1401,22 +1530,25 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1426,22 +1558,25 @@ export type RecurringExpenseTemplateCreateManyCreatedByUserInput = {
   id?: string
   workspaceId: string
   categoryId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1449,22 +1584,25 @@ export type RecurringExpenseTemplateCreateManyCreatedByUserInput = {
 
 export type RecurringExpenseTemplateUpdateWithoutCreatedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1477,22 +1615,25 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutCreatedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1503,22 +1644,25 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserInput
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1528,22 +1672,25 @@ export type RecurringExpenseTemplateCreateManyWorkspaceInput = {
   id?: string
   categoryId: string
   createdByUserId: string
+  kind?: $Enums.RecurringTemplateKind
   title: string
   description?: string | null
-  originalAmountMinor: number
+  originalAmountMinor?: number | null
   originalCurrencyCode: string
-  workspaceAmountMinor: number
+  workspaceAmountMinor?: number | null
   workspaceCurrencyCode: string
-  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate: Date | string
+  exchangeRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Date | string | null
   frequency: $Enums.RecurringFrequency
   interval?: number
+  anchorDays?: Prisma.RecurringExpenseTemplateCreateanchorDaysInput | number[]
   startDate: Date | string
   endDate?: Date | string | null
   nextOccurrenceDate: Date | string
   lastGeneratedAt?: Date | string | null
   defaultStatus?: $Enums.ExpenseStatus
   isActive?: boolean
+  paymentUrl?: string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1551,22 +1698,25 @@ export type RecurringExpenseTemplateCreateManyWorkspaceInput = {
 
 export type RecurringExpenseTemplateUpdateWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1579,22 +1729,25 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1605,22 +1758,25 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
-  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exchangeRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  exchangeRateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   frequency?: Prisma.EnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency
   interval?: Prisma.IntFieldUpdateOperationsInput | number
+  anchorDays?: Prisma.RecurringExpenseTemplateUpdateanchorDaysInput | number[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextOccurrenceDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   defaultStatus?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1662,6 +1818,7 @@ export type RecurringExpenseTemplateSelect<ExtArgs extends runtime.Types.Extensi
   workspaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
+  kind?: boolean
   title?: boolean
   description?: boolean
   originalAmountMinor?: boolean
@@ -1672,12 +1829,14 @@ export type RecurringExpenseTemplateSelect<ExtArgs extends runtime.Types.Extensi
   exchangeRateDate?: boolean
   frequency?: boolean
   interval?: boolean
+  anchorDays?: boolean
   startDate?: boolean
   endDate?: boolean
   nextOccurrenceDate?: boolean
   lastGeneratedAt?: boolean
   defaultStatus?: boolean
   isActive?: boolean
+  paymentUrl?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1693,6 +1852,7 @@ export type RecurringExpenseTemplateSelectCreateManyAndReturn<ExtArgs extends ru
   workspaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
+  kind?: boolean
   title?: boolean
   description?: boolean
   originalAmountMinor?: boolean
@@ -1703,12 +1863,14 @@ export type RecurringExpenseTemplateSelectCreateManyAndReturn<ExtArgs extends ru
   exchangeRateDate?: boolean
   frequency?: boolean
   interval?: boolean
+  anchorDays?: boolean
   startDate?: boolean
   endDate?: boolean
   nextOccurrenceDate?: boolean
   lastGeneratedAt?: boolean
   defaultStatus?: boolean
   isActive?: boolean
+  paymentUrl?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1722,6 +1884,7 @@ export type RecurringExpenseTemplateSelectUpdateManyAndReturn<ExtArgs extends ru
   workspaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
+  kind?: boolean
   title?: boolean
   description?: boolean
   originalAmountMinor?: boolean
@@ -1732,12 +1895,14 @@ export type RecurringExpenseTemplateSelectUpdateManyAndReturn<ExtArgs extends ru
   exchangeRateDate?: boolean
   frequency?: boolean
   interval?: boolean
+  anchorDays?: boolean
   startDate?: boolean
   endDate?: boolean
   nextOccurrenceDate?: boolean
   lastGeneratedAt?: boolean
   defaultStatus?: boolean
   isActive?: boolean
+  paymentUrl?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1751,6 +1916,7 @@ export type RecurringExpenseTemplateSelectScalar = {
   workspaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
+  kind?: boolean
   title?: boolean
   description?: boolean
   originalAmountMinor?: boolean
@@ -1761,18 +1927,20 @@ export type RecurringExpenseTemplateSelectScalar = {
   exchangeRateDate?: boolean
   frequency?: boolean
   interval?: boolean
+  anchorDays?: boolean
   startDate?: boolean
   endDate?: boolean
   nextOccurrenceDate?: boolean
   lastGeneratedAt?: boolean
   defaultStatus?: boolean
   isActive?: boolean
+  paymentUrl?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RecurringExpenseTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "categoryId" | "createdByUserId" | "title" | "description" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "frequency" | "interval" | "startDate" | "endDate" | "nextOccurrenceDate" | "lastGeneratedAt" | "defaultStatus" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["recurringExpenseTemplate"]>
+export type RecurringExpenseTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "categoryId" | "createdByUserId" | "kind" | "title" | "description" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "frequency" | "interval" | "anchorDays" | "startDate" | "endDate" | "nextOccurrenceDate" | "lastGeneratedAt" | "defaultStatus" | "isActive" | "paymentUrl" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["recurringExpenseTemplate"]>
 export type RecurringExpenseTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1804,22 +1972,25 @@ export type $RecurringExpenseTemplatePayload<ExtArgs extends runtime.Types.Exten
     workspaceId: string
     categoryId: string
     createdByUserId: string
+    kind: $Enums.RecurringTemplateKind
     title: string
     description: string | null
-    originalAmountMinor: number
+    originalAmountMinor: number | null
     originalCurrencyCode: string
-    workspaceAmountMinor: number
+    workspaceAmountMinor: number | null
     workspaceCurrencyCode: string
-    exchangeRate: runtime.Decimal
-    exchangeRateDate: Date
+    exchangeRate: runtime.Decimal | null
+    exchangeRateDate: Date | null
     frequency: $Enums.RecurringFrequency
     interval: number
+    anchorDays: number[]
     startDate: Date
     endDate: Date | null
     nextOccurrenceDate: Date
     lastGeneratedAt: Date | null
     defaultStatus: $Enums.ExpenseStatus
     isActive: boolean
+    paymentUrl: string | null
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -2254,6 +2425,7 @@ export interface RecurringExpenseTemplateFieldRefs {
   readonly workspaceId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly categoryId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly createdByUserId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
+  readonly kind: Prisma.FieldRef<"RecurringExpenseTemplate", 'RecurringTemplateKind'>
   readonly title: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly description: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly originalAmountMinor: Prisma.FieldRef<"RecurringExpenseTemplate", 'Int'>
@@ -2264,12 +2436,14 @@ export interface RecurringExpenseTemplateFieldRefs {
   readonly exchangeRateDate: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>
   readonly frequency: Prisma.FieldRef<"RecurringExpenseTemplate", 'RecurringFrequency'>
   readonly interval: Prisma.FieldRef<"RecurringExpenseTemplate", 'Int'>
+  readonly anchorDays: Prisma.FieldRef<"RecurringExpenseTemplate", 'Int[]'>
   readonly startDate: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>
   readonly nextOccurrenceDate: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>
   readonly lastGeneratedAt: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>
   readonly defaultStatus: Prisma.FieldRef<"RecurringExpenseTemplate", 'ExpenseStatus'>
   readonly isActive: Prisma.FieldRef<"RecurringExpenseTemplate", 'Boolean'>
+  readonly paymentUrl: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly notes: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly createdAt: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"RecurringExpenseTemplate", 'DateTime'>

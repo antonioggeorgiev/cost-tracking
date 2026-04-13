@@ -3,17 +3,29 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { DebtAccountKind, DebtDirection, RecurringFrequency } from "@/generated/prisma/enums";
 import { supportedCurrencies } from "@/lib/currency";
 import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createDebtAccountSchema = z.object({
   workspaceSlug: z.string().min(1),
+  kind: z.nativeEnum(DebtAccountKind),
+  direction: z.nativeEnum(DebtDirection),
   name: z.string().trim().min(2).max(120),
   provider: z.string().max(120).optional().nullable(),
+  counterparty: z.string().max(120).optional().nullable(),
   originalAmount: z.coerce.number().positive(),
   currencyCode: z.enum(supportedCurrencies),
   openedAt: z.string().min(1),
+  interestRateBps: z.coerce.number().int().min(0).optional().nullable(),
+  termMonths: z.coerce.number().int().min(1).optional().nullable(),
+  monthlyAmount: z.coerce.number().positive().optional().nullable(),
+  residualValue: z.coerce.number().min(0).optional().nullable(),
+  frequency: z.nativeEnum(RecurringFrequency).optional().nullable(),
+  interval: z.coerce.number().int().min(1).optional().nullable(),
+  anchorDays: z.string().optional().nullable(),
+  nextPaymentDate: z.string().optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
 });
 
@@ -30,11 +42,22 @@ const createDebtPaymentSchema = z.object({
 export async function createDebtAccountAction(formData: FormData) {
   const input = createDebtAccountSchema.parse({
     workspaceSlug: formData.get("workspaceSlug"),
+    kind: formData.get("kind"),
+    direction: formData.get("direction"),
     name: formData.get("name"),
     provider: formData.get("provider") || null,
+    counterparty: formData.get("counterparty") || null,
     originalAmount: formData.get("originalAmount"),
     currencyCode: formData.get("currencyCode"),
     openedAt: formData.get("openedAt"),
+    interestRateBps: formData.get("interestRateBps") || null,
+    termMonths: formData.get("termMonths") || null,
+    monthlyAmount: formData.get("monthlyAmount") || null,
+    residualValue: formData.get("residualValue") || null,
+    frequency: formData.get("frequency") || null,
+    interval: formData.get("interval") || null,
+    anchorDays: formData.get("anchorDays") || null,
+    nextPaymentDate: formData.get("nextPaymentDate") || null,
     notes: formData.get("notes") || null,
   });
 
@@ -43,6 +66,8 @@ export async function createDebtAccountAction(formData: FormData) {
     await caller.debts.createAccount({
       ...input,
       openedAt: new Date(input.openedAt),
+      anchorDays: input.anchorDays ? JSON.parse(input.anchorDays) : undefined,
+      nextPaymentDate: input.nextPaymentDate ? new Date(input.nextPaymentDate) : undefined,
     });
     revalidatePath(routes.workspaceDebts(input.workspaceSlug));
     revalidatePath(routes.workspace(input.workspaceSlug));

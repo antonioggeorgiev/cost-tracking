@@ -46,11 +46,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       children: c.children.map((child) => ({ id: child.id, name: child.name })),
     }));
 
-    const result = await documentExtractionService.extractExpense(base64, file.type, categoryTree);
+    const result = await documentExtractionService.extractMultipleExpenses(base64, file.type, categoryTree);
 
     return NextResponse.json(result);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to scan receipt";
+    const message = error instanceof Error ? error.message : "Failed to scan transactions";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

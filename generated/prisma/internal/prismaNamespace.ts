@@ -1227,11 +1227,22 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 export const DebtAccountScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  kind: 'kind',
+  direction: 'direction',
   name: 'name',
   provider: 'provider',
+  counterparty: 'counterparty',
   originalAmountMinor: 'originalAmountMinor',
   currencyCode: 'currencyCode',
   currentBalanceMinor: 'currentBalanceMinor',
+  interestRateBps: 'interestRateBps',
+  termMonths: 'termMonths',
+  monthlyAmountMinor: 'monthlyAmountMinor',
+  residualValueMinor: 'residualValueMinor',
+  frequency: 'frequency',
+  interval: 'interval',
+  anchorDays: 'anchorDays',
+  nextPaymentDate: 'nextPaymentDate',
   openedAt: 'openedAt',
   isActive: 'isActive',
   notes: 'notes',
@@ -1294,6 +1305,7 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
   workspaceId: 'workspaceId',
   categoryId: 'categoryId',
   createdByUserId: 'createdByUserId',
+  kind: 'kind',
   title: 'title',
   description: 'description',
   originalAmountMinor: 'originalAmountMinor',
@@ -1304,12 +1316,14 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
   exchangeRateDate: 'exchangeRateDate',
   frequency: 'frequency',
   interval: 'interval',
+  anchorDays: 'anchorDays',
   startDate: 'startDate',
   endDate: 'endDate',
   nextOccurrenceDate: 'nextOccurrenceDate',
   lastGeneratedAt: 'lastGeneratedAt',
   defaultStatus: 'defaultStatus',
   isActive: 'isActive',
+  paymentUrl: 'paymentUrl',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1453,6 +1467,48 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'DebtAccountKind'
+ */
+export type EnumDebtAccountKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtAccountKind'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtAccountKind[]'
+ */
+export type ListEnumDebtAccountKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtAccountKind[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtDirection'
+ */
+export type EnumDebtDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtDirection'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtDirection[]'
+ */
+export type ListEnumDebtDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtDirection[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RecurringFrequency'
+ */
+export type EnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency'>
+    
+
+
+/**
+ * Reference to a field of type 'RecurringFrequency[]'
+ */
+export type ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -1495,16 +1551,16 @@ export type ListEnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'RecurringFrequency'
+ * Reference to a field of type 'RecurringTemplateKind'
  */
-export type EnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency'>
+export type EnumRecurringTemplateKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringTemplateKind'>
     
 
 
 /**
- * Reference to a field of type 'RecurringFrequency[]'
+ * Reference to a field of type 'RecurringTemplateKind[]'
  */
-export type ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency[]'>
+export type ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringTemplateKind[]'>
     
 
 

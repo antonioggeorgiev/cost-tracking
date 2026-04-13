@@ -385,6 +385,7 @@ export type ExpenseOrderByWithRelationInput = {
 
 export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  recurringTemplateId_expenseDate?: Prisma.ExpenseRecurringTemplateIdExpenseDateCompoundUniqueInput
   AND?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   OR?: Prisma.ExpenseWhereInput[]
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
@@ -414,7 +415,7 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   debtAccount?: Prisma.XOR<Prisma.DebtAccountNullableScalarRelationFilter, Prisma.DebtAccountWhereInput> | null
   debtPayment?: Prisma.XOR<Prisma.DebtPaymentNullableScalarRelationFilter, Prisma.DebtPaymentWhereInput> | null
   attachments?: Prisma.ExpenseAttachmentListRelationFilter
-}, "id">
+}, "id" | "recurringTemplateId_expenseDate">
 
 export type ExpenseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -652,6 +653,11 @@ export type ExpenseOrderByRelationAggregateInput = {
 export type ExpenseNullableScalarRelationFilter = {
   is?: Prisma.ExpenseWhereInput | null
   isNot?: Prisma.ExpenseWhereInput | null
+}
+
+export type ExpenseRecurringTemplateIdExpenseDateCompoundUniqueInput = {
+  recurringTemplateId: string
+  expenseDate: Date | string
 }
 
 export type ExpenseCountOrderByAggregateInput = {

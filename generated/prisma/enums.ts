@@ -55,3 +55,28 @@ export const RecurringFrequency = {
 } as const
 
 export type RecurringFrequency = (typeof RecurringFrequency)[keyof typeof RecurringFrequency]
+
+
+export const RecurringTemplateKind = {
+  fixed_amount: 'fixed_amount',
+  variable_amount: 'variable_amount'
+} as const
+
+export type RecurringTemplateKind = (typeof RecurringTemplateKind)[keyof typeof RecurringTemplateKind]
+
+
+export const DebtAccountKind = {
+  bank_loan: 'bank_loan',
+  personal_loan: 'personal_loan',
+  leasing: 'leasing'
+} as const
+
+export type DebtAccountKind = (typeof DebtAccountKind)[keyof typeof DebtAccountKind]
+
+
+export const DebtDirection = {
+  i_owe: 'i_owe',
+  they_owe_me: 'they_owe_me'
+} as const
+
+export type DebtDirection = (typeof DebtDirection)[keyof typeof DebtDirection]

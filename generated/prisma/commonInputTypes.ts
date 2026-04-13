@@ -202,6 +202,57 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
+export type EnumDebtAccountKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtAccountKind | Prisma.EnumDebtAccountKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtAccountKindFilter<$PrismaModel> | $Enums.DebtAccountKind
+}
+
+export type EnumDebtDirectionFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtDirection | Prisma.EnumDebtDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtDirectionFilter<$PrismaModel> | $Enums.DebtDirection
+}
+
+export type EnumRecurringFrequencyNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringFrequency | Prisma.EnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRecurringFrequencyNullableFilter<$PrismaModel> | $Enums.RecurringFrequency | null
+}
+
+export type EnumDebtAccountKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtAccountKind | Prisma.EnumDebtAccountKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtAccountKindWithAggregatesFilter<$PrismaModel> | $Enums.DebtAccountKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDebtAccountKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDebtAccountKindFilter<$PrismaModel>
+}
+
+export type EnumDebtDirectionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtDirection | Prisma.EnumDebtDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtDirectionWithAggregatesFilter<$PrismaModel> | $Enums.DebtDirection
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDebtDirectionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDebtDirectionFilter<$PrismaModel>
+}
+
+export type EnumRecurringFrequencyNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringFrequency | Prisma.EnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRecurringFrequencyNullableWithAggregatesFilter<$PrismaModel> | $Enums.RecurringFrequency | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRecurringFrequencyNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRecurringFrequencyNullableFilter<$PrismaModel>
+}
+
 export type DecimalFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
@@ -263,11 +314,55 @@ export type EnumExpenseStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumExpenseStatusFilter<$PrismaModel>
 }
 
+export type EnumRecurringTemplateKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringTemplateKind | Prisma.EnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  in?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRecurringTemplateKindFilter<$PrismaModel> | $Enums.RecurringTemplateKind
+}
+
+export type DecimalNullableFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
 export type EnumRecurringFrequencyFilter<$PrismaModel = never> = {
   equals?: $Enums.RecurringFrequency | Prisma.EnumRecurringFrequencyFieldRefInput<$PrismaModel>
   in?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel>
   notIn?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumRecurringFrequencyFilter<$PrismaModel> | $Enums.RecurringFrequency
+}
+
+export type EnumRecurringTemplateKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringTemplateKind | Prisma.EnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  in?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRecurringTemplateKindWithAggregatesFilter<$PrismaModel> | $Enums.RecurringTemplateKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRecurringTemplateKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRecurringTemplateKindFilter<$PrismaModel>
+}
+
+export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _avg?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+  _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
 }
 
 export type EnumRecurringFrequencyWithAggregatesFilter<$PrismaModel = never> = {
@@ -515,6 +610,57 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
+export type NestedEnumDebtAccountKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtAccountKind | Prisma.EnumDebtAccountKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtAccountKindFilter<$PrismaModel> | $Enums.DebtAccountKind
+}
+
+export type NestedEnumDebtDirectionFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtDirection | Prisma.EnumDebtDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtDirectionFilter<$PrismaModel> | $Enums.DebtDirection
+}
+
+export type NestedEnumRecurringFrequencyNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringFrequency | Prisma.EnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRecurringFrequencyNullableFilter<$PrismaModel> | $Enums.RecurringFrequency | null
+}
+
+export type NestedEnumDebtAccountKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtAccountKind | Prisma.EnumDebtAccountKindFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtAccountKind[] | Prisma.ListEnumDebtAccountKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtAccountKindWithAggregatesFilter<$PrismaModel> | $Enums.DebtAccountKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDebtAccountKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDebtAccountKindFilter<$PrismaModel>
+}
+
+export type NestedEnumDebtDirectionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DebtDirection | Prisma.EnumDebtDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DebtDirection[] | Prisma.ListEnumDebtDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDebtDirectionWithAggregatesFilter<$PrismaModel> | $Enums.DebtDirection
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDebtDirectionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDebtDirectionFilter<$PrismaModel>
+}
+
+export type NestedEnumRecurringFrequencyNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringFrequency | Prisma.EnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRecurringFrequencyNullableWithAggregatesFilter<$PrismaModel> | $Enums.RecurringFrequency | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRecurringFrequencyNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRecurringFrequencyNullableFilter<$PrismaModel>
+}
+
 export type NestedDecimalFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
@@ -576,11 +722,55 @@ export type NestedEnumExpenseStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumExpenseStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumRecurringTemplateKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringTemplateKind | Prisma.EnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  in?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRecurringTemplateKindFilter<$PrismaModel> | $Enums.RecurringTemplateKind
+}
+
+export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
 export type NestedEnumRecurringFrequencyFilter<$PrismaModel = never> = {
   equals?: $Enums.RecurringFrequency | Prisma.EnumRecurringFrequencyFieldRefInput<$PrismaModel>
   in?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel>
   notIn?: $Enums.RecurringFrequency[] | Prisma.ListEnumRecurringFrequencyFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumRecurringFrequencyFilter<$PrismaModel> | $Enums.RecurringFrequency
+}
+
+export type NestedEnumRecurringTemplateKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RecurringTemplateKind | Prisma.EnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  in?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RecurringTemplateKind[] | Prisma.ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRecurringTemplateKindWithAggregatesFilter<$PrismaModel> | $Enums.RecurringTemplateKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRecurringTemplateKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRecurringTemplateKindFilter<$PrismaModel>
+}
+
+export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _avg?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+  _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumRecurringFrequencyWithAggregatesFilter<$PrismaModel = never> = {

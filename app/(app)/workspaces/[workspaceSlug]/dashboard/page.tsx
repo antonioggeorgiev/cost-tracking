@@ -6,7 +6,7 @@ import { SpendingChart } from "@/components/charts/spending-chart";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
-import { FolderTree, Receipt, RefreshCw, Landmark } from "lucide-react";
+import { FolderTree, Receipt, RefreshCw, Landmark, ExternalLink } from "lucide-react";
 
 type DashboardPageProps = {
   params: Promise<{ workspaceSlug: string }>;
@@ -106,6 +106,40 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                 ))
               ) : (
                 <p className="text-sm text-muted">No category data this month.</p>
+              )}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-heading text-base font-semibold text-heading">Due Variable Bills</h2>
+              <Link href={routes.workspaceRecurring(workspace.slug)} className="text-sm font-medium text-primary hover:underline">
+                Open recurring
+              </Link>
+            </div>
+            <div className="mt-4 space-y-3">
+              {dashboard.dueVariableRecurring.length > 0 ? (
+                dashboard.dueVariableRecurring.map((item) => (
+                  <div key={item.id} className="rounded-xl border border-border px-4 py-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium text-heading">{item.title}</p>
+                        <p className="mt-1 text-xs text-muted">{item.categoryPath}</p>
+                        <p className="mt-1 text-xs text-muted">
+                          Due {new Date(item.nextOccurrenceDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </p>
+                      </div>
+                      {item.paymentUrl ? (
+                        <Link href={item.paymentUrl} target="_blank" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                          Pay
+                          <ExternalLink size={12} />
+                        </Link>
+                      ) : null}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted">No variable bills need an amount right now.</p>
               )}
             </div>
           </section>

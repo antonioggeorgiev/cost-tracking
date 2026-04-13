@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { createExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/actions";
-import { QuickAddExpenseForm } from "@/components/quick-add/quick-add-expense-form";
+import { createDebtAccountAction } from "@/app/(app)/workspaces/[workspaceSlug]/debts/actions";
+import { createRecurringTemplateAction } from "@/app/(app)/workspaces/[workspaceSlug]/recurring/actions";
+import { QuickAddPanel } from "@/components/quick-add/quick-add-panel";
 import { RecentExpensesTable } from "@/components/quick-add/recent-expenses-table";
-import { TypeSelector } from "@/components/quick-add/type-selector";
 import { supportedCurrencies } from "@/lib/currency";
 import { getServerCaller } from "@/server/trpc-caller";
 
@@ -47,24 +48,16 @@ export default async function WorkspacePage({ params, searchParams }: WorkspaceP
         <h1 className="mt-1 font-heading text-2xl font-bold text-heading">Quick Add</h1>
       </div>
 
-      {/* Type selector */}
-      <TypeSelector />
-
-      {/* Quick add form */}
-      <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-        <div className="mb-6">
-          <h2 className="font-heading text-xl font-bold text-heading">New Expense</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Record a new expense entry</p>
-        </div>
-        <QuickAddExpenseForm
-          workspaceSlug={workspaceSlug}
-          baseCurrencyCode={workspace.baseCurrencyCode}
-          categories={categoryTree}
-          currencies={supportedCurrencies}
-          createExpense={createExpenseAction}
-          createCategory={createCategoryAction}
-        />
-      </section>
+      <QuickAddPanel
+        workspaceSlug={workspaceSlug}
+        baseCurrencyCode={workspace.baseCurrencyCode}
+        categories={categoryTree}
+        currencies={supportedCurrencies}
+        createExpense={createExpenseAction}
+        createCategory={createCategoryAction}
+        createRecurring={createRecurringTemplateAction}
+        createDebtAccount={createDebtAccountAction}
+      />
 
       {/* Recent expenses table */}
       <RecentExpensesTable

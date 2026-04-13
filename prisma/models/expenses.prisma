@@ -30,6 +30,7 @@ model Expense {
   @@index([workspaceId, expenseDate])
   @@index([workspaceId, status, expenseDate])
   @@index([workspaceId, categoryId, expenseDate])
+  @@unique([recurringTemplateId, expenseDate])
 }
 
 model RecurringExpenseTemplate {
@@ -37,22 +38,25 @@ model RecurringExpenseTemplate {
   workspaceId           String
   categoryId            String
   createdByUserId       String
+  kind                  RecurringTemplateKind @default(fixed_amount)
   title                 String
   description           String?
-  originalAmountMinor   Int
+  originalAmountMinor   Int?
   originalCurrencyCode  String
-  workspaceAmountMinor  Int
+  workspaceAmountMinor  Int?
   workspaceCurrencyCode String
-  exchangeRate          Decimal              @db.Decimal(18, 8)
-  exchangeRateDate      DateTime
+  exchangeRate          Decimal?             @db.Decimal(18, 8)
+  exchangeRateDate      DateTime?
   frequency             RecurringFrequency
   interval              Int                  @default(1)
+  anchorDays            Int[]                @default([])
   startDate             DateTime
   endDate               DateTime?
   nextOccurrenceDate    DateTime
   lastGeneratedAt       DateTime?
   defaultStatus         ExpenseStatus        @default(posted)
   isActive              Boolean              @default(true)
+  paymentUrl            String?
   notes                 String?
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt

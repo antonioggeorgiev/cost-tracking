@@ -30,3 +30,19 @@ enum RecurringFrequency {
   monthly
   yearly
 }
+
+enum RecurringTemplateKind {
+  fixed_amount
+  variable_amount
+}
+
+enum DebtAccountKind {
+  bank_loan
+  personal_loan
+  leasing
+}
+
+enum DebtDirection {
+  i_owe
+  they_owe_me
+}

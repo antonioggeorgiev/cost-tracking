@@ -1,6 +1,7 @@
-import { ExpenseStatus, ExpenseType } from "@/generated/prisma/enums";
+import { DebtAccountKind, DebtDirection, ExpenseStatus, ExpenseType, RecurringFrequency } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { toMinorUnits } from "@/lib/money";
+import { addRecurringInterval } from "@/server/services/recurring-service";
 import { expenseService } from "@/server/services/expense-service";
 import { fxService } from "@/server/services/fx";
 
@@ -31,15 +32,45 @@ export const debtService = {
     });
   },
 
-  createAccount(input: { workspaceId: string; name: string; provider?: string | null; originalAmount: number; currencyCode: string; openedAt: Date; notes?: string | null }) {
+  createAccount(input: {
+    workspaceId: string;
+    kind: DebtAccountKind;
+    direction: DebtDirection;
+    name: string;
+    provider?: string | null;
+    counterparty?: string | null;
+    originalAmount: number;
+    currencyCode: string;
+    openedAt: Date;
+    interestRateBps?: number | null;
+    termMonths?: number | null;
+    monthlyAmount?: number | null;
+    residualValue?: number | null;
+    frequency?: RecurringFrequency | null;
+    interval?: number | null;
+    anchorDays?: number[] | null;
+    nextPaymentDate?: Date | null;
+    notes?: string | null;
+  }) {
     return db.debtAccount.create({
       data: {
         workspaceId: input.workspaceId,
+        kind: input.kind,
+        direction: input.direction,
         name: input.name.trim(),
         provider: input.provider?.trim() || null,
+        counterparty: input.counterparty?.trim() || null,
         originalAmountMinor: toMinorUnits(input.originalAmount),
         currencyCode: input.currencyCode,
         currentBalanceMinor: toMinorUnits(input.originalAmount),
+        interestRateBps: input.interestRateBps ?? null,
+        termMonths: input.termMonths ?? null,
+        monthlyAmountMinor: input.monthlyAmount != null ? toMinorUnits(input.monthlyAmount) : null,
+        residualValueMinor: input.residualValue != null ? toMinorUnits(input.residualValue) : null,
+        frequency: input.frequency ?? null,
+        interval: input.interval ?? null,
+        anchorDays: input.anchorDays ?? [],
+        nextPaymentDate: input.nextPaymentDate ?? null,
         openedAt: input.openedAt,
         notes: input.notes?.trim() || null,
       },
@@ -61,7 +92,7 @@ export const debtService = {
 
     const debtAccount = await db.debtAccount.findUnique({
       where: { id: input.debtAccountId },
-      select: { id: true, workspaceId: true, name: true, currentBalanceMinor: true, currencyCode: true, isActive: true },
+      select: { id: true, workspaceId: true, name: true, currentBalanceMinor: true, currencyCode: true, isActive: true, direction: true, frequency: true, interval: true, nextPaymentDate: true },
     });
     if (!debtAccount || debtAccount.workspaceId !== input.workspaceId) throw new Error("Debt account does not belong to this workspace.");
     if (!debtAccount.isActive) throw new Error("Inactive debt accounts cannot receive payments.");
@@ -80,7 +111,7 @@ export const debtService = {
     return db.$transaction(async (tx) => {
       let linkedExpenseId: string | null = null;
 
-      if (input.createLinkedExpense) {
+      if (input.createLinkedExpense && debtAccount.direction !== DebtDirection.they_owe_me) {
         const expense = await expenseService.createRecord({
           workspaceId: input.workspaceId,
           categoryId: await getDebtPaymentCategoryId(tx, input.workspaceId),
@@ -119,9 +150,27 @@ export const debtService = {
         },
       });
 
+      const newBalance = debtAccount.currentBalanceMinor - originalAmountMinor;
+      const accountUpdate: Record<string, unknown> = { currentBalanceMinor: newBalance };
+
+      // Advance nextPaymentDate if a schedule is configured
+      if (debtAccount.frequency && debtAccount.interval && debtAccount.nextPaymentDate) {
+        if (newBalance <= 0) {
+          // Debt fully paid — clear the next payment date
+          accountUpdate.nextPaymentDate = null;
+          accountUpdate.isActive = false;
+        } else {
+          accountUpdate.nextPaymentDate = addRecurringInterval(
+            debtAccount.nextPaymentDate,
+            debtAccount.frequency,
+            debtAccount.interval,
+          );
+        }
+      }
+
       await tx.debtAccount.update({
         where: { id: debtAccount.id },
-        data: { currentBalanceMinor: debtAccount.currentBalanceMinor - originalAmountMinor },
+        data: accountUpdate,
       });
 
       return payment;

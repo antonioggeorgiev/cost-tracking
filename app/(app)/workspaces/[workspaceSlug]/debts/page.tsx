@@ -1,13 +1,31 @@
 import { createDebtAccountAction, createDebtPaymentAction } from "@/app/(app)/workspaces/[workspaceSlug]/debts/actions";
+import { DebtAccountForm } from "@/components/debt/debt-account-form";
+import { DebtPaymentForm } from "@/components/debt/debt-payment-form";
 import { supportedCurrencies } from "@/lib/currency";
 import { formatMoney } from "@/lib/money";
 import { getServerCaller } from "@/server/trpc-caller";
-import { Landmark, CreditCard, Plus } from "lucide-react";
+import { Landmark, Users, Car, CreditCard } from "lucide-react";
 
 type DebtsPageProps = {
   params: Promise<{ workspaceSlug: string }>;
   searchParams: Promise<{ error?: string }>;
 };
+
+const kindIcon: Record<string, typeof Landmark> = {
+  bank_loan: Landmark,
+  personal_loan: Users,
+  leasing: Car,
+};
+
+const kindLabel: Record<string, string> = {
+  bank_loan: "Bank Loan",
+  personal_loan: "Personal",
+  leasing: "Leasing",
+};
+
+function formatPercent(rate: number) {
+  return (rate / 100).toFixed(2) + "%";
+}
 
 export default async function DebtsPage({ params, searchParams }: DebtsPageProps) {
   const { workspaceSlug } = await params;
@@ -25,6 +43,13 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
   const role = workspace.memberships[0]?.role ?? "viewer";
   const canManage = role === "owner" || role === "editor";
   const totalDebt = debts.filter((d) => d.isActive).reduce((sum, d) => sum + d.currentBalanceMinor, 0);
+
+  const activeAccounts = debts.map((d) => ({
+    id: d.id,
+    name: d.name,
+    currencyCode: d.currencyCode,
+    isActive: d.isActive,
+  }));
 
   return (
     <div className="space-y-6">
@@ -54,103 +79,27 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
         <div className="grid gap-6 lg:grid-cols-2">
           <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <h2 className="font-heading text-base font-semibold text-heading">Create debt account</h2>
-            <form action={createDebtAccountAction} className="mt-5 space-y-4">
-              <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Name</span>
-                <input name="name" required placeholder="Renovation loan" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Provider</span>
-                <input name="provider" placeholder="Optional lender or bank" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Original amount</span>
-                <input name="originalAmount" type="number" min="0.01" step="0.01" required placeholder="10000" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-
-              <div className="grid grid-cols-2 gap-4">
-                <label className="grid gap-1.5 text-sm">
-                  <span className="font-medium text-heading">Currency</span>
-                  <select name="currencyCode" defaultValue={workspace.baseCurrencyCode} className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                    {supportedCurrencies.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="grid gap-1.5 text-sm">
-                  <span className="font-medium text-heading">Opened at</span>
-                  <input name="openedAt" type="date" required defaultValue={new Date().toISOString().slice(0, 10)} className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
-                </label>
-              </div>
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Notes</span>
-                <textarea name="notes" rows={2} placeholder="Optional notes" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-
-              <button className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90">
-                <Plus size={16} />
-                Create Account
-              </button>
-            </form>
+            <div className="mt-5">
+              <DebtAccountForm
+                workspaceSlug={workspaceSlug}
+                baseCurrencyCode={workspace.baseCurrencyCode}
+                currencies={supportedCurrencies}
+                createDebtAccount={createDebtAccountAction}
+              />
+            </div>
           </section>
 
           <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <h2 className="font-heading text-base font-semibold text-heading">Record payment</h2>
-            <form action={createDebtPaymentAction} className="mt-5 space-y-4">
-              <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Debt account</span>
-                <select name="debtAccountId" required className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                  <option value="">Select account</option>
-                  {debts.filter((d) => d.isActive).map((d) => (
-                    <option key={d.id} value={d.id}>{d.name} · {d.currencyCode}</option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Payment amount</span>
-                <input name="amount" type="number" min="0.01" step="0.01" required placeholder="300" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-
-              <div className="grid grid-cols-2 gap-4">
-                <label className="grid gap-1.5 text-sm">
-                  <span className="font-medium text-heading">Currency</span>
-                  <select name="currencyCode" defaultValue={workspace.baseCurrencyCode} className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                    {supportedCurrencies.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="grid gap-1.5 text-sm">
-                  <span className="font-medium text-heading">Payment date</span>
-                  <input name="paymentDate" type="date" required defaultValue={new Date().toISOString().slice(0, 10)} className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
-                </label>
-              </div>
-
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Notes</span>
-                <textarea name="notes" rows={2} placeholder="Optional notes" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-
-              <label className="flex items-center gap-3 text-sm text-heading">
-                <input name="createLinkedExpense" type="checkbox" defaultChecked className="h-4 w-4 rounded border-border accent-primary" />
-                <span>Create a linked expense record</span>
-              </label>
-
-              <button className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90">
-                <Plus size={16} />
-                Record Payment
-              </button>
-            </form>
+            <div className="mt-5">
+              <DebtPaymentForm
+                workspaceSlug={workspaceSlug}
+                baseCurrencyCode={workspace.baseCurrencyCode}
+                currencies={supportedCurrencies}
+                debtAccounts={activeAccounts}
+                createDebtPayment={createDebtPaymentAction}
+              />
+            </div>
           </section>
         </div>
       ) : null}
@@ -169,21 +118,46 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
                 ? Math.round(((debt.originalAmountMinor - debt.currentBalanceMinor) / debt.originalAmountMinor) * 100)
                 : 0;
 
+              const Icon = kindIcon[debt.kind] ?? CreditCard;
+              const label = kindLabel[debt.kind] ?? "Debt";
+              const isPersonal = debt.kind === "personal_loan";
+              const theyOweMe = debt.direction === "they_owe_me";
+
               return (
                 <div key={debt.id} className="px-6 py-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-primary">
-                        <CreditCard size={18} />
+                        <Icon size={18} />
                       </div>
                       <div>
-                        <p className="font-medium text-heading">{debt.name}</p>
-                        <p className="text-xs text-muted">{debt.provider || "No provider"} · opened {new Date(debt.openedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-heading">{debt.name}</p>
+                          <span className="rounded-full bg-surface-secondary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
+                            {label}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted">
+                          {isPersonal && debt.counterparty
+                            ? theyOweMe
+                              ? `${debt.counterparty} owes you`
+                              : `You owe ${debt.counterparty}`
+                            : debt.provider || "No provider"}
+                          {" · opened "}
+                          {new Date(debt.openedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </p>
                       </div>
                     </div>
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase ${debt.isActive ? "bg-posted-bg text-posted" : "bg-surface-secondary text-muted"}`}>
-                      {debt.isActive ? "Active" : "Archived"}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {theyOweMe && (
+                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase text-primary">
+                          Receivable
+                        </span>
+                      )}
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase ${debt.isActive ? "bg-posted-bg text-posted" : "bg-surface-secondary text-muted"}`}>
+                        {debt.isActive ? "Active" : "Archived"}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Progress bar */}
@@ -197,8 +171,23 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
                     </div>
                   </div>
 
+                  {/* Next payment due */}
+                  {debt.nextPaymentDate && debt.isActive && (
+                    <div className="mt-4 flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5">
+                      <span className="text-sm font-medium text-primary">Next payment due:</span>
+                      <span className="text-sm font-semibold text-heading">
+                        {new Date(debt.nextPaymentDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </span>
+                      {debt.monthlyAmountMinor != null && (
+                        <span className="ml-auto text-sm font-semibold text-heading">
+                          {formatMoney(debt.monthlyAmountMinor, debt.currencyCode)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   {/* Stats */}
-                  <div className="mt-4 grid grid-cols-3 gap-3">
+                  <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
                     <div className="rounded-xl bg-surface-secondary p-3 text-center">
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted">Original</p>
                       <p className="mt-1 font-semibold text-heading text-sm">{formatMoney(debt.originalAmountMinor, debt.currencyCode)}</p>
@@ -211,6 +200,18 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted">Payments</p>
                       <p className="mt-1 font-semibold text-heading text-sm">{debt.payments.length}</p>
                     </div>
+                    {debt.interestRateBps != null && (
+                      <div className="rounded-xl bg-surface-secondary p-3 text-center">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Interest</p>
+                        <p className="mt-1 font-semibold text-heading text-sm">{formatPercent(debt.interestRateBps)}</p>
+                      </div>
+                    )}
+                    {debt.termMonths != null && (
+                      <div className="rounded-xl bg-surface-secondary p-3 text-center">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Term</p>
+                        <p className="mt-1 font-semibold text-heading text-sm">{debt.termMonths}mo</p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Recent payments */}

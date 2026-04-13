@@ -4,18 +4,22 @@ import { useForm } from "@tanstack/react-form";
 import { useStore } from "@tanstack/react-store";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
-import { format } from "date-fns";
-import { CalendarIcon, Loader2, Paperclip, ScanLine, X } from "lucide-react";
+import { useCallback, useRef, useState, useTransition } from "react";
+import { Images, Loader2, Paperclip, ScanLine, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SearchableSelect } from "@/components/ui/searchable-select";
-import { CreateCategoryDialog } from "@/components/create-category-dialog";
-import { cn } from "@/lib/utils";
+import {
+  AmountInput,
+  CategorySelect,
+  CurrencySelect,
+  DatePickerField,
+  FormError,
+  StatusSelect,
+} from "@/components/form-fields";
 import { saveAttachmentsAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/attachment-action";
+import { BulkExpenseCard, type BulkItemStatus, type BulkCardHandle } from "@/components/quick-add/bulk-expense-card";
+import type { ExpenseExtractionResult } from "@/server/services/document-extraction-service";
 
 type Category = {
   id: string;
@@ -43,12 +47,6 @@ const expenseFormSchema = z.object({
   description: z.string().max(500),
 });
 
-const statusItems = [
-  { value: "planned", label: "Planned" },
-  { value: "pending", label: "Pending" },
-  { value: "posted", label: "Posted" },
-];
-
 export function QuickAddExpenseForm({
   workspaceSlug,
   baseCurrencyCode,
@@ -60,7 +58,6 @@ export function QuickAddExpenseForm({
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -117,12 +114,115 @@ export function QuickAddExpenseForm({
   });
 
   const selectedParentId = useStore(form.store, (state) => state.values.parentCategoryId);
-  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
-  const [subcategoryDialogOpen, setSubcategoryDialogOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isScanning, setIsScanning] = useState(false);
   const receiptInputRef = useRef<HTMLInputElement>(null);
+
+  // Bulk scan state
+  type BulkItem = {
+    id: string;
+    data: ExpenseExtractionResult;
+    status: BulkItemStatus;
+    error?: string;
+  };
+  const [bulkItems, setBulkItems] = useState<BulkItem[]>([]);
+  const [isBulkScanning, setIsBulkScanning] = useState(false);
+  const [bulkScanError, setBulkScanError] = useState<string | null>(null);
+  const [isSubmittingAll, setIsSubmittingAll] = useState(false);
+  const bulkInputRef = useRef<HTMLInputElement>(null);
+  const bulkFormRefs = useRef<Map<string, BulkCardHandle>>(new Map());
+
+  const isBulkMode = bulkItems.length > 0;
+
+  async function handleBulkScan(scannedFile: File) {
+    setIsBulkScanning(true);
+    setBulkScanError(null);
+    try {
+      const body = new FormData();
+      body.set("file", scannedFile);
+      body.set("workspaceSlug", workspaceSlug);
+      const res = await fetch("/api/scan-bulk", { method: "POST", body });
+      const result = await res.json();
+
+      if (result.error) {
+        setBulkScanError(result.error);
+        return;
+      }
+
+      if (!result.expenses || result.expenses.length === 0) {
+        setBulkScanError("No transactions found in the screenshot.");
+        return;
+      }
+
+      setBulkItems(
+        result.expenses.map((expense: ExpenseExtractionResult, i: number) => ({
+          id: `bulk-${Date.now()}-${i}`,
+          data: expense,
+          status: "pending" as const,
+        })),
+      );
+    } catch {
+      setBulkScanError("Failed to scan screenshot. Please try again.");
+    } finally {
+      setIsBulkScanning(false);
+    }
+  }
+
+  function removeBulkItem(id: string) {
+    setBulkItems((prev) => prev.filter((item) => item.id !== id));
+    bulkFormRefs.current.delete(id);
+  }
+
+  const handleSubmitAll = useCallback(async () => {
+    setIsSubmittingAll(true);
+    const pending = bulkItems.filter((item) => item.status === "pending");
+
+    for (const item of pending) {
+      const formHelpers = bulkFormRefs.current.get(item.id);
+      if (!formHelpers) continue;
+
+      setBulkItems((prev) =>
+        prev.map((bi) => (bi.id === item.id ? { ...bi, status: "submitting" as const } : bi)),
+      );
+
+      try {
+        const values = formHelpers.getValues();
+        const formData = new FormData();
+        formData.set("workspaceSlug", workspaceSlug);
+        formData.set("title", String(values.title));
+        formData.set("amount", String(values.amount));
+        formData.set("expenseDate", String(values.expenseDate));
+        formData.set("status", String(values.status));
+        if (values.categoryId) formData.set("categoryId", String(values.categoryId));
+        formData.set("currencyCode", String(values.currencyCode));
+        formData.set("description", String(values.description ?? ""));
+
+        const result = await createExpense(formData);
+
+        if ("error" in result) {
+          setBulkItems((prev) =>
+            prev.map((bi) =>
+              bi.id === item.id ? { ...bi, status: "error" as const, error: result.error } : bi,
+            ),
+          );
+        } else {
+          setBulkItems((prev) =>
+            prev.map((bi) => (bi.id === item.id ? { ...bi, status: "submitted" as const } : bi)),
+          );
+        }
+      } catch {
+        setBulkItems((prev) =>
+          prev.map((bi) =>
+            bi.id === item.id ? { ...bi, status: "error" as const, error: "Failed to create expense" } : bi,
+          ),
+        );
+      }
+    }
+
+    setIsSubmittingAll(false);
+    router.refresh();
+  }, [bulkItems, createExpense, workspaceSlug, router]);
 
   async function handleReceiptScan(scannedFile: File) {
     setIsScanning(true);
@@ -167,12 +267,78 @@ export function QuickAddExpenseForm({
       setIsScanning(false);
     }
   }
-  const selectedParent = categories.find((c) => c.id === selectedParentId);
-  const childCategories = selectedParent?.children ?? [];
 
-  const categoryItems = categories.map((c) => ({ value: c.id, label: c.name }));
-  const subcategoryItems = childCategories.map((c) => ({ value: c.id, label: c.name }));
-  const currencyItems = currencies.map((c) => ({ value: c, label: c }));
+  // Bulk mode UI
+  if (isBulkMode) {
+    const pendingCount = bulkItems.filter((i) => i.status === "pending").length;
+    const submittedCount = bulkItems.filter((i) => i.status === "submitted").length;
+
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            {submittedCount > 0
+              ? `${submittedCount} of ${bulkItems.length} submitted`
+              : `${bulkItems.length} transactions found`}
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setBulkItems([]);
+              bulkFormRefs.current.clear();
+            }}
+            disabled={isSubmittingAll}
+          >
+            <X className="size-3.5" />
+            Clear All
+          </Button>
+        </div>
+
+        <div className="space-y-3">
+          {bulkItems.map((item) => (
+            <BulkExpenseCard
+              key={item.id}
+              item={item.data}
+              status={item.status}
+              error={item.error}
+              baseCurrencyCode={baseCurrencyCode}
+              categories={categories}
+              currencies={currencies}
+              workspaceSlug={workspaceSlug}
+              createCategory={createCategory}
+              onRemove={() => removeBulkItem(item.id)}
+              formRef={(handle) => {
+                bulkFormRefs.current.set(item.id, handle);
+              }}
+            />
+          ))}
+        </div>
+
+        {pendingCount > 0 && (
+          <div className="pt-2">
+            <Button
+              type="button"
+              onClick={handleSubmitAll}
+              disabled={isSubmittingAll}
+              className="w-full"
+              size="lg"
+            >
+              {isSubmittingAll ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                `Submit All (${pendingCount})`
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -184,8 +350,8 @@ export function QuickAddExpenseForm({
       }}
       className="space-y-4"
     >
-      {/* Receipt scan */}
-      <div className="grid gap-1.5">
+      {/* Receipt scan buttons */}
+      <div className="grid grid-cols-2 gap-2">
         <input
           ref={receiptInputRef}
           type="file"
@@ -197,32 +363,59 @@ export function QuickAddExpenseForm({
             e.target.value = "";
           }}
         />
+        <input
+          ref={bulkInputRef}
+          type="file"
+          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleBulkScan(file);
+            e.target.value = "";
+          }}
+        />
         <Button
           type="button"
           variant="outline"
-          disabled={isScanning || isPending}
+          disabled={isScanning || isBulkScanning || isPending}
           onClick={() => receiptInputRef.current?.click()}
-          className="h-12 w-full border-2 border-dashed border-primary/30 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10"
+          className="h-12 border-2 border-dashed border-primary/30 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10"
         >
           {isScanning ? (
             <>
               <Loader2 className="size-5 animate-spin" />
-              Scanning receipt...
+              Scanning...
             </>
           ) : (
             <>
               <ScanLine className="size-5" />
-              Scan Receipt / Invoice
+              Scan Receipt
+            </>
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isScanning || isBulkScanning || isPending}
+          onClick={() => bulkInputRef.current?.click()}
+          className="h-12 border-2 border-dashed border-primary/30 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10"
+        >
+          {isBulkScanning ? (
+            <>
+              <Loader2 className="size-5 animate-spin" />
+              Scanning...
+            </>
+          ) : (
+            <>
+              <Images className="size-5" />
+              Scan Multiple
             </>
           )}
         </Button>
       </div>
 
-      {formError && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          {formError}
-        </div>
-      )}
+      <FormError message={formError} />
+      <FormError message={bulkScanError} />
 
       <form.Field name="title">
         {(field) => (
@@ -245,145 +438,65 @@ export function QuickAddExpenseForm({
 
       <form.Field name="amount">
         {(field) => (
-          <div className="grid gap-1.5">
-            <Label htmlFor="amount">Amount</Label>
-            <div className="relative">
-              <Input
-                id="amount"
-                type="number"
-                min="0.01"
-                step="0.01"
-                value={field.state.value || ""}
-                onChange={(e) => field.handleChange(e.target.valueAsNumber || 0)}
-                onBlur={field.handleBlur}
-                required
-                placeholder="199.99"
-                className="pr-16"
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-accent px-2 py-0.5 text-xs font-semibold text-accent-foreground">
-                {baseCurrencyCode}
-              </span>
-            </div>
-            {field.state.meta.errors.length > 0 && (
-              <span className="text-xs text-destructive">{field.state.meta.errors[0]?.message}</span>
-            )}
-          </div>
+          <AmountInput
+            value={field.state.value}
+            onChange={field.handleChange}
+            onBlur={field.handleBlur}
+            currencyBadge={baseCurrencyCode}
+            required
+            error={field.state.meta.errors.length > 0 ? field.state.meta.errors[0]?.message : undefined}
+          />
         )}
       </form.Field>
 
       <div className="grid grid-cols-2 gap-4">
         <form.Field name="expenseDate">
-          {(field) => {
-            const dateValue = field.state.value ? new Date(field.state.value + "T00:00:00") : undefined;
-            return (
-              <div className="grid gap-1.5">
-                <Label>Date</Label>
-                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                  <PopoverTrigger
-                    className={cn(
-                      "flex h-9 w-full items-center justify-between rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-                      !field.state.value && "text-muted-foreground"
-                    )}
-                  >
-                    {dateValue ? format(dateValue, "MMM d, yyyy") : "Pick a date"}
-                    <CalendarIcon className="size-4 text-muted-foreground" />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dateValue}
-                      onSelect={(date) => {
-                        if (date) {
-                          field.handleChange(format(date, "yyyy-MM-dd"));
-                        }
-                        setCalendarOpen(false);
-                      }}
-                      defaultMonth={dateValue}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            );
-          }}
+          {(field) => (
+            <DatePickerField
+              value={field.state.value}
+              onChange={field.handleChange}
+              label="Date"
+            />
+          )}
         </form.Field>
 
         <form.Field name="status">
           {(field) => (
-            <div className="grid gap-1.5">
-              <Label>Status</Label>
-              <SearchableSelect
-                items={statusItems}
-                value={field.state.value}
-                onValueChange={(val) => field.handleChange(val as "planned" | "pending" | "posted")}
-                placeholder="Select status"
-                searchPlaceholder="Search status..."
-              />
-            </div>
+            <StatusSelect
+              value={field.state.value}
+              onValueChange={(val) => field.handleChange(val as "planned" | "pending" | "posted")}
+            />
           )}
         </form.Field>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <form.Field name="parentCategoryId">
-          {(field) => (
-            <div className="grid gap-1.5">
-              <Label>Category</Label>
-              <SearchableSelect
-                items={categoryItems}
-                value={field.state.value}
-                onValueChange={(val) => {
-                  field.handleChange(val);
-
-                  form.setFieldValue("categoryId", "");
-                }}
-                placeholder="Select category"
-                searchPlaceholder="Search categories..."
-                emptyMessage="No categories found."
-                onCreateNew={() => setCategoryDialogOpen(true)}
-                createNewLabel="Create category"
+      <form.Field name="parentCategoryId">
+        {(parentField) => (
+          <form.Field name="categoryId">
+            {(categoryField) => (
+              <CategorySelect
+                categories={categories}
+                parentCategoryId={parentField.state.value}
+                onParentChange={parentField.handleChange}
+                categoryId={categoryField.state.value}
+                onCategoryChange={categoryField.handleChange}
+                workspaceSlug={workspaceSlug}
+                createCategory={createCategory}
+                parentError={parentField.state.meta.errors.length > 0 ? parentField.state.meta.errors[0]?.message : undefined}
+                categoryError={categoryField.state.meta.errors.length > 0 ? categoryField.state.meta.errors[0]?.message : undefined}
               />
-              {field.state.meta.errors.length > 0 && (
-                <span className="text-xs text-destructive">{field.state.meta.errors[0]?.message}</span>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        <form.Field name="categoryId">
-          {(field) => (
-            <div className="grid gap-1.5">
-              <Label>Subcategory</Label>
-              <SearchableSelect
-                items={subcategoryItems}
-                value={field.state.value}
-                onValueChange={field.handleChange}
-                placeholder={!selectedParentId ? "Select category first" : "Select subcategory"}
-                searchPlaceholder="Search subcategories..."
-                emptyMessage="No subcategories found."
-                disabled={!selectedParentId}
-                onCreateNew={selectedParentId ? () => setSubcategoryDialogOpen(true) : undefined}
-                createNewLabel="Create subcategory"
-              />
-              {field.state.meta.errors.length > 0 && (
-                <span className="text-xs text-destructive">{field.state.meta.errors[0]?.message}</span>
-              )}
-            </div>
-          )}
-        </form.Field>
-      </div>
+            )}
+          </form.Field>
+        )}
+      </form.Field>
 
       <form.Field name="currencyCode">
         {(field) => (
-          <div className="grid gap-1.5">
-            <Label>Currency</Label>
-            <SearchableSelect
-              items={currencyItems}
-              value={field.state.value}
-              onValueChange={field.handleChange}
-              placeholder="Select currency"
-              searchPlaceholder="Search currencies..."
-            />
-          </div>
+          <CurrencySelect
+            currencies={currencies}
+            value={field.state.value}
+            onValueChange={field.handleChange}
+          />
         )}
       </form.Field>
 
@@ -451,29 +564,6 @@ export function QuickAddExpenseForm({
       </div>
 
     </form>
-
-      <CreateCategoryDialog
-        type="category"
-        workspaceSlug={workspaceSlug}
-        createCategory={createCategory}
-        open={categoryDialogOpen}
-        onOpenChange={setCategoryDialogOpen}
-        onCreated={(id) => {
-          form.setFieldValue("parentCategoryId", id);
-          form.setFieldValue("categoryId", "");
-        }}
-      />
-      <CreateCategoryDialog
-        type="subcategory"
-        workspaceSlug={workspaceSlug}
-        parentCategoryId={selectedParentId}
-        createCategory={createCategory}
-        open={subcategoryDialogOpen}
-        onOpenChange={setSubcategoryDialogOpen}
-        onCreated={(id) => {
-          form.setFieldValue("categoryId", id);
-        }}
-      />
     </>
   );
 }
