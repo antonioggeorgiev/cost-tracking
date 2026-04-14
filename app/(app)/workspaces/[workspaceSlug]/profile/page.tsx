@@ -36,19 +36,19 @@ export default async function ProfilePage() {
 
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl bg-surface-secondary p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Name</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-body">Name</p>
             <p className="mt-1 font-medium text-heading">
               {user.firstName} {user.lastName}
             </p>
           </div>
           <div className="rounded-xl bg-surface-secondary p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Email</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-body">Email</p>
             <p className="mt-1 font-medium text-heading">
               {user.emailAddresses[0]?.emailAddress ?? "—"}
             </p>
           </div>
           <div className="rounded-xl bg-surface-secondary p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Joined</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-body">Joined</p>
             <p className="mt-1 font-medium text-heading">
               {new Date(user.createdAt).toLocaleDateString()}
             </p>

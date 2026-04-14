@@ -45,7 +45,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="font-heading text-base font-semibold text-heading">Invite a member</h2>
-              <p className="mt-1 text-sm text-muted">They will join after accepting the invite link.</p>
+              <p className="mt-1 text-sm text-body">They will join after accepting the invite link.</p>
             </div>
             {!isResendConfigured ? (
               <span className="rounded-full bg-pending-bg px-3 py-1 text-xs font-semibold text-pending-badge">Email disabled</span>
@@ -62,7 +62,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
                 type="email"
                 required
                 placeholder="friend@example.com"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10"
+                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
 
@@ -74,7 +74,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
               </select>
             </label>
 
-            <button className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90 sm:w-auto">
+            <button className="flex items-center justify-center gap-2 rounded-xl bg-heading px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90 sm:w-auto">
               <UserPlus size={16} />
               Invite
             </button>
@@ -86,7 +86,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
       <section className="rounded-2xl border border-border bg-surface shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-heading text-base font-semibold text-heading">Active Members</h2>
-          <span className="text-sm text-muted">{data.memberships.length} total</span>
+          <span className="text-sm text-body">{data.memberships.length} total</span>
         </div>
 
         <div className="divide-y divide-border">
@@ -97,7 +97,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-heading">{item.user.name || item.user.email}</p>
-                <p className="truncate text-xs text-muted">{item.user.email}</p>
+                <p className="truncate text-xs text-body">{item.user.email}</p>
               </div>
               <div className="flex items-center gap-2">
                 <MemberRoleBadge role={item.role} />
@@ -130,7 +130,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
       <section className="rounded-2xl border border-border bg-surface shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-heading text-base font-semibold text-heading">Pending Invites</h2>
-          <span className="text-sm text-muted">{data.invites.length} active</span>
+          <span className="text-sm text-body">{data.invites.length} active</span>
         </div>
 
         {data.invites.length > 0 ? (
@@ -144,7 +144,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
                     </div>
                     <div>
                       <p className="font-medium text-heading">{invite.email}</p>
-                      <p className="text-xs text-muted">Expires {invite.expiresAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p>
+                      <p className="text-xs text-body">Expires {invite.expiresAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ export default async function MembersPage({ params, searchParams }: MembersPageP
             ))}
           </div>
         ) : (
-          <div className="px-6 py-12 text-center text-sm text-muted">No pending invites.</div>
+          <div className="px-6 py-12 text-center text-sm text-body">No pending invites.</div>
         )}
       </section>
     </div>

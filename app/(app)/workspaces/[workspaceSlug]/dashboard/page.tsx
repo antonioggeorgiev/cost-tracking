@@ -47,13 +47,13 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
         <div className="space-y-6 lg:col-span-8">
           {/* Hero amount */}
           <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Current Month Ledger</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-body">Current Month Ledger</p>
             <div className="mt-3 flex items-baseline gap-3">
               <span className="font-heading text-5xl font-extrabold tracking-tight text-heading lg:text-6xl">
                 {heroAmount}
               </span>
             </div>
-            <p className="mt-2 text-sm text-muted">
+            <p className="mt-2 text-sm text-body">
               {dashboard.currentMonthExpenseCount} posted expenses · Previous month {formatMoney(dashboard.previousMonthTotal, dashboard.baseCurrencyCode)}
             </p>
           </section>
@@ -105,7 +105,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted">No category data this month.</p>
+                <p className="text-sm text-body">No category data this month.</p>
               )}
             </div>
           </section>
@@ -124,8 +124,8 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="font-medium text-heading">{item.title}</p>
-                        <p className="mt-1 text-xs text-muted">{item.categoryPath}</p>
-                        <p className="mt-1 text-xs text-muted">
+                        <p className="mt-1 text-xs text-body">{item.categoryPath}</p>
+                        <p className="mt-1 text-xs text-body">
                           Due {new Date(item.nextOccurrenceDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </p>
                       </div>
@@ -139,7 +139,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted">No variable bills need an amount right now.</p>
+                <p className="text-sm text-body">No variable bills need an amount right now.</p>
               )}
             </div>
           </section>
@@ -170,7 +170,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                     <p className="truncate font-medium text-heading">{expense.title}</p>
                     <StatusBadge status={expense.status} />
                   </div>
-                  <p className="mt-0.5 text-xs text-muted">
+                  <p className="mt-0.5 text-xs text-body">
                     {expense.categoryPath} · {timeAgo(expense.expenseDate)}
                   </p>
                 </div>
@@ -180,7 +180,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               </div>
             ))
           ) : (
-            <div className="py-6 text-center text-sm text-muted">No activity yet.</div>
+            <div className="py-6 text-center text-sm text-body">No activity yet.</div>
           )}
         </div>
       </section>
@@ -205,7 +205,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               </div>
               <div>
                 <h3 className="font-medium text-heading">{link.title}</h3>
-                <p className="text-sm text-muted">{link.desc}</p>
+                <p className="text-sm text-body">{link.desc}</p>
               </div>
             </Link>
           );

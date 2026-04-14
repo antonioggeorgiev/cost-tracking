@@ -10,7 +10,7 @@ type SpendingChartProps = {
 export function SpendingChart({ data, currencyCode }: SpendingChartProps) {
   if (data.length === 0) {
     return (
-      <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted">
+      <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-border text-sm text-body">
         No spending data this month
       </div>
     );

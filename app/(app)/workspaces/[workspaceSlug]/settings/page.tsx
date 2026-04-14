@@ -68,15 +68,15 @@ export default async function SettingsPage({ params, searchParams }: SettingsPag
             </label>
 
             <div className="sm:col-span-2">
-              <button className="rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90">
+              <button className="rounded-xl bg-heading px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90">
                 Save Settings
               </button>
             </div>
           </form>
         ) : (
           <div className="rounded-xl border border-dashed border-border p-6 text-center">
-            <Shield size={24} className="mx-auto text-muted" />
-            <p className="mt-2 text-sm text-muted">Only workspace owners can update settings.</p>
+            <Shield size={24} className="mx-auto text-body" />
+            <p className="mt-2 text-sm text-body">Only workspace owners can update settings.</p>
           </div>
         )}
       </section>
@@ -86,15 +86,15 @@ export default async function SettingsPage({ params, searchParams }: SettingsPag
         <h2 className="font-heading text-base font-semibold text-heading">Workspace Info</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl bg-surface-secondary p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Slug</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-body">Slug</p>
             <p className="mt-1 font-medium text-heading">/{workspace.slug}</p>
           </div>
           <div className="rounded-xl bg-surface-secondary p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Currency</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-body">Currency</p>
             <p className="mt-1 font-medium text-heading">{workspace.baseCurrencyCode}</p>
           </div>
           <div className="rounded-xl bg-surface-secondary p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Members</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-body">Members</p>
             <p className="mt-1 font-medium text-heading">{workspace._count.memberships}</p>
           </div>
         </div>

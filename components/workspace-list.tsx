@@ -18,7 +18,7 @@ export function WorkspaceList({ workspaces }: WorkspaceListProps) {
     <section className="rounded-2xl border border-border bg-surface shadow-sm">
       <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <h2 className="font-heading text-base font-semibold text-heading">Your Workspaces</h2>
-        <span className="text-sm text-muted">{workspaces.length} total</span>
+        <span className="text-sm text-body">{workspaces.length} total</span>
       </div>
 
       <div className="divide-y divide-border">
@@ -33,10 +33,10 @@ export function WorkspaceList({ workspaces }: WorkspaceListProps) {
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium text-heading">{workspace.name}</p>
-              <p className="mt-0.5 text-xs text-muted">/{workspace.slug} · {workspace.baseCurrencyCode}</p>
+              <p className="mt-0.5 text-xs text-body">/{workspace.slug} · {workspace.baseCurrencyCode}</p>
             </div>
             <MemberRoleBadge role={workspace.role} />
-            <ChevronRight size={16} className="text-muted" />
+            <ChevronRight size={16} className="text-body" />
           </Link>
         ))}
       </div>

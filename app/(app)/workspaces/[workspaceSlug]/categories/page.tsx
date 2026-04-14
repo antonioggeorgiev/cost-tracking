@@ -43,9 +43,9 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
               <input type="hidden" name="parentCategoryId" value="" />
               <label className="grid gap-1.5 text-sm">
                 <span className="font-medium text-heading">Name</span>
-                <input name="name" required placeholder="Renovation" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                <input name="name" required placeholder="Renovation" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10" />
               </label>
-              <button className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90">
+              <button className="flex items-center gap-2 rounded-xl bg-heading px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90">
                 <Plus size={16} />
                 Create Parent
               </button>
@@ -67,9 +67,9 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
               </label>
               <label className="grid gap-1.5 text-sm">
                 <span className="font-medium text-heading">Name</span>
-                <input name="name" required placeholder="Bathroom" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                <input name="name" required placeholder="Bathroom" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10" />
               </label>
-              <button className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-dark px-5 py-3 text-sm font-semibold text-on-primary shadow-lg shadow-primary/20 transition hover:opacity-90">
+              <button className="flex items-center gap-2 rounded-xl bg-heading px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90">
                 <Plus size={16} />
                 Create Child
               </button>
@@ -82,7 +82,7 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
       <section className="rounded-2xl border border-border bg-surface shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-heading text-base font-semibold text-heading">Category Tree</h2>
-          <span className="text-sm text-muted">{categories.length} parents</span>
+          <span className="text-sm text-body">{categories.length} parents</span>
         </div>
 
         {categories.length > 0 ? (
@@ -95,7 +95,7 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-heading">{category.name}</p>
-                    <p className="text-xs text-muted">/{category.slug} · {category.children.length} children</p>
+                    <p className="text-xs text-body">/{category.slug} · {category.children.length} children</p>
                   </div>
                 </div>
 
@@ -103,22 +103,22 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
                   <div className="mt-3 ml-13 space-y-1.5">
                     {category.children.map((child) => (
                       <div key={child.id} className="flex items-center gap-2 rounded-xl bg-surface-secondary px-4 py-2.5">
-                        <ChevronRight size={14} className="text-muted" />
+                        <ChevronRight size={14} className="text-body" />
                         <span className="text-sm font-medium text-heading">{child.name}</span>
-                        <span className="text-xs text-muted ml-auto">/{child.slug}</span>
+                        <span className="text-xs text-body ml-auto">/{child.slug}</span>
                       </div>
                     ))}
                   </div>
                 )}
 
                 {category.children.length === 0 && (
-                  <p className="mt-3 ml-13 text-sm text-muted">No child categories yet.</p>
+                  <p className="mt-3 ml-13 text-sm text-body">No child categories yet.</p>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="px-6 py-12 text-center text-sm text-muted">
+          <div className="px-6 py-12 text-center text-sm text-body">
             No categories yet. Create a parent category to start.
           </div>
         )}

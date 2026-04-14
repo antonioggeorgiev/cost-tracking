@@ -43,7 +43,7 @@ export function BottomNav({ workspaceSlug }: BottomNavProps) {
               href={base + tab.segment}
               className={cn(
                 "flex flex-col items-center gap-1 px-2 py-1.5 min-w-0",
-                active ? "text-primary" : "text-muted"
+                active ? "text-primary" : "text-body"
               )}
             >
               <Icon size={20} strokeWidth={active ? 2.5 : 2} />

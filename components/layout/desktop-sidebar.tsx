@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
 import { isClerkConfigured } from "@/lib/clerk";
-import { LayoutDashboard, Receipt, RefreshCw, Landmark, Users, FolderTree, Settings, LogOut, ChevronDown, ChevronUp, User, Check, PlusCircle } from "lucide-react";
+import { LayoutDashboard, Receipt, RefreshCw, Landmark, Users, FolderTree, Settings, LogOut, ChevronDown, ChevronUp, User, Check, PlusCircle, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routes, WORKSPACE_SLUG_PATTERN } from "@/lib/routes";
 
@@ -25,13 +25,19 @@ type DesktopSidebarProps = {
   };
 };
 
-const workspaceNavItems = [
+const topNavItems = [
   { label: "Quick Add", icon: PlusCircle, segment: "" },
-  { label: "Dashboard", icon: LayoutDashboard, segment: "/dashboard" },
+] as const;
+
+const financeNavItems = [
   { label: "Expenses", icon: Receipt, segment: "/expenses" },
-  { label: "Categories", icon: FolderTree, segment: "/categories" },
   { label: "Recurring", icon: RefreshCw, segment: "/recurring" },
   { label: "Debts", icon: Landmark, segment: "/debts" },
+] as const;
+
+const bottomNavItems = [
+  { label: "Dashboard", icon: LayoutDashboard, segment: "/dashboard" },
+  { label: "Categories", icon: FolderTree, segment: "/categories" },
   { label: "Members", icon: Users, segment: "/members" },
 ] as const;
 
@@ -49,6 +55,9 @@ export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
 
   const settingsActive = base ? pathname.startsWith(base + "/settings") || pathname.startsWith(base + "/profile") : false;
   const [settingsOpen, setSettingsOpen] = useState(settingsActive);
+
+  const financeActive = base ? financeNavItems.some((item) => pathname.startsWith(base + item.segment)) : false;
+  const [financeOpen, setFinanceOpen] = useState(true);
 
   // Close popover on click outside
   useEffect(() => {
@@ -92,7 +101,73 @@ export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
 
         {base && (
           <nav className="space-y-1 mb-6">
-            {workspaceNavItems.map((item) => {
+            {topNavItems.map((item) => {
+              const active = isActive(item.segment);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.label}
+                  href={base + item.segment}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
+                    active
+                      ? "bg-primary-lighter text-primary"
+                      : "text-body hover:bg-surface-secondary hover:text-heading"
+                  )}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </Link>
+              );
+            })}
+
+            {/* Finance group */}
+            <div>
+              <button
+                onClick={() => setFinanceOpen(!financeOpen)}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
+                  financeActive && !financeOpen
+                    ? "bg-primary-lighter text-primary"
+                    : "text-body hover:bg-surface-secondary hover:text-heading"
+                )}
+              >
+                <Wallet size={16} />
+                Finance
+                <ChevronDown
+                  size={14}
+                  className={cn(
+                    "ml-auto transition-transform",
+                    financeOpen && "rotate-180"
+                  )}
+                />
+              </button>
+              {financeOpen && (
+                <div className="ml-5 mt-1 space-y-0.5 border-l border-border pl-3">
+                  {financeNavItems.map((item) => {
+                    const active = isActive(item.segment);
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.label}
+                        href={base + item.segment}
+                        className={cn(
+                          "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition",
+                          active
+                            ? "text-primary"
+                            : "text-body hover:text-heading"
+                        )}
+                      >
+                        <Icon size={14} />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {bottomNavItems.map((item) => {
               const active = isActive(item.segment);
               const Icon = item.icon;
               return (
@@ -175,7 +250,7 @@ export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
             >
               {workspaces.length > 0 && (
                 <div className="p-2">
-                  <p className="mb-1 px-2 pt-1 text-xs font-semibold uppercase tracking-widest text-muted">
+                  <p className="mb-1 px-2 pt-1 text-xs font-semibold uppercase tracking-widest text-body">
                     Workspaces
                   </p>
                   <div className="space-y-0.5">
@@ -195,7 +270,7 @@ export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
                           <span className="block text-sm font-medium text-heading truncate">
                             {workspace.name}
                           </span>
-                          <span className="block text-xs text-muted">
+                          <span className="block text-xs text-body">
                             {workspace.baseCurrencyCode} · {workspace.role}
                           </span>
                         </div>
@@ -250,14 +325,14 @@ export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
                 <span className="block text-sm font-medium text-heading truncate">
                   {user?.name ?? "User"}
                 </span>
-                <span className="block text-xs text-muted truncate">
+                <span className="block text-xs text-body truncate">
                   {activeWorkspace?.name ?? "No workspace"}
                 </span>
               </div>
               <ChevronUp
                 size={16}
                 className={cn(
-                  "shrink-0 text-muted transition-transform",
+                  "shrink-0 text-body transition-transform",
                   popoverOpen && "rotate-180"
                 )}
               />
