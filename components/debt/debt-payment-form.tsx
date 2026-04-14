@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +18,8 @@ type DebtAccountOption = {
   name: string;
   currencyCode: string;
   isActive: boolean;
+  monthlyAmountMinor?: number | null;
+  unpaidDueDates?: string[];
 };
 
 type DebtPaymentFormProps = {
@@ -26,6 +28,8 @@ type DebtPaymentFormProps = {
   currencies: readonly string[];
   debtAccounts: DebtAccountOption[];
   createDebtPayment: (formData: FormData) => Promise<void>;
+  defaultDebtAccountId?: string;
+  onSuccess?: () => void;
 };
 
 export function DebtPaymentForm({
@@ -34,15 +38,18 @@ export function DebtPaymentForm({
   currencies,
   debtAccounts,
   createDebtPayment,
+  defaultDebtAccountId,
+  onSuccess,
 }: DebtPaymentFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
 
-  const [debtAccountId, setDebtAccountId] = useState("");
+  const [debtAccountId, setDebtAccountId] = useState(defaultDebtAccountId ?? "");
   const [amount, setAmount] = useState(0);
   const [currencyCode, setCurrencyCode] = useState(baseCurrencyCode);
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().slice(0, 10));
+  const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
   const [createLinkedExpense, setCreateLinkedExpense] = useState(true);
 
@@ -52,11 +59,31 @@ export function DebtPaymentForm({
     label: `${d.name} · ${d.currencyCode}`,
   }));
 
+  const selectedAccount = activeAccounts.find((d) => d.id === debtAccountId);
+  const unpaidDates = selectedAccount?.unpaidDueDates ?? [];
+  const hasSchedule = unpaidDates.length > 0;
+
+  // Auto-select first unpaid date and auto-fill amount when account changes
+  useEffect(() => {
+    if (selectedAccount) {
+      setCurrencyCode(selectedAccount.currencyCode);
+      if (unpaidDates.length > 0) {
+        setDueDate(unpaidDates[0]);
+        if (selectedAccount.monthlyAmountMinor != null && selectedAccount.monthlyAmountMinor > 0) {
+          setAmount(selectedAccount.monthlyAmountMinor / 100);
+        }
+      } else {
+        setDueDate("");
+      }
+    }
+  }, [debtAccountId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   function resetForm() {
     setDebtAccountId("");
     setAmount(0);
     setCurrencyCode(baseCurrencyCode);
     setPaymentDate(new Date().toISOString().slice(0, 10));
+    setDueDate("");
     setNotes("");
     setCreateLinkedExpense(true);
   }
@@ -73,6 +100,7 @@ export function DebtPaymentForm({
         formData.set("amount", String(amount));
         formData.set("currencyCode", currencyCode);
         formData.set("paymentDate", paymentDate);
+        if (dueDate) formData.set("dueDate", dueDate);
         formData.set("notes", notes);
         if (createLinkedExpense) formData.set("createLinkedExpense", "on");
 
@@ -81,6 +109,7 @@ export function DebtPaymentForm({
             await createDebtPayment(formData);
             resetForm();
             router.refresh();
+            onSuccess?.();
           } catch (error) {
             setFormError(error instanceof Error ? error.message : "Failed to record payment.");
           }
@@ -100,6 +129,31 @@ export function DebtPaymentForm({
           searchPlaceholder="Search accounts..."
         />
       </div>
+
+      {/* Due date selector when account has scheduled payments */}
+      {debtAccountId && hasSchedule && (
+        <div className="grid gap-1.5">
+          <Label>Due date</Label>
+          <select
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className="flex h-10 w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-heading shadow-sm transition focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          >
+            {unpaidDates.map((d) => (
+              <option key={d} value={d}>
+                {new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Message when all scheduled payments are done */}
+      {debtAccountId && selectedAccount && unpaidDates.length === 0 && selectedAccount.monthlyAmountMinor != null && (
+        <div className="rounded-lg border border-posted/20 bg-posted/5 px-4 py-3 text-sm text-posted">
+          All scheduled payments for this month have been recorded.
+        </div>
+      )}
 
       <AmountInput
         value={amount}
