@@ -11,6 +11,8 @@ export const expensesRouter = createTRPCRouter({
       search: z.string().optional(),
       categoryId: z.string().optional(),
       status: z.string().optional(),
+      dateFrom: z.string().optional(),
+      dateTo: z.string().optional(),
       page: z.coerce.number().int().min(1).optional(),
       perPage: z.coerce.number().int().min(1).max(100).optional(),
     }))
@@ -18,6 +20,8 @@ export const expensesRouter = createTRPCRouter({
       search: input.search,
       categoryId: input.categoryId,
       status: input.status,
+      dateFrom: input.dateFrom,
+      dateTo: input.dateTo,
       page: input.page,
       perPage: input.perPage,
     })),

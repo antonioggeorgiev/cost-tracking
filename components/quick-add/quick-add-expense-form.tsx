@@ -34,6 +34,8 @@ type QuickAddExpenseFormProps = {
   currencies: readonly string[];
   createExpense: (formData: FormData) => Promise<{ id: string } | { error: string }>;
   createCategory: (formData: FormData) => Promise<{ id: string }>;
+  submitLabel?: string;
+  onSuccess?: () => void;
 };
 
 const expenseFormSchema = z.object({
@@ -54,6 +56,8 @@ export function QuickAddExpenseForm({
   currencies,
   createExpense,
   createCategory,
+  submitLabel = "Add Expense",
+  onSuccess,
 }: QuickAddExpenseFormProps) {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -109,6 +113,7 @@ export function QuickAddExpenseForm({
 
         setFile(null);
         router.refresh();
+        onSuccess?.();
       });
     },
   });
@@ -222,7 +227,8 @@ export function QuickAddExpenseForm({
 
     setIsSubmittingAll(false);
     router.refresh();
-  }, [bulkItems, createExpense, workspaceSlug, router]);
+    onSuccess?.();
+  }, [bulkItems, createExpense, workspaceSlug, router, onSuccess]);
 
   async function handleReceiptScan(scannedFile: File) {
     setIsScanning(true);
@@ -559,7 +565,7 @@ export function QuickAddExpenseForm({
 
       <div className="pt-2">
         <Button type="submit" disabled={isPending} className="w-full" size="lg">
-          {isPending ? "Adding..." : "Add Expense"}
+          {isPending ? "Adding..." : submitLabel}
         </Button>
       </div>
 

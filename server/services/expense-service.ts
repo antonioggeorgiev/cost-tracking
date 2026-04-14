@@ -8,6 +8,8 @@ export const expenseService = {
     search?: string;
     categoryId?: string;
     status?: string;
+    dateFrom?: string;
+    dateTo?: string;
     page?: number;
     perPage?: number;
   }) {
@@ -26,8 +28,18 @@ export const expenseService = {
     if (options?.status && options.status !== "all") {
       where.status = options.status;
     }
+    if (options?.dateFrom || options?.dateTo) {
+      const dateFilter: Record<string, Date> = {};
+      if (options.dateFrom) dateFilter.gte = new Date(options.dateFrom);
+      if (options.dateTo) {
+        const to = new Date(options.dateTo);
+        to.setHours(23, 59, 59, 999);
+        dateFilter.lte = to;
+      }
+      where.expenseDate = dateFilter;
+    }
 
-    const [expenses, total] = await Promise.all([
+    const [expenses, total, aggregates] = await Promise.all([
       db.expense.findMany({
         where,
         include: {
@@ -39,7 +51,10 @@ export const expenseService = {
         take: perPage,
       }),
       db.expense.count({ where }),
+      db.expense.aggregate({ where, _sum: { workspaceAmountMinor: true } }),
     ]);
+
+    const totalAmount = aggregates._sum.workspaceAmountMinor ?? 0;
 
     return {
       items: expenses.map((expense) => ({
@@ -50,6 +65,7 @@ export const expenseService = {
         createdByLabel: expense.createdByUser.name || expense.createdByUser.email,
       })),
       total,
+      totalAmount,
       page,
       perPage,
       totalPages: Math.ceil(total / perPage),
