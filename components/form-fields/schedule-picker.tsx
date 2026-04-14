@@ -92,7 +92,7 @@ export function SchedulePicker({
             month_grid: "w-full border-collapse",
             weekdays: "",
             weekday:
-              "pb-2 pt-1 text-center text-xs font-medium uppercase tracking-wider text-muted",
+              "pb-2 pt-1 text-center text-xs font-medium uppercase tracking-wider text-body",
             weeks: "",
             week: "h-11",
             day: "text-center align-middle",
@@ -102,8 +102,8 @@ export function SchedulePicker({
               "[&>button]:!bg-primary [&>button]:!text-on-primary [&>button]:!font-semibold [&>button]:hover:!bg-primary-dark [&>button]:shadow-sm",
             today:
               "[&:not(.rdp-selected)>button]:font-bold [&:not(.rdp-selected)>button]:text-heading",
-            outside: "text-muted opacity-50",
-            disabled: "text-muted opacity-30 cursor-not-allowed",
+            outside: "text-body opacity-50",
+            disabled: "text-body opacity-30 cursor-not-allowed",
           }}
         />
       </div>
@@ -131,7 +131,7 @@ export function SchedulePicker({
                       ? "bg-primary text-on-primary shadow-sm"
                       : available
                         ? "bg-surface-secondary text-body hover:bg-surface-hover"
-                        : "bg-surface-secondary text-muted cursor-not-allowed opacity-50",
+                        : "bg-surface-secondary text-body cursor-not-allowed opacity-50",
                   )}
                 >
                   {frequencyLabels[opt]}
@@ -168,7 +168,7 @@ export function SchedulePicker({
             {summary}
           </div>
         ) : (
-          <div className="rounded-md bg-surface-secondary px-3 py-2 text-sm text-muted text-center">
+          <div className="rounded-md bg-surface-secondary px-3 py-2 text-sm text-body text-center">
             Select days on the calendar above
           </div>
         )}

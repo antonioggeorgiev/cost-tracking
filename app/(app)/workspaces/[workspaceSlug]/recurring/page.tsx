@@ -1,20 +1,27 @@
 import Link from "next/link";
 import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
-import { createRecurringTemplateAction, recordVariableRecurringExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/recurring/actions";
-import { RecordVariableRecurringForm } from "@/components/recurring/record-variable-recurring-form";
-import { RecurringTemplateForm } from "@/components/recurring/recurring-template-form";
+import { createRecurringTemplateAction, markFixedAsPaidAction, recordVariableRecurringExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/recurring/actions";
+import { RecurringCard } from "@/components/recurring/recurring-card";
+import { RecurringDueSection } from "@/components/recurring/recurring-due-section";
+import { RecurringModal } from "@/components/recurring/recurring-modal";
+import { RecurringSummaryStats } from "@/components/recurring/recurring-summary-stats";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { supportedCurrencies } from "@/lib/currency";
+import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/money";
+import { normalizeToMonthlyMinor } from "@/lib/recurring-display";
+import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
-import { RefreshCw, Calendar, ExternalLink } from "lucide-react";
+import { Plus, RefreshCw } from "lucide-react";
 
 type RecurringPageProps = {
   params: Promise<{ workspaceSlug: string }>;
+  searchParams: Promise<{ modal?: string }>;
 };
 
-export default async function RecurringPage({ params }: RecurringPageProps) {
+export default async function RecurringPage({ params, searchParams }: RecurringPageProps) {
   const { workspaceSlug } = await params;
+  await searchParams; // consume to avoid Next.js warnings
   const caller = await getServerCaller();
   await caller.recurring.generateDue({ workspaceSlug });
 
@@ -37,10 +44,88 @@ export default async function RecurringPage({ params }: RecurringPageProps) {
     name: category.name,
     children: category.children.map((child) => ({ id: child.id, name: child.name })),
   }));
-  const generatedExpenses = expenseResult.items.filter((expense) => expense.type === "recurring_generated").slice(0, 10);
+
+  // Serialize templates to strip Decimal objects (not serializable to client components)
+  function serializeTemplate(t: (typeof templates)[number]) {
+    return {
+      id: t.id,
+      kind: t.kind,
+      title: t.title,
+      originalAmountMinor: t.originalAmountMinor,
+      originalCurrencyCode: t.originalCurrencyCode,
+      workspaceAmountMinor: t.workspaceAmountMinor,
+      frequency: t.frequency,
+      interval: t.interval,
+      anchorDays: t.anchorDays,
+      nextOccurrenceDate: t.nextOccurrenceDate.toISOString(),
+      lastGeneratedAt: t.lastGeneratedAt?.toISOString() ?? null,
+      defaultStatus: t.defaultStatus,
+      isActive: t.isActive,
+      paymentUrl: t.paymentUrl,
+      category: t.category,
+    };
+  }
+
+  // Sort templates: active first (by nextOccurrenceDate), then inactive
+  const activeTemplates = templates
+    .filter((t) => t.isActive)
+    .sort((a, b) => new Date(a.nextOccurrenceDate).getTime() - new Date(b.nextOccurrenceDate).getTime())
+    .map(serializeTemplate);
+  const inactiveTemplates = templates.filter((t) => !t.isActive).map(serializeTemplate);
+
+  // Summary stats (computed from raw templates before serialization)
+  const now = new Date();
+  const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+
+  let totalMonthlyMinor = 0;
+  let dueThisMonthMinor = 0;
+  const rawActiveTemplates = templates
+    .filter((t) => t.isActive)
+    .sort((a, b) => new Date(a.nextOccurrenceDate).getTime() - new Date(b.nextOccurrenceDate).getTime());
+  for (const t of rawActiveTemplates) {
+    if (t.kind === "fixed_amount" && t.workspaceAmountMinor != null) {
+      totalMonthlyMinor += normalizeToMonthlyMinor(t.workspaceAmountMinor, t.frequency, t.interval);
+      const next = new Date(t.nextOccurrenceDate);
+      if (next >= currentMonthStart && next <= currentMonthEnd) {
+        dueThisMonthMinor += t.workspaceAmountMinor;
+      }
+    }
+  }
+
+  const nextPaymentTemplate = activeTemplates[0] ?? null;
+
+  // Count paid/due this month for recurring templates
+  const recurringExpensesThisMonth = await db.expense.findMany({
+    where: {
+      workspaceId: workspace.id,
+      recurringTemplateId: { not: null },
+      expenseDate: { gte: currentMonthStart, lte: currentMonthEnd },
+    },
+    select: { recurringTemplateId: true },
+  });
+  const paidTemplateIds = new Set(recurringExpensesThisMonth.map((e) => e.recurringTemplateId));
+
+  // Count how many active templates are expected to have occurrences this month
+  // A template is "expected" if its nextOccurrenceDate is this month OR it already generated expenses this month
+  let dueThisMonthCount = 0;
+  let paidThisMonthCount = 0;
+  for (const t of rawActiveTemplates) {
+    const next = new Date(t.nextOccurrenceDate);
+    const hasDueThisMonth = (next >= currentMonthStart && next <= currentMonthEnd) || paidTemplateIds.has(t.id);
+    if (hasDueThisMonth) {
+      dueThisMonthCount++;
+      if (paidTemplateIds.has(t.id)) paidThisMonthCount++;
+    }
+  }
+
+  // Recently generated expenses
+  const generatedExpenses = expenseResult.items
+    .filter((expense) => expense.type === "recurring_generated")
+    .slice(0, 10);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -48,163 +133,146 @@ export default async function RecurringPage({ params }: RecurringPageProps) {
           <h1 className="mt-1 font-heading text-2xl font-bold text-heading">Recurring</h1>
           <p className="mt-2 text-sm text-body">Manage templates that auto-generate expense entries.</p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-posted-bg px-3 py-1 text-xs font-semibold text-posted">{templates.length} active</span>
-        </div>
+        {canManage && (
+          <Link
+            href={`${routes.workspaceRecurring(workspaceSlug)}?modal=add-recurring`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-heading px-4 py-2.5 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90"
+          >
+            <Plus size={16} />
+            Add Recurring
+          </Link>
+        )}
       </div>
 
-      {canManage ? (
-        <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-          <h2 className="font-heading text-base font-semibold text-heading">Create recurring template</h2>
-          <div className="mt-5">
-            <RecurringTemplateForm
-              workspaceSlug={workspaceSlug}
-              baseCurrencyCode={workspace.baseCurrencyCode}
-              categories={categoryTree}
-              currencies={supportedCurrencies}
-              createRecurring={createRecurringTemplateAction}
-              createCategory={createCategoryAction}
-            />
+      {/* Summary stats */}
+      {templates.length > 0 && (
+        <RecurringSummaryStats
+          totalMonthlyMinor={totalMonthlyMinor}
+          activeCount={activeTemplates.length}
+          nextPaymentDate={nextPaymentTemplate?.nextOccurrenceDate ?? null}
+          nextPaymentTitle={nextPaymentTemplate?.title ?? null}
+          dueThisMonthMinor={dueThisMonthMinor}
+          baseCurrencyCode={workspace.baseCurrencyCode}
+          paidThisMonthCount={paidThisMonthCount}
+          dueThisMonthCount={dueThisMonthCount}
+        />
+      )}
+
+      {/* Due / Action required section */}
+      <RecurringDueSection
+        dueVariableTemplates={dueVariableTemplates}
+        workspaceSlug={workspaceSlug}
+        canManage={canManage}
+        recordAction={recordVariableRecurringExpenseAction}
+      />
+
+      {/* Active templates card grid */}
+      {activeTemplates.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center gap-2.5">
+            <h2 className="font-heading text-lg font-semibold text-heading">Active Templates</h2>
+            <span className="rounded-full bg-posted-bg px-2.5 py-0.5 text-xs font-semibold text-posted">
+              {activeTemplates.length}
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {activeTemplates.map((template) => (
+              <RecurringCard
+                key={template.id}
+                template={template}
+                workspaceSlug={workspaceSlug}
+                canManage={canManage}
+                markPaidAction={markFixedAsPaidAction}
+              />
+            ))}
           </div>
         </section>
-      ) : null}
+      )}
 
-      <section className="rounded-2xl border border-border bg-surface shadow-sm">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Due variable bills</h2>
-          <span className="text-sm text-muted">{dueVariableTemplates.length} due</span>
-        </div>
-
-        {dueVariableTemplates.length > 0 ? (
-          <div className="divide-y divide-border">
-            {dueVariableTemplates.map((template) => {
-              const categoryPath = template.category.parentCategory
-                ? `${template.category.parentCategory.name} / ${template.category.name}`
-                : template.category.name;
-
-              return (
-                <div key={template.id} className="space-y-4 px-6 py-5">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-heading">{template.title}</p>
-                        <span className="rounded-full bg-pending-bg px-2 py-0.5 text-xs font-semibold text-pending-badge">Variable</span>
-                      </div>
-                      <p className="mt-1 text-sm text-muted">{categoryPath}</p>
-                      <p className="mt-1 text-xs text-muted">
-                        Due {new Date(template.nextOccurrenceDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                      </p>
-                    </div>
-                    {template.paymentUrl ? (
-                      <Link href={template.paymentUrl} target="_blank" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-                        Payment link
-                        <ExternalLink size={14} />
-                      </Link>
-                    ) : null}
-                  </div>
-
-                  {canManage ? (
-                    <RecordVariableRecurringForm
-                      workspaceSlug={workspaceSlug}
-                      templateId={template.id}
-                      currencyCode={template.originalCurrencyCode}
-                      action={recordVariableRecurringExpenseAction}
-                    />
-                  ) : null}
-                </div>
-              );
-            })}
+      {/* Inactive templates */}
+      {inactiveTemplates.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="font-heading text-base font-semibold text-body">Inactive Templates</h2>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {inactiveTemplates.map((template) => (
+              <RecurringCard
+                key={template.id}
+                template={template}
+                workspaceSlug={workspaceSlug}
+                canManage={canManage}
+                markPaidAction={markFixedAsPaidAction}
+              />
+            ))}
           </div>
-        ) : (
-          <div className="px-6 py-12 text-center text-sm text-muted">No variable recurring bills are due right now.</div>
-        )}
-      </section>
+        </section>
+      )}
 
-      {/* Templates list */}
-      <section className="rounded-2xl border border-border bg-surface shadow-sm">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Templates</h2>
-          <span className="text-sm text-muted">{templates.length} total</span>
-        </div>
-
-        {templates.length > 0 ? (
-          <div className="divide-y divide-border">
-            {templates.map((template) => {
-              const categoryPath = template.category.parentCategory
-                ? `${template.category.parentCategory.name} / ${template.category.name}`
-                : template.category.name;
-
-                return (
-                  <div key={template.id} className="flex items-center gap-4 px-6 py-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-primary">
-                    <RefreshCw size={18} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="truncate font-medium text-heading">{template.title}</p>
-                        <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
-                          {template.kind === "fixed_amount" ? "Fixed" : "Variable"}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-xs text-muted">{categoryPath} · every {template.interval} {template.frequency}</p>
-                      <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted">
-                        {template.endDate ? <span>Ends {new Date(template.endDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span> : <span>Infinite schedule</span>}
-                        {template.paymentUrl ? (
-                          <Link href={template.paymentUrl} target="_blank" className="inline-flex items-center gap-1 text-primary hover:underline">
-                            Payment link
-                            <ExternalLink size={12} />
-                          </Link>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <p className="font-medium text-heading">
-                        {template.originalAmountMinor !== null
-                          ? formatMoney(template.originalAmountMinor, template.originalCurrencyCode)
-                          : "Amount set when due"}
-                      </p>
-                      <div className="mt-1 flex items-center justify-end gap-2">
-                        <Calendar size={12} className="text-muted" />
-                        <span className="text-xs text-muted">{new Date(template.nextOccurrenceDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+      {/* Empty state */}
+      {templates.length === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-surface py-16 text-center shadow-sm">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-lighter text-primary">
+            <RefreshCw size={24} />
           </div>
-        ) : (
-          <div className="px-6 py-12 text-center text-sm text-muted">No recurring templates yet.</div>
-        )}
-      </section>
-
-      {/* Generated expenses */}
-      <section className="rounded-2xl border border-border bg-surface shadow-sm">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Recently Generated</h2>
-          <span className="text-sm text-muted">{generatedExpenses.length} shown</span>
+          <p className="mt-4 font-heading text-lg font-semibold text-heading">No recurring templates yet</p>
+          <p className="mt-1 text-sm text-body">Create your first template to auto-generate expenses.</p>
+          {canManage && (
+            <Link
+              href={`${routes.workspaceRecurring(workspaceSlug)}?modal=add-recurring`}
+              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-heading px-4 py-2.5 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90"
+            >
+              <Plus size={16} />
+              Add Recurring
+            </Link>
+          )}
         </div>
+      )}
 
-        {generatedExpenses.length > 0 ? (
+      {/* Recently generated expenses */}
+      {generatedExpenses.length > 0 && (
+        <section className="rounded-2xl border border-border bg-surface shadow-sm">
+          <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <h2 className="font-heading text-base font-semibold text-heading">Recently Generated</h2>
+            <span className="text-sm text-body">{generatedExpenses.length} shown</span>
+          </div>
           <div className="divide-y divide-border">
             {generatedExpenses.map((expense) => (
-              <div key={expense.id} className="flex items-center justify-between gap-4 px-6 py-4">
+              <Link
+                key={expense.id}
+                href={routes.workspaceExpense(workspaceSlug, expense.id)}
+                className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-surface-secondary/50"
+              >
                 <div className="min-w-0">
                   <p className="truncate font-medium text-heading">{expense.title}</p>
-                  <p className="mt-0.5 text-xs text-muted">{expense.categoryPath} · {new Date(expense.expenseDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p>
+                  <p className="mt-0.5 text-xs text-body">
+                    {expense.categoryPath} ·{" "}
+                    {new Date(expense.expenseDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </p>
                 </div>
                 <div className="shrink-0 text-right">
-                  <p className="font-medium text-heading">{formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}</p>
+                  <p className="font-medium text-heading">
+                    {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
+                  </p>
                   <div className="mt-1">
                     <StatusBadge status={expense.status} />
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
-        ) : (
-          <div className="px-6 py-12 text-center text-sm text-muted">No generated recurring expenses yet.</div>
-        )}
-      </section>
+        </section>
+      )}
+
+      {/* Modal */}
+      {canManage && (
+        <RecurringModal
+          workspaceSlug={workspaceSlug}
+          baseCurrencyCode={workspace.baseCurrencyCode}
+          categories={categoryTree}
+          currencies={supportedCurrencies}
+          createRecurring={createRecurringTemplateAction}
+          createCategory={createCategoryAction}
+        />
+      )}
     </div>
   );
 }

@@ -35,6 +35,7 @@ type RecurringTemplateFormProps = {
   createRecurring: (formData: FormData) => Promise<{ success: true } | { error: string }>;
   createCategory: (formData: FormData) => Promise<{ id: string }>;
   submitLabel?: string;
+  onSuccess?: () => void;
 };
 
 const kindItems = [
@@ -50,6 +51,7 @@ export function RecurringTemplateForm({
   createRecurring,
   createCategory,
   submitLabel = "Create Template",
+  onSuccess,
 }: RecurringTemplateFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -176,6 +178,7 @@ export function RecurringTemplateForm({
 
           resetForm();
           router.refresh();
+          onSuccess?.();
         });
       }}
       className="space-y-6"

@@ -28,7 +28,7 @@ function isPastEndDate(date: Date, endDate?: Date | null) {
  * For weekly: anchorDays are day-of-week (0=Sun..6=Sat).
  * For monthly/yearly: anchorDays are day-of-month (1-31).
  */
-function expandAnchorDates(
+export function expandAnchorDates(
   baseDate: Date,
   frequency: (typeof RecurringFrequency)[keyof typeof RecurringFrequency],
   anchorDays: number[],
@@ -66,6 +66,130 @@ function getNextTemplateState(date: Date, frequency: (typeof RecurringFrequency)
 }
 
 export const recurringService = {
+  async getById(workspaceId: string, templateId: string) {
+    const template = await db.recurringExpenseTemplate.findUnique({
+      where: { id: templateId },
+      include: {
+        category: { include: { parentCategory: true } },
+        createdByUser: { select: { name: true, email: true } },
+        expenses: {
+          orderBy: { expenseDate: "desc" as const },
+          take: 20,
+          select: {
+            id: true,
+            title: true,
+            expenseDate: true,
+            originalAmountMinor: true,
+            originalCurrencyCode: true,
+            workspaceAmountMinor: true,
+            workspaceCurrencyCode: true,
+            status: true,
+          },
+        },
+      },
+    });
+
+    if (!template || template.workspaceId !== workspaceId) return null;
+
+    return {
+      ...template,
+      categoryPath: template.category
+        ? (template.category.parentCategory
+          ? `${template.category.parentCategory.name} / ${template.category.name}`
+          : template.category.name)
+        : "Uncategorized",
+      createdByLabel: template.createdByUser.name || template.createdByUser.email,
+    };
+  },
+
+  async updateTemplate(workspaceId: string, templateId: string, input: {
+    title?: string;
+    categoryId?: string;
+    amount?: number | null;
+    currencyCode?: string;
+    description?: string | null;
+    notes?: string | null;
+    frequency?: (typeof RecurringFrequency)[keyof typeof RecurringFrequency];
+    interval?: number;
+    anchorDays?: number[];
+    startDate?: Date;
+    endDate?: Date | null;
+    defaultStatus?: "planned" | "pending" | "posted" | "cancelled";
+    paymentUrl?: string | null;
+    isActive?: boolean;
+  }) {
+    const existing = await db.recurringExpenseTemplate.findUnique({ where: { id: templateId } });
+    if (!existing || existing.workspaceId !== workspaceId) throw new Error("Recurring template not found.");
+
+    const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { baseCurrencyCode: true } });
+    if (!workspace) throw new Error("Workspace not found.");
+
+    const data: Record<string, unknown> = {};
+
+    if (input.title !== undefined) data.title = input.title.trim();
+    if (input.description !== undefined) data.description = input.description?.trim() || null;
+    if (input.notes !== undefined) data.notes = input.notes?.trim() || null;
+    if (input.defaultStatus !== undefined) data.defaultStatus = input.defaultStatus;
+    if (input.paymentUrl !== undefined) data.paymentUrl = input.paymentUrl?.trim() || null;
+    if (input.isActive !== undefined) data.isActive = input.isActive;
+    if (input.endDate !== undefined) data.endDate = input.endDate;
+
+    if (input.categoryId !== undefined) {
+      const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
+      if (!category || category.workspaceId !== workspaceId) throw new Error("Category does not belong to this workspace.");
+      if (category.isArchived) throw new Error("Archived categories cannot be used.");
+      data.categoryId = input.categoryId;
+    }
+
+    // Recalculate FX if amount or currency changed on fixed templates
+    const needsRecalc = input.amount !== undefined || input.currencyCode !== undefined;
+    if (needsRecalc && existing.kind === RecurringTemplateKind.fixed_amount) {
+      const amount = input.amount ?? (existing.originalAmountMinor ? existing.originalAmountMinor / 100 : 0);
+      const currencyCode = input.currencyCode ?? existing.originalCurrencyCode;
+      const refDate = input.startDate ?? existing.startDate;
+
+      const snapshot = await fxService.getExchangeRateSnapshot({
+        fromCurrencyCode: currencyCode,
+        toCurrencyCode: workspace.baseCurrencyCode,
+        expenseDate: refDate,
+      });
+
+      data.originalAmountMinor = toMinorUnits(amount ?? 0);
+      data.originalCurrencyCode = currencyCode;
+      data.workspaceAmountMinor = toMinorUnits((amount ?? 0) * snapshot.rate);
+      data.workspaceCurrencyCode = workspace.baseCurrencyCode;
+      data.exchangeRate = snapshot.rate.toFixed(8);
+      data.exchangeRateDate = snapshot.rateDate;
+    } else if (input.currencyCode !== undefined) {
+      data.originalCurrencyCode = input.currencyCode;
+    }
+
+    // Recalculate nextOccurrenceDate if schedule fields changed
+    const scheduleChanged = input.frequency !== undefined || input.interval !== undefined || input.anchorDays !== undefined || input.startDate !== undefined;
+    if (scheduleChanged) {
+      if (input.frequency !== undefined) data.frequency = input.frequency;
+      if (input.interval !== undefined) data.interval = input.interval;
+      if (input.anchorDays !== undefined) data.anchorDays = input.anchorDays;
+      if (input.startDate !== undefined) data.startDate = input.startDate;
+
+      const frequency = input.frequency ?? existing.frequency;
+      const interval = input.interval ?? existing.interval;
+      const startDate = input.startDate ?? existing.startDate;
+      const endDate = input.endDate !== undefined ? input.endDate : existing.endDate;
+
+      // Find the next future occurrence from now
+      const now = new Date();
+      let next = new Date(startDate);
+      while (next <= now && !isPastEndDate(next, endDate)) {
+        next = addRecurringInterval(next, frequency, interval);
+      }
+      data.nextOccurrenceDate = next;
+      data.isActive = !isPastEndDate(next, endDate);
+    }
+
+    return db.recurringExpenseTemplate.update({ where: { id: templateId }, data });
+  },
+
   listTemplates(workspaceId: string) {
     return db.recurringExpenseTemplate.findMany({
       where: { workspaceId },
@@ -233,6 +357,56 @@ export const recurringService = {
     }
 
     return { generatedCount };
+  },
+
+  async markFixedAsPaid(input: {
+    workspaceId: string;
+    createdByUserId: string;
+    templateId: string;
+  }) {
+    const template = await db.recurringExpenseTemplate.findUnique({ where: { id: input.templateId } });
+    if (!template || template.workspaceId !== input.workspaceId) throw new Error("Recurring template not found.");
+    if (template.kind !== RecurringTemplateKind.fixed_amount) throw new Error("Only fixed recurring templates can be marked as paid.");
+    if (!template.isActive) throw new Error("Recurring template is inactive.");
+
+    // Check if expense already exists for this occurrence
+    const existingExpense = await db.expense.findFirst({
+      where: { recurringTemplateId: template.id, expenseDate: template.nextOccurrenceDate },
+      select: { id: true },
+    });
+
+    // Create the expense if it doesn't exist yet
+    if (!existingExpense) {
+      await expenseService.createRecord({
+        workspaceId: template.workspaceId,
+        categoryId: template.categoryId,
+        createdByUserId: input.createdByUserId,
+        title: template.title,
+        description: template.description,
+        originalAmountMinor: template.originalAmountMinor ?? 0,
+        originalCurrencyCode: template.originalCurrencyCode,
+        workspaceAmountMinor: template.workspaceAmountMinor ?? 0,
+        workspaceCurrencyCode: template.workspaceCurrencyCode,
+        exchangeRate: Number(template.exchangeRate ?? 1),
+        exchangeRateDate: template.exchangeRateDate ?? template.nextOccurrenceDate,
+        expenseDate: template.nextOccurrenceDate,
+        type: ExpenseType.recurring_generated,
+        status: template.defaultStatus,
+        notes: template.notes,
+        recurringTemplateId: template.id,
+      });
+    }
+
+    // Always advance the template
+    const nextState = getNextTemplateState(template.nextOccurrenceDate, template.frequency, template.interval, template.endDate);
+    await db.recurringExpenseTemplate.update({
+      where: { id: template.id },
+      data: {
+        nextOccurrenceDate: nextState.nextOccurrenceDate,
+        lastGeneratedAt: new Date(),
+        isActive: nextState.isActive,
+      },
+    });
   },
 
   async recordVariableExpense(input: {

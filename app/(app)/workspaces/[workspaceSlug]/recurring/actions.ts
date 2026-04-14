@@ -73,6 +73,104 @@ const recordVariableRecurringSchema = z.object({
   notes: z.string().max(1000).optional().nullable(),
 });
 
+const updateRecurringSchema = z.object({
+  workspaceSlug: z.string().min(1),
+  templateId: z.string().min(1),
+  title: z.string().trim().min(2).max(120).optional(),
+  categoryId: z.string().cuid().optional(),
+  amount: z.coerce.number().positive().optional().nullable(),
+  currencyCode: z.enum(supportedCurrencies).optional(),
+  startDate: z.string().min(1).optional(),
+  endDate: z.string().optional().nullable(),
+  frequency: z.nativeEnum(RecurringFrequency).optional(),
+  interval: z.coerce.number().int().min(1).max(24).optional(),
+  anchorDays: z.array(z.number().int().min(0).max(31)).optional(),
+  defaultStatus: z.nativeEnum(ExpenseStatus).optional(),
+  paymentUrl: z.string().url().max(500).optional().nullable(),
+  description: z.string().max(500).optional().nullable(),
+  notes: z.string().max(1000).optional().nullable(),
+  isActive: z.boolean().optional(),
+});
+
+export async function updateRecurringTemplateAction(
+  formData: FormData,
+): Promise<{ success: true } | { error: string }> {
+  try {
+    const raw: Record<string, unknown> = {
+      workspaceSlug: formData.get("workspaceSlug"),
+      templateId: formData.get("templateId"),
+    };
+
+    for (const key of ["title", "categoryId", "currencyCode", "startDate", "frequency", "defaultStatus", "description", "notes"] as const) {
+      if (formData.has(key)) raw[key] = formData.get(key) || undefined;
+    }
+    if (formData.has("amount")) raw.amount = formData.get("amount") || null;
+    if (formData.has("endDate")) raw.endDate = formData.get("endDate") || null;
+    if (formData.has("interval")) raw.interval = formData.get("interval");
+    if (formData.has("anchorDays")) raw.anchorDays = JSON.parse((formData.get("anchorDays") as string) || "[]");
+    if (formData.has("paymentUrl")) raw.paymentUrl = formData.get("paymentUrl") || null;
+
+    const input = updateRecurringSchema.parse(raw);
+
+    const caller = await getServerCaller();
+    await caller.recurring.update({
+      ...input,
+      startDate: input.startDate ? new Date(input.startDate) : undefined,
+      endDate: input.endDate ? new Date(input.endDate) : input.endDate === null ? null : undefined,
+    });
+
+    revalidatePath(routes.workspaceRecurring(input.workspaceSlug));
+    revalidatePath(routes.workspaceRecurringTemplate(input.workspaceSlug, input.templateId));
+    revalidatePath(routes.workspace(input.workspaceSlug));
+    revalidatePath(routes.workspaceDashboard(input.workspaceSlug));
+
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to update recurring template.";
+    return { error: message };
+  }
+}
+
+export async function toggleRecurringTemplateAction(
+  formData: FormData,
+): Promise<{ success: true } | { error: string }> {
+  try {
+    const workspaceSlug = formData.get("workspaceSlug") as string;
+    const templateId = formData.get("templateId") as string;
+    const isActive = formData.get("isActive") === "true";
+
+    const caller = await getServerCaller();
+    await caller.recurring.update({ workspaceSlug, templateId, isActive });
+
+    revalidatePath(routes.workspaceRecurring(workspaceSlug));
+    revalidatePath(routes.workspaceRecurringTemplate(workspaceSlug, templateId));
+    revalidatePath(routes.workspace(workspaceSlug));
+    revalidatePath(routes.workspaceDashboard(workspaceSlug));
+
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to update template status.";
+    return { error: message };
+  }
+}
+
+export async function markFixedAsPaidAction(formData: FormData): Promise<{ success: true } | { error: string }> {
+  try {
+    const workspaceSlug = z.string().min(1).parse(formData.get("workspaceSlug"));
+    const templateId = z.string().min(1).parse(formData.get("templateId"));
+    const caller = await getServerCaller();
+    await caller.recurring.markFixedAsPaid({ workspaceSlug, templateId });
+    revalidatePath(routes.workspaceRecurring(workspaceSlug));
+    revalidatePath(routes.workspaceExpenses(workspaceSlug));
+    revalidatePath(routes.workspace(workspaceSlug));
+    revalidatePath(routes.workspaceDashboard(workspaceSlug));
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to mark as paid.";
+    return { error: message };
+  }
+}
+
 export async function recordVariableRecurringExpenseAction(formData: FormData): Promise<{ success: true } | { error: string }> {
   try {
     const input = recordVariableRecurringSchema.parse({

@@ -9,6 +9,36 @@ export const recurringRouter = createTRPCRouter({
     .input(z.object({ workspaceSlug: z.string().min(1) }))
     .query(({ ctx }) => recurringService.listTemplates(ctx.membership.workspaceId)),
 
+  getById: workspaceMemberProcedure
+    .input(z.object({ workspaceSlug: z.string().min(1), templateId: z.string().min(1) }))
+    .query(({ ctx, input }) => recurringService.getById(ctx.membership.workspaceId, input.templateId)),
+
+  update: workspaceEditorProcedure
+    .input(
+      z.object({
+        workspaceSlug: z.string().min(1),
+        templateId: z.string().min(1),
+        title: z.string().trim().min(2).max(120).optional(),
+        categoryId: z.string().cuid().optional(),
+        amount: z.coerce.number().positive().optional().nullable(),
+        currencyCode: z.enum(supportedCurrencies).optional(),
+        startDate: z.coerce.date().optional(),
+        endDate: z.coerce.date().optional().nullable(),
+        frequency: z.nativeEnum(RecurringFrequency).optional(),
+        interval: z.coerce.number().int().min(1).max(24).optional(),
+        anchorDays: z.array(z.number().int().min(0).max(31)).optional(),
+        defaultStatus: z.nativeEnum(ExpenseStatus).optional(),
+        paymentUrl: z.string().url().max(500).optional().nullable(),
+        description: z.string().max(500).optional().nullable(),
+        notes: z.string().max(1000).optional().nullable(),
+        isActive: z.boolean().optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      const { workspaceSlug: _, templateId, ...rest } = input;
+      return recurringService.updateTemplate(ctx.membership.workspaceId, templateId, rest);
+    }),
+
   generateDue: workspaceMemberProcedure
     .input(z.object({ workspaceSlug: z.string().min(1) }))
     .mutation(({ ctx }) => recurringService.generateDueExpenses(ctx.membership.workspaceId)),
@@ -55,6 +85,16 @@ export const recurringRouter = createTRPCRouter({
         paymentUrl: input.paymentUrl,
         description: input.description,
         notes: input.notes,
+      });
+    }),
+
+  markFixedAsPaid: workspaceEditorProcedure
+    .input(z.object({ workspaceSlug: z.string().min(1), templateId: z.string().cuid() }))
+    .mutation(({ ctx, input }) => {
+      return recurringService.markFixedAsPaid({
+        workspaceId: ctx.membership.workspaceId,
+        createdByUserId: ctx.user.id,
+        templateId: input.templateId,
       });
     }),
 
