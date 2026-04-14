@@ -42,6 +42,7 @@ model DebtPayment {
   exchangeRate          Decimal     @db.Decimal(18, 8)
   exchangeRateDate      DateTime
   paymentDate           DateTime
+  dueDate               DateTime?
   notes                 String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
@@ -50,5 +51,7 @@ model DebtPayment {
   expense               Expense?    @relation(fields: [expenseId], references: [id], onDelete: SetNull)
   paidByUser            User        @relation("DebtPaymentCreator", fields: [paidByUserId], references: [id], onDelete: Restrict)
 
+  @@unique([debtAccountId, dueDate])
   @@index([workspaceId, paymentDate])
+  @@index([debtAccountId, dueDate])
 }

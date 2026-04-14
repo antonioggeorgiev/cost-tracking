@@ -153,6 +153,7 @@ export const DebtPaymentScalarFieldEnum = {
   exchangeRate: 'exchangeRate',
   exchangeRateDate: 'exchangeRateDate',
   paymentDate: 'paymentDate',
+  dueDate: 'dueDate',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

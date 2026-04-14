@@ -51,6 +51,7 @@ export type DebtPaymentMinAggregateOutputType = {
   exchangeRate: runtime.Decimal | null
   exchangeRateDate: Date | null
   paymentDate: Date | null
+  dueDate: Date | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -69,6 +70,7 @@ export type DebtPaymentMaxAggregateOutputType = {
   exchangeRate: runtime.Decimal | null
   exchangeRateDate: Date | null
   paymentDate: Date | null
+  dueDate: Date | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -87,6 +89,7 @@ export type DebtPaymentCountAggregateOutputType = {
   exchangeRate: number
   exchangeRateDate: number
   paymentDate: number
+  dueDate: number
   notes: number
   createdAt: number
   updatedAt: number
@@ -119,6 +122,7 @@ export type DebtPaymentMinAggregateInputType = {
   exchangeRate?: true
   exchangeRateDate?: true
   paymentDate?: true
+  dueDate?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -137,6 +141,7 @@ export type DebtPaymentMaxAggregateInputType = {
   exchangeRate?: true
   exchangeRateDate?: true
   paymentDate?: true
+  dueDate?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -155,6 +160,7 @@ export type DebtPaymentCountAggregateInputType = {
   exchangeRate?: true
   exchangeRateDate?: true
   paymentDate?: true
+  dueDate?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -260,6 +266,7 @@ export type DebtPaymentGroupByOutputType = {
   exchangeRate: runtime.Decimal
   exchangeRateDate: Date
   paymentDate: Date
+  dueDate: Date | null
   notes: string | null
   createdAt: Date
   updatedAt: Date
@@ -301,6 +308,7 @@ export type DebtPaymentWhereInput = {
   exchangeRate?: Prisma.DecimalFilter<"DebtPayment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
   paymentDate?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
+  dueDate?: Prisma.DateTimeNullableFilter<"DebtPayment"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"DebtPayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
@@ -323,6 +331,7 @@ export type DebtPaymentOrderByWithRelationInput = {
   exchangeRate?: Prisma.SortOrder
   exchangeRateDate?: Prisma.SortOrder
   paymentDate?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -335,6 +344,7 @@ export type DebtPaymentOrderByWithRelationInput = {
 export type DebtPaymentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   expenseId?: string
+  debtAccountId_dueDate?: Prisma.DebtPaymentDebtAccountIdDueDateCompoundUniqueInput
   AND?: Prisma.DebtPaymentWhereInput | Prisma.DebtPaymentWhereInput[]
   OR?: Prisma.DebtPaymentWhereInput[]
   NOT?: Prisma.DebtPaymentWhereInput | Prisma.DebtPaymentWhereInput[]
@@ -348,6 +358,7 @@ export type DebtPaymentWhereUniqueInput = Prisma.AtLeast<{
   exchangeRate?: Prisma.DecimalFilter<"DebtPayment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
   paymentDate?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
+  dueDate?: Prisma.DateTimeNullableFilter<"DebtPayment"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"DebtPayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
@@ -355,7 +366,7 @@ export type DebtPaymentWhereUniqueInput = Prisma.AtLeast<{
   debtAccount?: Prisma.XOR<Prisma.DebtAccountScalarRelationFilter, Prisma.DebtAccountWhereInput>
   expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
   paidByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "expenseId">
+}, "id" | "expenseId" | "debtAccountId_dueDate">
 
 export type DebtPaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -370,6 +381,7 @@ export type DebtPaymentOrderByWithAggregationInput = {
   exchangeRate?: Prisma.SortOrder
   exchangeRateDate?: Prisma.SortOrder
   paymentDate?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -396,6 +408,7 @@ export type DebtPaymentScalarWhereWithAggregatesInput = {
   exchangeRate?: Prisma.DecimalWithAggregatesFilter<"DebtPayment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeWithAggregatesFilter<"DebtPayment"> | Date | string
   paymentDate?: Prisma.DateTimeWithAggregatesFilter<"DebtPayment"> | Date | string
+  dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DebtPayment"> | Date | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"DebtPayment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DebtPayment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DebtPayment"> | Date | string
@@ -410,6 +423,7 @@ export type DebtPaymentCreateInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -432,6 +446,7 @@ export type DebtPaymentUncheckedCreateInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -446,6 +461,7 @@ export type DebtPaymentUpdateInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -468,6 +484,7 @@ export type DebtPaymentUncheckedUpdateInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -486,6 +503,7 @@ export type DebtPaymentCreateManyInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -500,6 +518,7 @@ export type DebtPaymentUpdateManyMutationInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -518,6 +537,7 @@ export type DebtPaymentUncheckedUpdateManyInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -533,6 +553,11 @@ export type DebtPaymentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type DebtPaymentDebtAccountIdDueDateCompoundUniqueInput = {
+  debtAccountId: string
+  dueDate: Date | string
+}
+
 export type DebtPaymentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -546,6 +571,7 @@ export type DebtPaymentCountOrderByAggregateInput = {
   exchangeRate?: Prisma.SortOrder
   exchangeRateDate?: Prisma.SortOrder
   paymentDate?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -570,6 +596,7 @@ export type DebtPaymentMaxOrderByAggregateInput = {
   exchangeRate?: Prisma.SortOrder
   exchangeRateDate?: Prisma.SortOrder
   paymentDate?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -588,6 +615,7 @@ export type DebtPaymentMinOrderByAggregateInput = {
   exchangeRate?: Prisma.SortOrder
   exchangeRateDate?: Prisma.SortOrder
   paymentDate?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -779,6 +807,7 @@ export type DebtPaymentCreateWithoutDebtAccountInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -799,6 +828,7 @@ export type DebtPaymentUncheckedCreateWithoutDebtAccountInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -846,6 +876,7 @@ export type DebtPaymentScalarWhereInput = {
   exchangeRate?: Prisma.DecimalFilter<"DebtPayment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
   paymentDate?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
+  dueDate?: Prisma.DateTimeNullableFilter<"DebtPayment"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"DebtPayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DebtPayment"> | Date | string
@@ -860,6 +891,7 @@ export type DebtPaymentCreateWithoutExpenseInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -880,6 +912,7 @@ export type DebtPaymentUncheckedCreateWithoutExpenseInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -910,6 +943,7 @@ export type DebtPaymentUpdateWithoutExpenseInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -930,6 +964,7 @@ export type DebtPaymentUncheckedUpdateWithoutExpenseInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -944,6 +979,7 @@ export type DebtPaymentCreateWithoutPaidByUserInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -964,6 +1000,7 @@ export type DebtPaymentUncheckedCreateWithoutPaidByUserInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1004,6 +1041,7 @@ export type DebtPaymentCreateWithoutWorkspaceInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1024,6 +1062,7 @@ export type DebtPaymentUncheckedCreateWithoutWorkspaceInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1067,6 +1106,7 @@ export type DebtPaymentCreateManyDebtAccountInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1081,6 +1121,7 @@ export type DebtPaymentUpdateWithoutDebtAccountInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1101,6 +1142,7 @@ export type DebtPaymentUncheckedUpdateWithoutDebtAccountInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1118,6 +1160,7 @@ export type DebtPaymentUncheckedUpdateManyWithoutDebtAccountInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1135,6 +1178,7 @@ export type DebtPaymentCreateManyPaidByUserInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1149,6 +1193,7 @@ export type DebtPaymentUpdateWithoutPaidByUserInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1169,6 +1214,7 @@ export type DebtPaymentUncheckedUpdateWithoutPaidByUserInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1186,6 +1232,7 @@ export type DebtPaymentUncheckedUpdateManyWithoutPaidByUserInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1203,6 +1250,7 @@ export type DebtPaymentCreateManyWorkspaceInput = {
   exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate: Date | string
   paymentDate: Date | string
+  dueDate?: Date | string | null
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1217,6 +1265,7 @@ export type DebtPaymentUpdateWithoutWorkspaceInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1237,6 +1286,7 @@ export type DebtPaymentUncheckedUpdateWithoutWorkspaceInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1254,6 +1304,7 @@ export type DebtPaymentUncheckedUpdateManyWithoutWorkspaceInput = {
   exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1274,6 +1325,7 @@ export type DebtPaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   exchangeRate?: boolean
   exchangeRateDate?: boolean
   paymentDate?: boolean
+  dueDate?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1296,6 +1348,7 @@ export type DebtPaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   exchangeRate?: boolean
   exchangeRateDate?: boolean
   paymentDate?: boolean
+  dueDate?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1318,6 +1371,7 @@ export type DebtPaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   exchangeRate?: boolean
   exchangeRateDate?: boolean
   paymentDate?: boolean
+  dueDate?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1340,12 +1394,13 @@ export type DebtPaymentSelectScalar = {
   exchangeRate?: boolean
   exchangeRateDate?: boolean
   paymentDate?: boolean
+  dueDate?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DebtPaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "debtAccountId" | "expenseId" | "paidByUserId" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "paymentDate" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["debtPayment"]>
+export type DebtPaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "debtAccountId" | "expenseId" | "paidByUserId" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "paymentDate" | "dueDate" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["debtPayment"]>
 export type DebtPaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   debtAccount?: boolean | Prisma.DebtAccountDefaultArgs<ExtArgs>
@@ -1386,6 +1441,7 @@ export type $DebtPaymentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     exchangeRate: runtime.Decimal
     exchangeRateDate: Date
     paymentDate: Date
+    dueDate: Date | null
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -1828,6 +1884,7 @@ export interface DebtPaymentFieldRefs {
   readonly exchangeRate: Prisma.FieldRef<"DebtPayment", 'Decimal'>
   readonly exchangeRateDate: Prisma.FieldRef<"DebtPayment", 'DateTime'>
   readonly paymentDate: Prisma.FieldRef<"DebtPayment", 'DateTime'>
+  readonly dueDate: Prisma.FieldRef<"DebtPayment", 'DateTime'>
   readonly notes: Prisma.FieldRef<"DebtPayment", 'String'>
   readonly createdAt: Prisma.FieldRef<"DebtPayment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DebtPayment", 'DateTime'>
