@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  ExpenseAttachment: 'ExpenseAttachment',
   Category: 'Category',
   DebtAccount: 'DebtAccount',
   DebtPayment: 'DebtPayment',
@@ -408,10 +409,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "debtAccount" | "debtPayment" | "expense" | "recurringExpenseTemplate" | "user" | "workspace" | "workspaceMembership" | "workspaceInvite"
+    modelProps: "expenseAttachment" | "category" | "debtAccount" | "debtPayment" | "expense" | "recurringExpenseTemplate" | "user" | "workspace" | "workspaceMembership" | "workspaceInvite"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    ExpenseAttachment: {
+      payload: Prisma.$ExpenseAttachmentPayload<ExtArgs>
+      fields: Prisma.ExpenseAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExpenseAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExpenseAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.ExpenseAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExpenseAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.ExpenseAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.ExpenseAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.ExpenseAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExpenseAttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.ExpenseAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        update: {
+          args: Prisma.ExpenseAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExpenseAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExpenseAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExpenseAttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExpenseAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpenseAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.ExpenseAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExpenseAttachment>
+        }
+        groupBy: {
+          args: Prisma.ExpenseAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpenseAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExpenseAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpenseAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
     Category: {
       payload: Prisma.$CategoryPayload<ExtArgs>
       fields: Prisma.CategoryFieldRefs
@@ -1117,6 +1192,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ExpenseAttachmentScalarFieldEnum = {
+  id: 'id',
+  expenseId: 'expenseId',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  contentType: 'contentType',
+  url: 'url',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ExpenseAttachmentScalarFieldEnum = (typeof ExpenseAttachmentScalarFieldEnum)[keyof typeof ExpenseAttachmentScalarFieldEnum]
+
+
 export const CategoryScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -1136,11 +1227,22 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 export const DebtAccountScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  kind: 'kind',
+  direction: 'direction',
   name: 'name',
   provider: 'provider',
+  counterparty: 'counterparty',
   originalAmountMinor: 'originalAmountMinor',
   currencyCode: 'currencyCode',
   currentBalanceMinor: 'currentBalanceMinor',
+  interestRateBps: 'interestRateBps',
+  termMonths: 'termMonths',
+  monthlyAmountMinor: 'monthlyAmountMinor',
+  residualValueMinor: 'residualValueMinor',
+  frequency: 'frequency',
+  interval: 'interval',
+  anchorDays: 'anchorDays',
+  nextPaymentDate: 'nextPaymentDate',
   openedAt: 'openedAt',
   isActive: 'isActive',
   notes: 'notes',
@@ -1203,6 +1305,7 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
   workspaceId: 'workspaceId',
   categoryId: 'categoryId',
   createdByUserId: 'createdByUserId',
+  kind: 'kind',
   title: 'title',
   description: 'description',
   originalAmountMinor: 'originalAmountMinor',
@@ -1213,12 +1316,14 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
   exchangeRateDate: 'exchangeRateDate',
   frequency: 'frequency',
   interval: 'interval',
+  anchorDays: 'anchorDays',
   startDate: 'startDate',
   endDate: 'endDate',
   nextOccurrenceDate: 'nextOccurrenceDate',
   lastGeneratedAt: 'lastGeneratedAt',
   defaultStatus: 'defaultStatus',
   isActive: 'isActive',
+  paymentUrl: 'paymentUrl',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1327,13 +1432,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1358,6 +1456,55 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtAccountKind'
+ */
+export type EnumDebtAccountKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtAccountKind'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtAccountKind[]'
+ */
+export type ListEnumDebtAccountKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtAccountKind[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtDirection'
+ */
+export type EnumDebtDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtDirection'>
+    
+
+
+/**
+ * Reference to a field of type 'DebtDirection[]'
+ */
+export type ListEnumDebtDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebtDirection[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RecurringFrequency'
+ */
+export type EnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency'>
+    
+
+
+/**
+ * Reference to a field of type 'RecurringFrequency[]'
+ */
+export type ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency[]'>
     
 
 
@@ -1404,16 +1551,16 @@ export type ListEnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'RecurringFrequency'
+ * Reference to a field of type 'RecurringTemplateKind'
  */
-export type EnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency'>
+export type EnumRecurringTemplateKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringTemplateKind'>
     
 
 
 /**
- * Reference to a field of type 'RecurringFrequency[]'
+ * Reference to a field of type 'RecurringTemplateKind[]'
  */
-export type ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency[]'>
+export type ListEnumRecurringTemplateKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringTemplateKind[]'>
     
 
 
@@ -1553,6 +1700,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  expenseAttachment?: Prisma.ExpenseAttachmentOmit
   category?: Prisma.CategoryOmit
   debtAccount?: Prisma.DebtAccountOmit
   debtPayment?: Prisma.DebtPaymentOmit

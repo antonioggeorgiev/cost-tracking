@@ -1,4 +1,4 @@
-import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
+import { createCategoryFormAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { getServerCaller } from "@/server/trpc-caller";
 import { FolderTree, Plus, ChevronRight } from "lucide-react";
 
@@ -38,7 +38,7 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
         <div className="grid gap-6 lg:grid-cols-2">
           <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <h2 className="font-heading text-base font-semibold text-heading">Create parent category</h2>
-            <form action={createCategoryAction} className="mt-5 space-y-4">
+            <form action={createCategoryFormAction} className="mt-5 space-y-4">
               <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
               <input type="hidden" name="parentCategoryId" value="" />
               <label className="grid gap-1.5 text-sm">
@@ -54,7 +54,7 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
 
           <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <h2 className="font-heading text-base font-semibold text-heading">Create child category</h2>
-            <form action={createCategoryAction} className="mt-5 space-y-4">
+            <form action={createCategoryFormAction} className="mt-5 space-y-4">
               <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
               <label className="grid gap-1.5 text-sm">
                 <span className="font-medium text-heading">Parent</span>

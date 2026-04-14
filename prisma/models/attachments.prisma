@@ -1,0 +1,15 @@
+model ExpenseAttachment {
+  id          String    @id @default(cuid())
+  expenseId   String
+  fileName    String
+  fileSize    Int
+  contentType String
+  url         String
+  imageWidth  Int?
+  imageHeight Int?
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  expense     Expense   @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@index([expenseId])
+}

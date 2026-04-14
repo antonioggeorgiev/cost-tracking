@@ -1,4 +1,4 @@
-import { ExpenseStatus } from "@/generated/prisma/enums";
+import { ExpenseStatus, RecurringTemplateKind } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 
 function startOfMonth(date: Date) {
@@ -24,7 +24,7 @@ export const reportingService = {
     const nextMonthStart = endOfMonth(now);
     const previousMonthStart = startOfMonth(new Date(now.getFullYear(), now.getMonth() - 1, 1));
 
-    const [currentMonthExpenses, previousMonthExpenses, allCurrentMonthExpenses, recentExpenses, upcomingRecurring, debtAccounts] = await Promise.all([
+    const [currentMonthExpenses, previousMonthExpenses, allCurrentMonthExpenses, recentExpenses, upcomingRecurring, dueVariableRecurring, debtAccounts] = await Promise.all([
       db.expense.findMany({
         where: { workspaceId: input.workspaceId, status: ExpenseStatus.posted, expenseDate: { gte: monthStart, lt: nextMonthStart } },
         include: { category: { include: { parentCategory: true } }, createdByUser: { select: { name: true, email: true } } },
@@ -45,7 +45,18 @@ export const reportingService = {
         take: 8,
       }),
       db.recurringExpenseTemplate.findMany({
-        where: { workspaceId: input.workspaceId, isActive: true },
+        where: { workspaceId: input.workspaceId, kind: RecurringTemplateKind.fixed_amount, isActive: true },
+        include: { category: { include: { parentCategory: true } } },
+        orderBy: { nextOccurrenceDate: "asc" },
+        take: 5,
+      }),
+      db.recurringExpenseTemplate.findMany({
+        where: {
+          workspaceId: input.workspaceId,
+          kind: RecurringTemplateKind.variable_amount,
+          isActive: true,
+          nextOccurrenceDate: { lte: now },
+        },
         include: { category: { include: { parentCategory: true } } },
         orderBy: { nextOccurrenceDate: "asc" },
         take: 5,
@@ -82,7 +93,9 @@ export const reportingService = {
     // Spending by category with percentages
     const spendingByCategoryMap = new Map<string, { label: string; amountMinor: number }>();
     for (const expense of currentMonthExpenses) {
-      const label = expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name;
+      const label = expense.category
+        ? (expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name)
+        : "Uncategorized";
       const existing = spendingByCategoryMap.get(label);
       spendingByCategoryMap.set(label, { label, amountMinor: (existing?.amountMinor ?? 0) + expense.workspaceAmountMinor });
     }
@@ -105,8 +118,12 @@ export const reportingService = {
       recentExpenses: recentExpenses.map((expense) => ({
         id: expense.id,
         title: expense.title,
-        categoryPath: expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name,
-        categoryName: expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name,
+        categoryPath: expense.category
+          ? (expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name)
+          : "Uncategorized",
+        categoryName: expense.category
+          ? (expense.category.parentCategory ? expense.category.parentCategory.name : expense.category.name)
+          : "Uncategorized",
         createdByLabel: expense.createdByUser.name || expense.createdByUser.email,
         expenseDate: expense.expenseDate,
         workspaceAmountMinor: expense.workspaceAmountMinor,
@@ -120,6 +137,14 @@ export const reportingService = {
         nextOccurrenceDate: template.nextOccurrenceDate,
         workspaceAmountMinor: template.workspaceAmountMinor,
         workspaceCurrencyCode: template.workspaceCurrencyCode,
+        categoryPath: template.category.parentCategory ? `${template.category.parentCategory.name} / ${template.category.name}` : template.category.name,
+      })),
+      dueVariableRecurring: dueVariableRecurring.map((template) => ({
+        id: template.id,
+        title: template.title,
+        nextOccurrenceDate: template.nextOccurrenceDate,
+        originalCurrencyCode: template.originalCurrencyCode,
+        paymentUrl: template.paymentUrl,
         categoryPath: template.category.parentCategory ? `${template.category.parentCategory.name} / ${template.category.name}` : template.category.name,
       })),
       activeDebts: debtAccounts.map((debt) => ({

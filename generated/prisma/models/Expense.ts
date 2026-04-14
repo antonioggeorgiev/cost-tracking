@@ -280,7 +280,7 @@ export type ExpenseGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type ExpenseGroupByOutputType = {
   id: string
   workspaceId: string
-  categoryId: string
+  categoryId: string | null
   createdByUserId: string
   title: string
   description: string | null
@@ -326,7 +326,7 @@ export type ExpenseWhereInput = {
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   id?: Prisma.StringFilter<"Expense"> | string
   workspaceId?: Prisma.StringFilter<"Expense"> | string
-  categoryId?: Prisma.StringFilter<"Expense"> | string
+  categoryId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdByUserId?: Prisma.StringFilter<"Expense"> | string
   title?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -345,17 +345,18 @@ export type ExpenseWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
-  category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
+  category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   recurringTemplate?: Prisma.XOR<Prisma.RecurringExpenseTemplateNullableScalarRelationFilter, Prisma.RecurringExpenseTemplateWhereInput> | null
   debtAccount?: Prisma.XOR<Prisma.DebtAccountNullableScalarRelationFilter, Prisma.DebtAccountWhereInput> | null
   debtPayment?: Prisma.XOR<Prisma.DebtPaymentNullableScalarRelationFilter, Prisma.DebtPaymentWhereInput> | null
+  attachments?: Prisma.ExpenseAttachmentListRelationFilter
 }
 
 export type ExpenseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
-  categoryId?: Prisma.SortOrder
+  categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -379,15 +380,17 @@ export type ExpenseOrderByWithRelationInput = {
   recurringTemplate?: Prisma.RecurringExpenseTemplateOrderByWithRelationInput
   debtAccount?: Prisma.DebtAccountOrderByWithRelationInput
   debtPayment?: Prisma.DebtPaymentOrderByWithRelationInput
+  attachments?: Prisma.ExpenseAttachmentOrderByRelationAggregateInput
 }
 
 export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  recurringTemplateId_expenseDate?: Prisma.ExpenseRecurringTemplateIdExpenseDateCompoundUniqueInput
   AND?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   OR?: Prisma.ExpenseWhereInput[]
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   workspaceId?: Prisma.StringFilter<"Expense"> | string
-  categoryId?: Prisma.StringFilter<"Expense"> | string
+  categoryId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdByUserId?: Prisma.StringFilter<"Expense"> | string
   title?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -406,17 +409,18 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
-  category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
+  category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   recurringTemplate?: Prisma.XOR<Prisma.RecurringExpenseTemplateNullableScalarRelationFilter, Prisma.RecurringExpenseTemplateWhereInput> | null
   debtAccount?: Prisma.XOR<Prisma.DebtAccountNullableScalarRelationFilter, Prisma.DebtAccountWhereInput> | null
   debtPayment?: Prisma.XOR<Prisma.DebtPaymentNullableScalarRelationFilter, Prisma.DebtPaymentWhereInput> | null
-}, "id">
+  attachments?: Prisma.ExpenseAttachmentListRelationFilter
+}, "id" | "recurringTemplateId_expenseDate">
 
 export type ExpenseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
-  categoryId?: Prisma.SortOrder
+  categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -447,7 +451,7 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ExpenseScalarWhereWithAggregatesInput | Prisma.ExpenseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   workspaceId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
-  categoryId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
+  categoryId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   createdByUserId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   title?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
@@ -484,17 +488,18 @@ export type ExpenseCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutExpensesInput
-  category: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutExpensesInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
   debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
   debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -513,6 +518,7 @@ export type ExpenseUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUpdateInput = {
@@ -532,17 +538,18 @@ export type ExpenseUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutExpensesNestedInput
-  category?: Prisma.CategoryUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
   debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
   debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -561,12 +568,13 @@ export type ExpenseUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseCreateManyInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -607,7 +615,7 @@ export type ExpenseUpdateManyMutationInput = {
 export type ExpenseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -627,6 +635,11 @@ export type ExpenseUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type ExpenseScalarRelationFilter = {
+  is?: Prisma.ExpenseWhereInput
+  isNot?: Prisma.ExpenseWhereInput
+}
+
 export type ExpenseListRelationFilter = {
   every?: Prisma.ExpenseWhereInput
   some?: Prisma.ExpenseWhereInput
@@ -640,6 +653,11 @@ export type ExpenseOrderByRelationAggregateInput = {
 export type ExpenseNullableScalarRelationFilter = {
   is?: Prisma.ExpenseWhereInput | null
   isNot?: Prisma.ExpenseWhereInput | null
+}
+
+export type ExpenseRecurringTemplateIdExpenseDateCompoundUniqueInput = {
+  recurringTemplateId: string
+  expenseDate: Date | string
 }
 
 export type ExpenseCountOrderByAggregateInput = {
@@ -721,6 +739,20 @@ export type ExpenseSumOrderByAggregateInput = {
   originalAmountMinor?: Prisma.SortOrder
   workspaceAmountMinor?: Prisma.SortOrder
   exchangeRate?: Prisma.SortOrder
+}
+
+export type ExpenseCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutAttachmentsInput, Prisma.ExpenseUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.ExpenseWhereUniqueInput
+}
+
+export type ExpenseUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutAttachmentsInput, Prisma.ExpenseUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.ExpenseUpsertWithoutAttachmentsInput
+  connect?: Prisma.ExpenseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExpenseUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.ExpenseUpdateWithoutAttachmentsInput>, Prisma.ExpenseUncheckedUpdateWithoutAttachmentsInput>
 }
 
 export type ExpenseCreateNestedManyWithoutCategoryInput = {
@@ -957,6 +989,118 @@ export type ExpenseUncheckedUpdateManyWithoutWorkspaceNestedInput = {
   deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
 }
 
+export type ExpenseCreateWithoutAttachmentsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  originalAmountMinor: number
+  originalCurrencyCode: string
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
+  expenseDate: Date | string
+  type?: $Enums.ExpenseType
+  status?: $Enums.ExpenseStatus
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  createdByUser: Prisma.UserCreateNestedOneWithoutExpensesInput
+  recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
+  debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
+  debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+}
+
+export type ExpenseUncheckedCreateWithoutAttachmentsInput = {
+  id?: string
+  workspaceId: string
+  categoryId?: string | null
+  createdByUserId: string
+  title: string
+  description?: string | null
+  originalAmountMinor: number
+  originalCurrencyCode: string
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
+  expenseDate: Date | string
+  type?: $Enums.ExpenseType
+  status?: $Enums.ExpenseStatus
+  recurringTemplateId?: string | null
+  debtAccountId?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+}
+
+export type ExpenseCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExpenseCreateWithoutAttachmentsInput, Prisma.ExpenseUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type ExpenseUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.ExpenseUpdateWithoutAttachmentsInput, Prisma.ExpenseUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.ExpenseCreateWithoutAttachmentsInput, Prisma.ExpenseUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.ExpenseWhereInput
+}
+
+export type ExpenseUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.ExpenseWhereInput
+  data: Prisma.XOR<Prisma.ExpenseUpdateWithoutAttachmentsInput, Prisma.ExpenseUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type ExpenseUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
+  createdByUser?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
+  recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
+  debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
+  debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+}
+
+export type ExpenseUncheckedUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  originalCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumExpenseTypeFieldUpdateOperationsInput | $Enums.ExpenseType
+  status?: Prisma.EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+  recurringTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  debtAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+}
+
 export type ExpenseCreateWithoutCategoryInput = {
   id?: string
   title: string
@@ -978,6 +1122,7 @@ export type ExpenseCreateWithoutCategoryInput = {
   recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
   debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
   debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateWithoutCategoryInput = {
@@ -1001,6 +1146,7 @@ export type ExpenseUncheckedCreateWithoutCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseCreateOrConnectWithoutCategoryInput = {
@@ -1035,7 +1181,7 @@ export type ExpenseScalarWhereInput = {
   NOT?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
   id?: Prisma.StringFilter<"Expense"> | string
   workspaceId?: Prisma.StringFilter<"Expense"> | string
-  categoryId?: Prisma.StringFilter<"Expense"> | string
+  categoryId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdByUserId?: Prisma.StringFilter<"Expense"> | string
   title?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -1072,16 +1218,17 @@ export type ExpenseCreateWithoutDebtAccountInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutExpensesInput
-  category: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutExpensesInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
   debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateWithoutDebtAccountInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1099,6 +1246,7 @@ export type ExpenseUncheckedCreateWithoutDebtAccountInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseCreateOrConnectWithoutDebtAccountInput = {
@@ -1144,16 +1292,17 @@ export type ExpenseCreateWithoutDebtPaymentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutExpensesInput
-  category: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutExpensesInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
   debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateWithoutDebtPaymentInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1171,6 +1320,7 @@ export type ExpenseUncheckedCreateWithoutDebtPaymentInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseCreateOrConnectWithoutDebtPaymentInput = {
@@ -1206,16 +1356,17 @@ export type ExpenseUpdateWithoutDebtPaymentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutExpensesNestedInput
-  category?: Prisma.CategoryUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
   debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutDebtPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1233,6 +1384,7 @@ export type ExpenseUncheckedUpdateWithoutDebtPaymentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseCreateWithoutRecurringTemplateInput = {
@@ -1252,16 +1404,17 @@ export type ExpenseCreateWithoutRecurringTemplateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutExpensesInput
-  category: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutExpensesInput
   debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
   debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateWithoutRecurringTemplateInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1279,6 +1432,7 @@ export type ExpenseUncheckedCreateWithoutRecurringTemplateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseCreateOrConnectWithoutRecurringTemplateInput = {
@@ -1324,16 +1478,17 @@ export type ExpenseCreateWithoutCreatedByUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   workspace: Prisma.WorkspaceCreateNestedOneWithoutExpensesInput
-  category: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
   debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
   debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateWithoutCreatedByUserInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   title: string
   description?: string | null
   originalAmountMinor: number
@@ -1351,6 +1506,7 @@ export type ExpenseUncheckedCreateWithoutCreatedByUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseCreateOrConnectWithoutCreatedByUserInput = {
@@ -1395,16 +1551,17 @@ export type ExpenseCreateWithoutWorkspaceInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  category: Prisma.CategoryCreateNestedOneWithoutExpensesInput
+  category?: Prisma.CategoryCreateNestedOneWithoutExpensesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutExpensesInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateCreateNestedOneWithoutExpensesInput
   debtAccount?: Prisma.DebtAccountCreateNestedOneWithoutExpensesInput
   debtPayment?: Prisma.DebtPaymentCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseUncheckedCreateWithoutWorkspaceInput = {
   id?: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1423,6 +1580,7 @@ export type ExpenseUncheckedCreateWithoutWorkspaceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedCreateNestedOneWithoutExpenseInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedCreateNestedManyWithoutExpenseInput
 }
 
 export type ExpenseCreateOrConnectWithoutWorkspaceInput = {
@@ -1494,6 +1652,7 @@ export type ExpenseUpdateWithoutCategoryInput = {
   recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
   debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
   debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutCategoryInput = {
@@ -1517,6 +1676,7 @@ export type ExpenseUncheckedUpdateWithoutCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateManyWithoutCategoryInput = {
@@ -1544,7 +1704,7 @@ export type ExpenseUncheckedUpdateManyWithoutCategoryInput = {
 export type ExpenseCreateManyDebtAccountInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1580,16 +1740,17 @@ export type ExpenseUpdateWithoutDebtAccountInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutExpensesNestedInput
-  category?: Prisma.CategoryUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
   debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutDebtAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1607,12 +1768,13 @@ export type ExpenseUncheckedUpdateWithoutDebtAccountInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateManyWithoutDebtAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1634,7 +1796,7 @@ export type ExpenseUncheckedUpdateManyWithoutDebtAccountInput = {
 export type ExpenseCreateManyRecurringTemplateInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1670,16 +1832,17 @@ export type ExpenseUpdateWithoutRecurringTemplateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutExpensesNestedInput
-  category?: Prisma.CategoryUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
   debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutRecurringTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1697,12 +1860,13 @@ export type ExpenseUncheckedUpdateWithoutRecurringTemplateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateManyWithoutRecurringTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1724,7 +1888,7 @@ export type ExpenseUncheckedUpdateManyWithoutRecurringTemplateInput = {
 export type ExpenseCreateManyCreatedByUserInput = {
   id?: string
   workspaceId: string
-  categoryId: string
+  categoryId?: string | null
   title: string
   description?: string | null
   originalAmountMinor: number
@@ -1760,16 +1924,17 @@ export type ExpenseUpdateWithoutCreatedByUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutExpensesNestedInput
-  category?: Prisma.CategoryUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
   debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
   debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutCreatedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1787,12 +1952,13 @@ export type ExpenseUncheckedUpdateWithoutCreatedByUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateManyWithoutCreatedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1813,7 +1979,7 @@ export type ExpenseUncheckedUpdateManyWithoutCreatedByUserInput = {
 
 export type ExpenseCreateManyWorkspaceInput = {
   id?: string
-  categoryId: string
+  categoryId?: string | null
   createdByUserId: string
   title: string
   description?: string | null
@@ -1849,16 +2015,17 @@ export type ExpenseUpdateWithoutWorkspaceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  category?: Prisma.CategoryUpdateOneRequiredWithoutExpensesNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutExpensesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   recurringTemplate?: Prisma.RecurringExpenseTemplateUpdateOneWithoutExpensesNestedInput
   debtAccount?: Prisma.DebtAccountUpdateOneWithoutExpensesNestedInput
   debtPayment?: Prisma.DebtPaymentUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1877,11 +2044,12 @@ export type ExpenseUncheckedUpdateWithoutWorkspaceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   debtPayment?: Prisma.DebtPaymentUncheckedUpdateOneWithoutExpenseNestedInput
+  attachments?: Prisma.ExpenseAttachmentUncheckedUpdateManyWithoutExpenseNestedInput
 }
 
 export type ExpenseUncheckedUpdateManyWithoutWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1901,6 +2069,35 @@ export type ExpenseUncheckedUpdateManyWithoutWorkspaceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type ExpenseCountOutputType
+ */
+
+export type ExpenseCountOutputType = {
+  attachments: number
+}
+
+export type ExpenseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  attachments?: boolean | ExpenseCountOutputTypeCountAttachmentsArgs
+}
+
+/**
+ * ExpenseCountOutputType without action
+ */
+export type ExpenseCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExpenseCountOutputType
+   */
+  select?: Prisma.ExpenseCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ExpenseCountOutputType without action
+ */
+export type ExpenseCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseAttachmentWhereInput
+}
 
 
 export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1925,11 +2122,13 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.Expense$categoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringTemplate?: boolean | Prisma.Expense$recurringTemplateArgs<ExtArgs>
   debtAccount?: boolean | Prisma.Expense$debtAccountArgs<ExtArgs>
   debtPayment?: boolean | Prisma.Expense$debtPaymentArgs<ExtArgs>
+  attachments?: boolean | Prisma.Expense$attachmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.ExpenseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1954,7 +2153,7 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.Expense$categoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringTemplate?: boolean | Prisma.Expense$recurringTemplateArgs<ExtArgs>
   debtAccount?: boolean | Prisma.Expense$debtAccountArgs<ExtArgs>
@@ -1982,7 +2181,7 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.Expense$categoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringTemplate?: boolean | Prisma.Expense$recurringTemplateArgs<ExtArgs>
   debtAccount?: boolean | Prisma.Expense$debtAccountArgs<ExtArgs>
@@ -2014,22 +2213,24 @@ export type ExpenseSelectScalar = {
 export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "categoryId" | "createdByUserId" | "title" | "description" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "expenseDate" | "type" | "status" | "recurringTemplateId" | "debtAccountId" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.Expense$categoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringTemplate?: boolean | Prisma.Expense$recurringTemplateArgs<ExtArgs>
   debtAccount?: boolean | Prisma.Expense$debtAccountArgs<ExtArgs>
   debtPayment?: boolean | Prisma.Expense$debtPaymentArgs<ExtArgs>
+  attachments?: boolean | Prisma.Expense$attachmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.ExpenseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.Expense$categoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringTemplate?: boolean | Prisma.Expense$recurringTemplateArgs<ExtArgs>
   debtAccount?: boolean | Prisma.Expense$debtAccountArgs<ExtArgs>
 }
 export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
-  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.Expense$categoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recurringTemplate?: boolean | Prisma.Expense$recurringTemplateArgs<ExtArgs>
   debtAccount?: boolean | Prisma.Expense$debtAccountArgs<ExtArgs>
@@ -2039,16 +2240,17 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Expense"
   objects: {
     workspace: Prisma.$WorkspacePayload<ExtArgs>
-    category: Prisma.$CategoryPayload<ExtArgs>
+    category: Prisma.$CategoryPayload<ExtArgs> | null
     createdByUser: Prisma.$UserPayload<ExtArgs>
     recurringTemplate: Prisma.$RecurringExpenseTemplatePayload<ExtArgs> | null
     debtAccount: Prisma.$DebtAccountPayload<ExtArgs> | null
     debtPayment: Prisma.$DebtPaymentPayload<ExtArgs> | null
+    attachments: Prisma.$ExpenseAttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     workspaceId: string
-    categoryId: string
+    categoryId: string | null
     createdByUserId: string
     title: string
     description: string | null
@@ -2461,11 +2663,12 @@ readonly fields: ExpenseFieldRefs;
 export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  category<T extends Prisma.Expense$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$categoryArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   recurringTemplate<T extends Prisma.Expense$recurringTemplateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$recurringTemplateArgs<ExtArgs>>): Prisma.Prisma__RecurringExpenseTemplateClient<runtime.Types.Result.GetResult<Prisma.$RecurringExpenseTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   debtAccount<T extends Prisma.Expense$debtAccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$debtAccountArgs<ExtArgs>>): Prisma.Prisma__DebtAccountClient<runtime.Types.Result.GetResult<Prisma.$DebtAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   debtPayment<T extends Prisma.Expense$debtPaymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$debtPaymentArgs<ExtArgs>>): Prisma.Prisma__DebtPaymentClient<runtime.Types.Result.GetResult<Prisma.$DebtPaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  attachments<T extends Prisma.Expense$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpenseAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2916,6 +3119,25 @@ export type ExpenseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Expense.category
+ */
+export type Expense$categoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Category
+   */
+  select?: Prisma.CategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Category
+   */
+  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoryInclude<ExtArgs> | null
+  where?: Prisma.CategoryWhereInput
+}
+
+/**
  * Expense.recurringTemplate
  */
 export type Expense$recurringTemplateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2970,6 +3192,30 @@ export type Expense$debtPaymentArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.DebtPaymentInclude<ExtArgs> | null
   where?: Prisma.DebtPaymentWhereInput
+}
+
+/**
+ * Expense.attachments
+ */
+export type Expense$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExpenseAttachment
+   */
+  select?: Prisma.ExpenseAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExpenseAttachment
+   */
+  omit?: Prisma.ExpenseAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseAttachmentInclude<ExtArgs> | null
+  where?: Prisma.ExpenseAttachmentWhereInput
+  orderBy?: Prisma.ExpenseAttachmentOrderByWithRelationInput | Prisma.ExpenseAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseAttachmentScalarFieldEnum | Prisma.ExpenseAttachmentScalarFieldEnum[]
 }
 
 /**

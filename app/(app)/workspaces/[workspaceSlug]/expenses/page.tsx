@@ -149,7 +149,11 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
         {expenses.length > 0 ? (
           <div className="divide-y divide-border">
             {expenses.map((expense) => (
-              <div key={expense.id} className="px-6 py-4 sm:grid sm:grid-cols-[1fr_120px_120px_100px] sm:items-center sm:gap-4">
+              <Link
+                key={expense.id}
+                href={routes.workspaceExpense(workspaceSlug, expense.id)}
+                className="block px-6 py-4 transition hover:bg-surface-secondary sm:grid sm:grid-cols-[1fr_120px_120px_100px] sm:items-center sm:gap-4"
+              >
                 <div className="min-w-0">
                   <p className="truncate font-medium text-heading">{expense.title}</p>
                   <p className="mt-0.5 truncate text-xs text-muted">{expense.categoryPath} · {expense.createdByLabel}</p>
@@ -168,7 +172,7 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
                 <div className="mt-2 sm:mt-0 sm:text-right">
                   <StatusBadge status={expense.status} />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

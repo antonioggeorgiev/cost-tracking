@@ -22,12 +22,37 @@ export const expensesRouter = createTRPCRouter({
       perPage: input.perPage,
     })),
 
+  getById: workspaceMemberProcedure
+    .input(z.object({
+      workspaceSlug: z.string().min(1),
+      expenseId: z.string().min(1),
+    }))
+    .query(({ ctx, input }) => expenseService.getById(ctx.membership.workspaceId, input.expenseId)),
+
+  update: workspaceEditorProcedure
+    .input(z.object({
+      workspaceSlug: z.string().min(1),
+      expenseId: z.string().min(1),
+      title: z.string().trim().min(2).max(120).optional(),
+      categoryId: z.string().cuid().optional().nullable(),
+      amount: z.coerce.number().positive().optional(),
+      currencyCode: z.enum(supportedCurrencies).optional(),
+      expenseDate: z.coerce.date().optional(),
+      status: z.nativeEnum(ExpenseStatus).optional(),
+      description: z.string().max(500).optional().nullable(),
+      notes: z.string().max(1000).optional().nullable(),
+    }))
+    .mutation(({ ctx, input }) => {
+      const { workspaceSlug: _, expenseId, ...data } = input;
+      return expenseService.update(ctx.membership.workspaceId, expenseId, data);
+    }),
+
   create: workspaceEditorProcedure
     .input(
       z.object({
         workspaceSlug: z.string().min(1),
         title: z.string().trim().min(2).max(120),
-        categoryId: z.string().cuid(),
+        categoryId: z.string().cuid().optional().nullable(),
         amount: z.coerce.number().positive(),
         currencyCode: z.enum(supportedCurrencies),
         expenseDate: z.coerce.date(),

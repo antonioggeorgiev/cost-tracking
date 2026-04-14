@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ExpenseAttachment: 'ExpenseAttachment',
   Category: 'Category',
   DebtAccount: 'DebtAccount',
   DebtPayment: 'DebtPayment',
@@ -78,6 +79,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ExpenseAttachmentScalarFieldEnum = {
+  id: 'id',
+  expenseId: 'expenseId',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  contentType: 'contentType',
+  url: 'url',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ExpenseAttachmentScalarFieldEnum = (typeof ExpenseAttachmentScalarFieldEnum)[keyof typeof ExpenseAttachmentScalarFieldEnum]
+
+
 export const CategoryScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -97,11 +114,22 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 export const DebtAccountScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
+  kind: 'kind',
+  direction: 'direction',
   name: 'name',
   provider: 'provider',
+  counterparty: 'counterparty',
   originalAmountMinor: 'originalAmountMinor',
   currencyCode: 'currencyCode',
   currentBalanceMinor: 'currentBalanceMinor',
+  interestRateBps: 'interestRateBps',
+  termMonths: 'termMonths',
+  monthlyAmountMinor: 'monthlyAmountMinor',
+  residualValueMinor: 'residualValueMinor',
+  frequency: 'frequency',
+  interval: 'interval',
+  anchorDays: 'anchorDays',
+  nextPaymentDate: 'nextPaymentDate',
   openedAt: 'openedAt',
   isActive: 'isActive',
   notes: 'notes',
@@ -164,6 +192,7 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
   workspaceId: 'workspaceId',
   categoryId: 'categoryId',
   createdByUserId: 'createdByUserId',
+  kind: 'kind',
   title: 'title',
   description: 'description',
   originalAmountMinor: 'originalAmountMinor',
@@ -174,12 +203,14 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
   exchangeRateDate: 'exchangeRateDate',
   frequency: 'frequency',
   interval: 'interval',
+  anchorDays: 'anchorDays',
   startDate: 'startDate',
   endDate: 'endDate',
   nextOccurrenceDate: 'nextOccurrenceDate',
   lastGeneratedAt: 'lastGeneratedAt',
   defaultStatus: 'defaultStatus',
   isActive: 'isActive',
+  paymentUrl: 'paymentUrl',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
