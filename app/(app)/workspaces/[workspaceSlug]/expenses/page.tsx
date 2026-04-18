@@ -3,6 +3,7 @@ import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/cat
 import { createExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/actions";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
 import { ExpenseModal } from "@/components/expenses/expense-modal";
+import { MonthSummaryBar } from "@/components/shared/month-summary-bar";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { supportedCurrencies } from "@/lib/currency";
 import { formatMoney } from "@/lib/money";
@@ -48,7 +49,7 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
   const effectiveDateFrom = isAllTime ? undefined : (sp.dateFrom || defaultRange.dateFrom);
   const effectiveDateTo = isAllTime ? undefined : (sp.dateTo || defaultRange.dateTo);
 
-  const [workspace, categories, expenseResult] = await Promise.all([
+  const [workspace, categories, expenseResult, monthSummary] = await Promise.all([
     caller.workspaces.bySlug({ workspaceSlug }),
     caller.categories.list({ workspaceSlug }),
     caller.expenses.list({
@@ -61,6 +62,7 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
       page: currentPage,
       perPage: 20,
     }),
+    caller.reporting.expenseMonthSummary({ workspaceSlug }),
   ]);
 
   if (!workspace) {
@@ -156,26 +158,18 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
         <ExpenseFilters categories={categoryOptions} workspaceSlug={workspaceSlug} />
       </div>
 
-      {/* Summary stats */}
-      {total > 0 && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-border bg-surface px-4 py-3 shadow-sm">
-            <p className="text-xs font-medium text-muted-foreground">Total</p>
-            <p className="mt-1 text-lg font-semibold text-heading">
-              {formatMoney(totalAmount, workspace.baseCurrencyCode)}
-            </p>
-          </div>
-          <div className="rounded-xl border border-border bg-surface px-4 py-3 shadow-sm">
-            <p className="text-xs font-medium text-muted-foreground">Expenses</p>
-            <p className="mt-1 text-lg font-semibold text-heading">{total}</p>
-          </div>
-          <div className="hidden rounded-xl border border-border bg-surface px-4 py-3 shadow-sm sm:block">
-            <p className="text-xs font-medium text-muted-foreground">Average</p>
-            <p className="mt-1 text-lg font-semibold text-heading">
-              {total > 0 ? formatMoney(Math.round(totalAmount / total), workspace.baseCurrencyCode) : "—"}
-            </p>
-          </div>
-        </div>
+      {/* Monthly summary stats */}
+      {monthSummary.totalMinor > 0 && (
+        <MonthSummaryBar
+          dueAmountMinor={monthSummary.totalMinor}
+          paidAmountMinor={monthSummary.postedMinor}
+          baseCurrencyCode={workspace.baseCurrencyCode}
+          bonusMetric={monthSummary.pendingCount > 0 ? {
+            label: "Pending",
+            value: `${monthSummary.pendingCount}`,
+            subtext: formatMoney(monthSummary.pendingMinor, workspace.baseCurrencyCode),
+          } : undefined}
+        />
       )}
 
       {/* Expense table/list */}

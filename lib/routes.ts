@@ -7,6 +7,7 @@ export const routes = {
 
   workspaces: "/workspaces",
   workspace: (slug: string) => `/workspaces/${slug}`,
+  workspaceOverview: (slug: string) => `/workspaces/${slug}/overview`,
   workspaceDashboard: (slug: string) => `/workspaces/${slug}/dashboard`,
   workspaceExpenses: (slug: string) => `/workspaces/${slug}/expenses`,
   workspaceExpense: (slug: string, expenseId: string) => `/workspaces/${slug}/expenses/${expenseId}`,

@@ -7,6 +7,7 @@ import { DebtSummaryBar } from "@/components/debt/debt-summary-bar";
 import { supportedCurrencies } from "@/lib/currency";
 import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
+import { db } from "@/lib/db";
 import { Landmark, Users, Car, Plus, CreditCard } from "lucide-react";
 
 type DebtsPageProps = {
@@ -19,6 +20,8 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
   const { error } = await searchParams;
   const caller = await getServerCaller();
   const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   const [workspace, debts, monthStatus] = await Promise.all([
     caller.workspaces.bySlug({ workspaceSlug }),
     caller.debts.list({ workspaceSlug }),
@@ -81,6 +84,26 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
     nextUnpaidDate: string | null;
     unpaidDueDates: string[];
   }> = {};
+  // Compute due/paid amounts for i_owe debts
+  let debtDueAmountMinor = 0;
+  let debtPaidAmountMinor = 0;
+  const debtPaymentsThisMonth = await db.debtPayment.findMany({
+    where: { workspaceId: workspace.id, paymentDate: { gte: monthStart, lt: nextMonthStart } },
+    select: { debtAccountId: true, workspaceAmountMinor: true },
+  });
+  const paidByDebt = new Map<string, number>();
+  for (const p of debtPaymentsThisMonth) {
+    paidByDebt.set(p.debtAccountId, (paidByDebt.get(p.debtAccountId) ?? 0) + p.workspaceAmountMinor);
+  }
+  for (const d of debts) {
+    if (d.direction !== "i_owe") continue;
+    const status = monthStatus[d.id];
+    if (status && status.dueCount > 0 && d.workspaceMonthlyAmountMinor != null) {
+      debtDueAmountMinor += d.workspaceMonthlyAmountMinor * status.dueCount;
+    }
+    debtPaidAmountMinor += paidByDebt.get(d.id) ?? 0;
+  }
+
   let monthlyPaymentsDue = 0;
   let monthlyPaymentsPaid = 0;
   for (const [id, status] of Object.entries(monthStatus)) {
@@ -147,12 +170,12 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
       {/* Summary bar */}
       {hasAnyDebt && (
         <DebtSummaryBar
+          dueAmountMinor={debtDueAmountMinor}
+          paidAmountMinor={debtPaidAmountMinor}
+          baseCurrencyCode={workspace.baseCurrencyCode}
           totalIOwe={totalIOwe}
           totalOwedToMe={totalOwedToMe}
           totalLeasing={totalLeasing}
-          baseCurrencyCode={workspace.baseCurrencyCode}
-          monthlyPaymentsDue={monthlyPaymentsDue}
-          monthlyPaymentsPaid={monthlyPaymentsPaid}
         />
       )}
 

@@ -58,7 +58,7 @@ export async function createRecurringTemplateAction(formData: FormData): Promise
     });
     revalidatePath(routes.workspaceRecurring(input.workspaceSlug));
     revalidatePath(routes.workspace(input.workspaceSlug));
-    revalidatePath(routes.workspaceDashboard(input.workspaceSlug));
+    revalidatePath(routes.workspaceOverview(input.workspaceSlug));
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create recurring template.";
@@ -122,7 +122,7 @@ export async function updateRecurringTemplateAction(
     revalidatePath(routes.workspaceRecurring(input.workspaceSlug));
     revalidatePath(routes.workspaceRecurringTemplate(input.workspaceSlug, input.templateId));
     revalidatePath(routes.workspace(input.workspaceSlug));
-    revalidatePath(routes.workspaceDashboard(input.workspaceSlug));
+    revalidatePath(routes.workspaceOverview(input.workspaceSlug));
 
     return { success: true };
   } catch (error) {
@@ -145,7 +145,7 @@ export async function toggleRecurringTemplateAction(
     revalidatePath(routes.workspaceRecurring(workspaceSlug));
     revalidatePath(routes.workspaceRecurringTemplate(workspaceSlug, templateId));
     revalidatePath(routes.workspace(workspaceSlug));
-    revalidatePath(routes.workspaceDashboard(workspaceSlug));
+    revalidatePath(routes.workspaceOverview(workspaceSlug));
 
     return { success: true };
   } catch (error) {
@@ -163,7 +163,7 @@ export async function markFixedAsPaidAction(formData: FormData): Promise<{ succe
     revalidatePath(routes.workspaceRecurring(workspaceSlug));
     revalidatePath(routes.workspaceExpenses(workspaceSlug));
     revalidatePath(routes.workspace(workspaceSlug));
-    revalidatePath(routes.workspaceDashboard(workspaceSlug));
+    revalidatePath(routes.workspaceOverview(workspaceSlug));
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to mark as paid.";
@@ -184,7 +184,7 @@ export async function recordVariableRecurringExpenseAction(formData: FormData): 
     await caller.recurring.recordVariableExpense(input);
     revalidatePath(routes.workspaceRecurring(input.workspaceSlug));
     revalidatePath(routes.workspace(input.workspaceSlug));
-    revalidatePath(routes.workspaceDashboard(input.workspaceSlug));
+    revalidatePath(routes.workspaceOverview(input.workspaceSlug));
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to record recurring expense.";

@@ -96,19 +96,22 @@ export default async function RecurringPage({ params, searchParams }: RecurringP
 
   const nextPaymentTemplate = activeTemplates[0] ?? null;
 
-  // Count paid/due this month for recurring templates
+  // Count and sum paid this month for recurring templates
   const recurringExpensesThisMonth = await db.expense.findMany({
     where: {
       workspaceId: workspace.id,
       recurringTemplateId: { not: null },
       expenseDate: { gte: currentMonthStart, lte: currentMonthEnd },
     },
-    select: { recurringTemplateId: true },
+    select: { recurringTemplateId: true, workspaceAmountMinor: true },
   });
   const paidTemplateIds = new Set(recurringExpensesThisMonth.map((e) => e.recurringTemplateId));
+  let paidThisMonthMinor = 0;
+  for (const e of recurringExpensesThisMonth) {
+    paidThisMonthMinor += e.workspaceAmountMinor;
+  }
 
   // Count how many active templates are expected to have occurrences this month
-  // A template is "expected" if its nextOccurrenceDate is this month OR it already generated expenses this month
   let dueThisMonthCount = 0;
   let paidThisMonthCount = 0;
   for (const t of rawActiveTemplates) {
@@ -148,14 +151,11 @@ export default async function RecurringPage({ params, searchParams }: RecurringP
       {/* Summary stats */}
       {templates.length > 0 && (
         <RecurringSummaryStats
-          totalMonthlyMinor={totalMonthlyMinor}
-          activeCount={activeTemplates.length}
+          dueThisMonthMinor={dueThisMonthMinor}
+          paidThisMonthMinor={paidThisMonthMinor}
+          baseCurrencyCode={workspace.baseCurrencyCode}
           nextPaymentDate={nextPaymentTemplate?.nextOccurrenceDate ?? null}
           nextPaymentTitle={nextPaymentTemplate?.title ?? null}
-          dueThisMonthMinor={dueThisMonthMinor}
-          baseCurrencyCode={workspace.baseCurrencyCode}
-          paidThisMonthCount={paidThisMonthCount}
-          dueThisMonthCount={dueThisMonthCount}
         />
       )}
 
