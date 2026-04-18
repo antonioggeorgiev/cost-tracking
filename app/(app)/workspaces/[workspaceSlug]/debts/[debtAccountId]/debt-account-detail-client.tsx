@@ -27,6 +27,11 @@ type DebtData = {
   originalAmountMinor: number;
   currencyCode: string;
   currentBalanceMinor: number;
+  workspaceAmountMinor: number;
+  workspaceCurrencyCode: string;
+  workspaceBalanceMinor: number;
+  workspaceMonthlyAmountMinor: number | null;
+  workspaceResidualValueMinor: number | null;
   interestRateBps: number | null;
   termMonths: number | null;
   monthlyAmountMinor: number | null;
@@ -145,8 +150,8 @@ export function DebtAccountDetailClient({
   const Icon = kindIcon[debt.kind] ?? CreditCard;
   const isPersonal = debt.kind === "personal_loan";
   const theyOweMe = debt.direction === "they_owe_me";
-  const paidPercent = debt.originalAmountMinor > 0
-    ? Math.round(((debt.originalAmountMinor - debt.currentBalanceMinor) / debt.originalAmountMinor) * 100)
+  const paidPercent = debt.workspaceAmountMinor > 0
+    ? Math.round(((debt.workspaceAmountMinor - debt.workspaceBalanceMinor) / debt.workspaceAmountMinor) * 100)
     : 0;
 
   function resetForm() {
@@ -423,7 +428,7 @@ export function DebtAccountDetailClient({
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-body">Paid {paidPercent}%</span>
-                  <span className="font-medium text-heading">{formatMoney(debt.currentBalanceMinor, debt.currencyCode)} remaining</span>
+                  <span className="font-medium text-heading">{formatMoney(debt.workspaceBalanceMinor, debt.workspaceCurrencyCode)} remaining</span>
                 </div>
                 <div className="mt-1.5 h-2 rounded-full bg-surface-secondary">
                   <div className="h-2 rounded-full bg-gradient-to-r from-primary to-primary-dark" style={{ width: `${paidPercent}%` }} />
@@ -472,13 +477,13 @@ export function DebtAccountDetailClient({
                           </span>
                           {item.paid && item.payment ? (
                             <span className="text-xs text-posted">
-                              Paid &mdash; {formatMoney(item.payment.originalAmountMinor, item.payment.originalCurrencyCode)} on{" "}
+                              Paid &mdash; {formatMoney(item.payment.workspaceAmountMinor, item.payment.workspaceCurrencyCode)} on{" "}
                               {new Date(item.payment.paymentDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                             </span>
                           ) : (
                             <span className="text-xs text-body">
                               {new Date(item.date + "T00:00:00") < now ? "Overdue" : "Due"}
-                              {debt.monthlyAmountMinor != null && ` \u2014 ${formatMoney(debt.monthlyAmountMinor, debt.currencyCode)}`}
+                              {debt.workspaceMonthlyAmountMinor != null && ` \u2014 ${formatMoney(debt.workspaceMonthlyAmountMinor, debt.workspaceCurrencyCode)}`}
                             </span>
                           )}
                         </div>
@@ -495,9 +500,9 @@ export function DebtAccountDetailClient({
                   <span className="text-sm font-semibold text-heading">
                     {new Date(debt.nextPaymentDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </span>
-                  {debt.monthlyAmountMinor != null && (
+                  {debt.workspaceMonthlyAmountMinor != null && (
                     <span className="ml-auto text-sm font-semibold text-heading">
-                      {formatMoney(debt.monthlyAmountMinor, debt.currencyCode)}
+                      {formatMoney(debt.workspaceMonthlyAmountMinor, debt.workspaceCurrencyCode)}
                     </span>
                   )}
                 </div>
@@ -507,12 +512,12 @@ export function DebtAccountDetailClient({
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Original Amount</p>
-                  <p className="mt-1 text-lg font-semibold text-heading">{formatMoney(debt.originalAmountMinor, debt.currencyCode)}</p>
+                  <p className="mt-1 text-lg font-semibold text-heading">{formatMoney(debt.workspaceAmountMinor, debt.workspaceCurrencyCode)}</p>
                 </div>
 
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Current Balance</p>
-                  <p className="mt-1 text-lg font-semibold text-heading">{formatMoney(debt.currentBalanceMinor, debt.currencyCode)}</p>
+                  <p className="mt-1 text-lg font-semibold text-heading">{formatMoney(debt.workspaceBalanceMinor, debt.workspaceCurrencyCode)}</p>
                 </div>
 
                 <div>
@@ -536,17 +541,17 @@ export function DebtAccountDetailClient({
                   </div>
                 )}
 
-                {debt.monthlyAmountMinor != null && (
+                {debt.workspaceMonthlyAmountMinor != null && (
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Monthly Payment</p>
-                    <p className="mt-1 font-medium text-heading">{formatMoney(debt.monthlyAmountMinor, debt.currencyCode)}</p>
+                    <p className="mt-1 font-medium text-heading">{formatMoney(debt.workspaceMonthlyAmountMinor, debt.workspaceCurrencyCode)}</p>
                   </div>
                 )}
 
-                {debt.residualValueMinor != null && debt.kind === "leasing" && (
+                {debt.workspaceResidualValueMinor != null && debt.kind === "leasing" && (
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Residual Value</p>
-                    <p className="mt-1 font-medium text-heading">{formatMoney(debt.residualValueMinor, debt.currencyCode)}</p>
+                    <p className="mt-1 font-medium text-heading">{formatMoney(debt.workspaceResidualValueMinor, debt.workspaceCurrencyCode)}</p>
                   </div>
                 )}
 
@@ -681,7 +686,7 @@ export function DebtAccountDetailClient({
               <div key={payment.id} className="flex items-center justify-between gap-4 px-6 py-4">
                 <div className="min-w-0">
                   <p className="font-medium text-heading">
-                    {formatMoney(payment.originalAmountMinor, payment.originalCurrencyCode)}
+                    {formatMoney(payment.workspaceAmountMinor, payment.workspaceCurrencyCode)}
                     {payment.dueDate && (
                       <span className="ml-2 text-xs font-normal text-muted">
                         For: {new Date(payment.dueDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
@@ -696,9 +701,6 @@ export function DebtAccountDetailClient({
                   </p>
                 </div>
                 <div className="shrink-0 text-right">
-                  {payment.originalCurrencyCode !== payment.workspaceCurrencyCode && (
-                    <p className="text-sm text-muted">{formatMoney(payment.workspaceAmountMinor, payment.workspaceCurrencyCode)}</p>
-                  )}
                   {payment.expenseId && (
                     <Link
                       href={routes.workspaceExpense(workspaceSlug, payment.expenseId)}

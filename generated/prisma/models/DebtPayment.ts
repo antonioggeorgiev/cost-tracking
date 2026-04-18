@@ -674,14 +674,6 @@ export type DebtPaymentUncheckedUpdateManyWithoutDebtAccountNestedInput = {
   deleteMany?: Prisma.DebtPaymentScalarWhereInput | Prisma.DebtPaymentScalarWhereInput[]
 }
 
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
 export type DebtPaymentCreateNestedOneWithoutExpenseInput = {
   create?: Prisma.XOR<Prisma.DebtPaymentCreateWithoutExpenseInput, Prisma.DebtPaymentUncheckedCreateWithoutExpenseInput>
   connectOrCreate?: Prisma.DebtPaymentCreateOrConnectWithoutExpenseInput

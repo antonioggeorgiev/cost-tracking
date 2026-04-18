@@ -151,6 +151,42 @@ export const debtService = {
       data.currentBalanceMinor = Math.max(0, newOriginalMinor - effectivePaid);
     }
 
+    // Recalculate workspace-converted fields when amount, currency, or balance changes
+    const needsFxUpdate = input.originalAmount !== undefined || input.currencyCode !== undefined
+      || input.alreadyPaid !== undefined || input.monthlyAmount !== undefined || input.residualValue !== undefined;
+
+    if (needsFxUpdate) {
+      const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { baseCurrencyCode: true } });
+      if (!workspace) throw new Error("Workspace not found.");
+
+      const effectiveCurrency = (input.currencyCode ?? existing.currencyCode);
+      const effectiveOpenedAt = (input.openedAt ?? existing.openedAt);
+      const snapshot = await fxService.getExchangeRateSnapshot({
+        fromCurrencyCode: effectiveCurrency,
+        toCurrencyCode: workspace.baseCurrencyCode,
+        expenseDate: effectiveOpenedAt,
+      });
+
+      const effectiveOriginalMinor = (data.originalAmountMinor as number | undefined) ?? existing.originalAmountMinor;
+      const effectiveBalanceMinor = (data.currentBalanceMinor as number | undefined) ?? existing.currentBalanceMinor;
+
+      data.workspaceAmountMinor = Math.round(effectiveOriginalMinor * snapshot.rate);
+      data.workspaceBalanceMinor = Math.round(effectiveBalanceMinor * snapshot.rate);
+      data.workspaceCurrencyCode = workspace.baseCurrencyCode;
+      data.exchangeRate = snapshot.rate.toFixed(8);
+      data.exchangeRateDate = snapshot.rateDate;
+
+      const effectiveMonthly = input.monthlyAmount !== undefined
+        ? (input.monthlyAmount != null ? toMinorUnits(input.monthlyAmount) : null)
+        : existing.monthlyAmountMinor;
+      data.workspaceMonthlyAmountMinor = effectiveMonthly != null ? Math.round(effectiveMonthly * snapshot.rate) : null;
+
+      const effectiveResidual = input.residualValue !== undefined
+        ? (input.residualValue != null ? toMinorUnits(input.residualValue) : null)
+        : existing.residualValueMinor;
+      data.workspaceResidualValueMinor = effectiveResidual != null ? Math.round(effectiveResidual * snapshot.rate) : null;
+    }
+
     if (input.isActive !== undefined) {
       data.isActive = input.isActive;
       if (!input.isActive) data.nextPaymentDate = null;
@@ -197,6 +233,17 @@ export const debtService = {
     // Create with defaults, then update the enum fields.
     const originalMinor = toMinorUnits(input.originalAmount);
     const alreadyPaidMinor = input.alreadyPaid ? toMinorUnits(input.alreadyPaid) : 0;
+    const balanceMinor = Math.max(0, originalMinor - alreadyPaidMinor);
+
+    const workspace = await db.workspace.findUnique({ where: { id: input.workspaceId }, select: { baseCurrencyCode: true } });
+    if (!workspace) throw new Error("Workspace not found.");
+
+    const snapshot = await fxService.getExchangeRateSnapshot({
+      fromCurrencyCode: input.currencyCode,
+      toCurrencyCode: workspace.baseCurrencyCode,
+      expenseDate: input.openedAt,
+    });
+
     const account = await db.debtAccount.create({
       data: {
         workspaceId: input.workspaceId,
@@ -205,11 +252,18 @@ export const debtService = {
         counterparty: input.counterparty?.trim() || null,
         originalAmountMinor: originalMinor,
         currencyCode: input.currencyCode,
-        currentBalanceMinor: Math.max(0, originalMinor - alreadyPaidMinor),
+        currentBalanceMinor: balanceMinor,
+        workspaceAmountMinor: toMinorUnits(input.originalAmount * snapshot.rate),
+        workspaceCurrencyCode: workspace.baseCurrencyCode,
+        workspaceBalanceMinor: toMinorUnits(Math.max(0, input.originalAmount - (input.alreadyPaid ?? 0)) * snapshot.rate),
+        exchangeRate: snapshot.rate.toFixed(8),
+        exchangeRateDate: snapshot.rateDate,
         interestRateBps: input.interestRateBps ?? null,
         termMonths: input.termMonths ?? null,
         monthlyAmountMinor: input.monthlyAmount != null ? toMinorUnits(input.monthlyAmount) : null,
         residualValueMinor: input.residualValue != null ? toMinorUnits(input.residualValue) : null,
+        workspaceMonthlyAmountMinor: input.monthlyAmount != null ? toMinorUnits(input.monthlyAmount * snapshot.rate) : null,
+        workspaceResidualValueMinor: input.residualValue != null ? toMinorUnits(input.residualValue * snapshot.rate) : null,
         interval: input.interval ?? null,
         anchorDays: input.anchorDays ?? [],
         nextPaymentDate: input.nextPaymentDate ?? null,
@@ -245,7 +299,7 @@ export const debtService = {
 
     const debtAccount = await db.debtAccount.findUnique({
       where: { id: input.debtAccountId },
-      select: { id: true, workspaceId: true, name: true, currentBalanceMinor: true, currencyCode: true, isActive: true, direction: true, frequency: true, interval: true, anchorDays: true, openedAt: true, nextPaymentDate: true },
+      select: { id: true, workspaceId: true, name: true, currentBalanceMinor: true, workspaceBalanceMinor: true, currencyCode: true, isActive: true, direction: true, frequency: true, interval: true, anchorDays: true, openedAt: true, nextPaymentDate: true },
     });
     if (!debtAccount || debtAccount.workspaceId !== input.workspaceId) throw new Error("Debt account does not belong to this workspace.");
     if (!debtAccount.isActive) throw new Error("Inactive debt accounts cannot receive payments.");
@@ -336,7 +390,8 @@ export const debtService = {
       });
 
       const newBalance = debtAccount.currentBalanceMinor - originalAmountMinor;
-      const accountUpdate: Record<string, unknown> = { currentBalanceMinor: newBalance };
+      const newWorkspaceBalance = newBalance <= 0 ? 0 : Math.max(0, debtAccount.workspaceBalanceMinor - workspaceAmountMinor);
+      const accountUpdate: Record<string, unknown> = { currentBalanceMinor: newBalance, workspaceBalanceMinor: newWorkspaceBalance };
 
       // Advance nextPaymentDate if a schedule is configured
       if (debtAccount.frequency && debtAccount.interval) {

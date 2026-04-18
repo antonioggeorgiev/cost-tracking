@@ -20,6 +20,11 @@ type DebtData = {
   originalAmountMinor: number;
   currencyCode: string;
   currentBalanceMinor: number;
+  workspaceAmountMinor: number;
+  workspaceCurrencyCode: string;
+  workspaceBalanceMinor: number;
+  workspaceMonthlyAmountMinor: number | null;
+  workspaceResidualValueMinor: number | null;
   interestRateBps: number | null;
   termMonths: number | null;
   monthlyAmountMinor: number | null;
@@ -43,7 +48,7 @@ export function DebtGroupSection({ title, icon, debts, baseCurrencyCode, workspa
   if (debts.length === 0) return null;
 
   const active = debts.filter((d) => d.isActive);
-  const totalRemaining = active.reduce((sum, d) => sum + d.currentBalanceMinor, 0);
+  const totalRemaining = active.reduce((sum, d) => sum + d.workspaceBalanceMinor, 0);
   const nextPayment = active
     .filter((d) => d.nextPaymentDate)
     .sort((a, b) => new Date(a.nextPaymentDate!).getTime() - new Date(b.nextPaymentDate!).getTime())[0];

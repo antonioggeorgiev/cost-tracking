@@ -39,6 +39,11 @@ type DebtCardProps = {
     originalAmountMinor: number;
     currencyCode: string;
     currentBalanceMinor: number;
+    workspaceAmountMinor: number;
+    workspaceCurrencyCode: string;
+    workspaceBalanceMinor: number;
+    workspaceMonthlyAmountMinor: number | null;
+    workspaceResidualValueMinor: number | null;
     interestRateBps: number | null;
     termMonths: number | null;
     monthlyAmountMinor: number | null;
@@ -65,8 +70,8 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
   const theyOweMe = debt.direction === "they_owe_me";
 
   const paidPercent =
-    debt.originalAmountMinor > 0
-      ? Math.round(((debt.originalAmountMinor - debt.currentBalanceMinor) / debt.originalAmountMinor) * 100)
+    debt.workspaceAmountMinor > 0
+      ? Math.round(((debt.workspaceAmountMinor - debt.workspaceBalanceMinor) / debt.workspaceAmountMinor) * 100)
       : 0;
 
   const subtitle = isPersonal && debt.counterparty
@@ -140,11 +145,11 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
         <div className="min-w-0 flex-1 space-y-1">
           <div>
             <p className="text-xs text-body">Original</p>
-            <p className="font-semibold text-heading">{formatMoney(debt.originalAmountMinor, debt.currencyCode)}</p>
+            <p className="font-semibold text-heading">{formatMoney(debt.workspaceAmountMinor, debt.workspaceCurrencyCode)}</p>
           </div>
           <div>
             <p className="text-xs text-body">Remaining</p>
-            <p className="font-heading text-lg font-bold text-heading">{formatMoney(debt.currentBalanceMinor, debt.currencyCode)}</p>
+            <p className="font-heading text-lg font-bold text-heading">{formatMoney(debt.workspaceBalanceMinor, debt.workspaceCurrencyCode)}</p>
           </div>
         </div>
       </div>
@@ -181,7 +186,7 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
         {hasMonthlyAmount && (
           <div className="rounded-lg bg-surface-secondary px-3 py-2">
             <p className="text-[10px] font-semibold uppercase tracking-wide text-body">Monthly</p>
-            <p className="mt-0.5 text-sm font-medium text-heading">{formatMoney(debt.monthlyAmountMinor!, debt.currencyCode)}</p>
+            <p className="mt-0.5 text-sm font-medium text-heading">{formatMoney(debt.workspaceMonthlyAmountMinor!, debt.workspaceCurrencyCode)}</p>
           </div>
         )}
         {debt.interestRateBps != null && (
@@ -214,7 +219,7 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
               <CheckCircle size={14} />
               {isPending
                 ? "Paying..."
-                : `Pay ${nextUnpaidDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} \u2014 ${formatMoney(debt.monthlyAmountMinor!, debt.currencyCode)}`}
+                : `Pay ${nextUnpaidDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} \u2014 ${formatMoney(debt.workspaceMonthlyAmountMinor!, debt.workspaceCurrencyCode)}`}
             </button>
           ) : hasMonthlyAmount && quickPayAction ? (
             <button
@@ -224,7 +229,7 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
               className="inline-flex items-center gap-1.5 rounded-xl bg-heading px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90 disabled:opacity-50"
             >
               <CheckCircle size={14} />
-              {isPending ? "Paying..." : `Pay ${formatMoney(debt.monthlyAmountMinor!, debt.currencyCode)}`}
+              {isPending ? "Paying..." : `Pay ${formatMoney(debt.workspaceMonthlyAmountMinor!, debt.workspaceCurrencyCode)}`}
             </button>
           ) : (
             <Link

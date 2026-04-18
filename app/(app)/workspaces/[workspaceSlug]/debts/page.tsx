@@ -43,6 +43,11 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
     originalAmountMinor: d.originalAmountMinor,
     currencyCode: d.currencyCode,
     currentBalanceMinor: d.currentBalanceMinor,
+    workspaceAmountMinor: d.workspaceAmountMinor,
+    workspaceCurrencyCode: d.workspaceCurrencyCode,
+    workspaceBalanceMinor: d.workspaceBalanceMinor,
+    workspaceMonthlyAmountMinor: d.workspaceMonthlyAmountMinor,
+    workspaceResidualValueMinor: d.workspaceResidualValueMinor,
     interestRateBps: d.interestRateBps,
     termMonths: d.termMonths,
     monthlyAmountMinor: d.monthlyAmountMinor,
@@ -60,13 +65,13 @@ export default async function DebtsPage({ params, searchParams }: DebtsPageProps
   const activeDebts = serializedDebts.filter((d) => d.isActive);
   const totalIOwe = activeDebts
     .filter((d) => d.direction === "i_owe" && d.kind !== "leasing")
-    .reduce((sum, d) => sum + d.currentBalanceMinor, 0);
+    .reduce((sum, d) => sum + d.workspaceBalanceMinor, 0);
   const totalOwedToMe = activeDebts
     .filter((d) => d.direction === "they_owe_me")
-    .reduce((sum, d) => sum + d.currentBalanceMinor, 0);
+    .reduce((sum, d) => sum + d.workspaceBalanceMinor, 0);
   const totalLeasing = activeDebts
     .filter((d) => d.kind === "leasing")
-    .reduce((sum, d) => sum + d.currentBalanceMinor, 0);
+    .reduce((sum, d) => sum + d.workspaceBalanceMinor, 0);
 
   // Serialize monthStatus dates for client components
   const serializedMonthStatus: Record<string, {

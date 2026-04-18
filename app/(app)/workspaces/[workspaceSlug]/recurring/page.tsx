@@ -54,6 +54,7 @@ export default async function RecurringPage({ params, searchParams }: RecurringP
       originalAmountMinor: t.originalAmountMinor,
       originalCurrencyCode: t.originalCurrencyCode,
       workspaceAmountMinor: t.workspaceAmountMinor,
+      workspaceCurrencyCode: t.workspaceCurrencyCode,
       frequency: t.frequency,
       interval: t.interval,
       anchorDays: t.anchorDays,

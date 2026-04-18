@@ -150,8 +150,8 @@ export const reportingService = {
       activeDebts: debtAccounts.map((debt) => ({
         id: debt.id,
         name: debt.name,
-        currentBalanceMinor: debt.currentBalanceMinor,
-        currencyCode: debt.currencyCode,
+        workspaceBalanceMinor: debt.workspaceBalanceMinor,
+        workspaceCurrencyCode: debt.workspaceCurrencyCode,
       })),
     };
   },

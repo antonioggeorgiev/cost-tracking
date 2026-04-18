@@ -6,13 +6,20 @@ model DebtAccount {
   name                String
   provider            String?
   counterparty        String?
-  originalAmountMinor Int
-  currencyCode        String
-  currentBalanceMinor Int
-  interestRateBps     Int?
-  termMonths          Int?
-  monthlyAmountMinor  Int?
-  residualValueMinor  Int?
+  originalAmountMinor         Int
+  currencyCode                String
+  currentBalanceMinor         Int
+  workspaceAmountMinor        Int
+  workspaceCurrencyCode       String
+  workspaceBalanceMinor       Int
+  exchangeRate                Decimal             @db.Decimal(18, 8)
+  exchangeRateDate            DateTime
+  interestRateBps             Int?
+  termMonths                  Int?
+  monthlyAmountMinor          Int?
+  residualValueMinor          Int?
+  workspaceMonthlyAmountMinor Int?
+  workspaceResidualValueMinor Int?
   frequency           RecurringFrequency?
   interval            Int?
   anchorDays          Int[]

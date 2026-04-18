@@ -378,13 +378,8 @@ export function ExpenseDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Amount</p>
                   <p className="mt-1 text-lg font-semibold text-heading">
-                    {formatMoney(expense.originalAmountMinor, expense.originalCurrencyCode)}
+                    {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
                   </p>
-                  {expense.originalCurrencyCode !== expense.workspaceCurrencyCode && (
-                    <p className="text-sm text-muted-foreground">
-                      {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
-                    </p>
-                  )}
                 </div>
 
                 <div>

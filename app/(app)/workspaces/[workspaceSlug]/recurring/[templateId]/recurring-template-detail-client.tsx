@@ -341,15 +341,10 @@ export function RecurringTemplateDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Amount</p>
                   <p className="mt-1 text-lg font-semibold text-heading">
-                    {template.originalAmountMinor != null
-                      ? formatMoney(template.originalAmountMinor, template.originalCurrencyCode)
+                    {template.workspaceAmountMinor != null
+                      ? formatMoney(template.workspaceAmountMinor, template.workspaceCurrencyCode)
                       : "Set when due"}
                   </p>
-                  {template.originalAmountMinor != null && template.originalCurrencyCode !== template.workspaceCurrencyCode && template.workspaceAmountMinor != null && (
-                    <p className="text-sm text-muted-foreground">
-                      {formatMoney(template.workspaceAmountMinor, template.workspaceCurrencyCode)}
-                    </p>
-                  )}
                 </div>
 
                 <div>
@@ -482,7 +477,7 @@ export function RecurringTemplateDetailClient({
                 </div>
                 <div className="shrink-0 text-right">
                   <p className="font-medium text-heading">
-                    {formatMoney(expense.originalAmountMinor, expense.originalCurrencyCode)}
+                    {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
                   </p>
                   <div className="mt-1">
                     <StatusBadge status={expense.status} />

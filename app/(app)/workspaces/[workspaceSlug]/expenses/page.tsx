@@ -209,11 +209,8 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
                 </p>
                 <div className="mt-1 sm:mt-0 sm:text-right">
                   <p className="font-medium text-heading">
-                    {formatMoney(expense.originalAmountMinor, expense.originalCurrencyCode)}
+                    {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
                   </p>
-                  {expense.originalCurrencyCode !== expense.workspaceCurrencyCode && (
-                    <p className="text-xs text-muted-foreground">{formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}</p>
-                  )}
                 </div>
                 <div className="mt-2 sm:mt-0 sm:text-right">
                   <StatusBadge status={expense.status} />

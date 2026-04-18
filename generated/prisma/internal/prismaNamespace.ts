@@ -1235,10 +1235,17 @@ export const DebtAccountScalarFieldEnum = {
   originalAmountMinor: 'originalAmountMinor',
   currencyCode: 'currencyCode',
   currentBalanceMinor: 'currentBalanceMinor',
+  workspaceAmountMinor: 'workspaceAmountMinor',
+  workspaceCurrencyCode: 'workspaceCurrencyCode',
+  workspaceBalanceMinor: 'workspaceBalanceMinor',
+  exchangeRate: 'exchangeRate',
+  exchangeRateDate: 'exchangeRateDate',
   interestRateBps: 'interestRateBps',
   termMonths: 'termMonths',
   monthlyAmountMinor: 'monthlyAmountMinor',
   residualValueMinor: 'residualValueMinor',
+  workspaceMonthlyAmountMinor: 'workspaceMonthlyAmountMinor',
+  workspaceResidualValueMinor: 'workspaceResidualValueMinor',
   frequency: 'frequency',
   interval: 'interval',
   anchorDays: 'anchorDays',
@@ -1496,20 +1503,6 @@ export type ListEnumDebtDirectionFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'RecurringFrequency'
- */
-export type EnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency'>
-    
-
-
-/**
- * Reference to a field of type 'RecurringFrequency[]'
- */
-export type ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency[]'>
-    
-
-
-/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -1520,6 +1513,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RecurringFrequency'
+ */
+export type EnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency'>
+    
+
+
+/**
+ * Reference to a field of type 'RecurringFrequency[]'
+ */
+export type ListEnumRecurringFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecurringFrequency[]'>
     
 
 

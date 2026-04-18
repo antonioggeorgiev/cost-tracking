@@ -16,6 +16,7 @@ type RecurringCardProps = {
     originalAmountMinor: number | null;
     originalCurrencyCode: string;
     workspaceAmountMinor: number | null;
+    workspaceCurrencyCode: string;
     frequency: string;
     interval: number;
     anchorDays: number[];
@@ -97,9 +98,9 @@ export function RecurringCard({ template, workspaceSlug, canManage, markPaidActi
 
       {/* Amount + frequency */}
       <div className="mt-4">
-        {isFixed && template.originalAmountMinor != null ? (
+        {isFixed && template.workspaceAmountMinor != null ? (
           <p className="font-heading text-xl font-bold text-heading">
-            {formatMoney(template.originalAmountMinor, template.originalCurrencyCode)}
+            {formatMoney(template.workspaceAmountMinor, template.workspaceCurrencyCode)}
           </p>
         ) : (
           <p className="text-sm italic text-body">Amount varies</p>

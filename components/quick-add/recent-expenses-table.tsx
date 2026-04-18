@@ -63,18 +63,13 @@ const columns = [
       </span>
     ),
   }),
-  columnHelper.accessor("originalAmountMinor", {
+  columnHelper.accessor("workspaceAmountMinor", {
     header: "Amount",
     cell: (info) => (
       <div className="text-right">
         <p className="font-medium text-heading">
-          {formatMoney(info.getValue(), info.row.original.originalCurrencyCode)}
+          {formatMoney(info.getValue(), info.row.original.workspaceCurrencyCode)}
         </p>
-        {info.row.original.originalCurrencyCode !== info.row.original.workspaceCurrencyCode && (
-          <p className="text-xs text-muted-foreground">
-            {formatMoney(info.row.original.workspaceAmountMinor, info.row.original.workspaceCurrencyCode)}
-          </p>
-        )}
       </div>
     ),
   }),
@@ -114,7 +109,7 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
             <span
               key={header.id}
               className={`text-xs font-semibold uppercase tracking-widest text-muted-foreground ${
-                header.id === "originalAmountMinor" || header.id === "status" ? "text-right" : ""
+                header.id === "workspaceAmountMinor" || header.id === "status" ? "text-right" : ""
               }`}
             >
               {flexRender(header.column.columnDef.header, header.getContext())}

@@ -29,10 +29,15 @@ export type AggregateDebtAccount = {
 export type DebtAccountAvgAggregateOutputType = {
   originalAmountMinor: number | null
   currentBalanceMinor: number | null
+  workspaceAmountMinor: number | null
+  workspaceBalanceMinor: number | null
+  exchangeRate: runtime.Decimal | null
   interestRateBps: number | null
   termMonths: number | null
   monthlyAmountMinor: number | null
   residualValueMinor: number | null
+  workspaceMonthlyAmountMinor: number | null
+  workspaceResidualValueMinor: number | null
   interval: number | null
   anchorDays: number | null
 }
@@ -40,10 +45,15 @@ export type DebtAccountAvgAggregateOutputType = {
 export type DebtAccountSumAggregateOutputType = {
   originalAmountMinor: number | null
   currentBalanceMinor: number | null
+  workspaceAmountMinor: number | null
+  workspaceBalanceMinor: number | null
+  exchangeRate: runtime.Decimal | null
   interestRateBps: number | null
   termMonths: number | null
   monthlyAmountMinor: number | null
   residualValueMinor: number | null
+  workspaceMonthlyAmountMinor: number | null
+  workspaceResidualValueMinor: number | null
   interval: number | null
   anchorDays: number[]
 }
@@ -59,10 +69,17 @@ export type DebtAccountMinAggregateOutputType = {
   originalAmountMinor: number | null
   currencyCode: string | null
   currentBalanceMinor: number | null
+  workspaceAmountMinor: number | null
+  workspaceCurrencyCode: string | null
+  workspaceBalanceMinor: number | null
+  exchangeRate: runtime.Decimal | null
+  exchangeRateDate: Date | null
   interestRateBps: number | null
   termMonths: number | null
   monthlyAmountMinor: number | null
   residualValueMinor: number | null
+  workspaceMonthlyAmountMinor: number | null
+  workspaceResidualValueMinor: number | null
   frequency: $Enums.RecurringFrequency | null
   interval: number | null
   nextPaymentDate: Date | null
@@ -84,10 +101,17 @@ export type DebtAccountMaxAggregateOutputType = {
   originalAmountMinor: number | null
   currencyCode: string | null
   currentBalanceMinor: number | null
+  workspaceAmountMinor: number | null
+  workspaceCurrencyCode: string | null
+  workspaceBalanceMinor: number | null
+  exchangeRate: runtime.Decimal | null
+  exchangeRateDate: Date | null
   interestRateBps: number | null
   termMonths: number | null
   monthlyAmountMinor: number | null
   residualValueMinor: number | null
+  workspaceMonthlyAmountMinor: number | null
+  workspaceResidualValueMinor: number | null
   frequency: $Enums.RecurringFrequency | null
   interval: number | null
   nextPaymentDate: Date | null
@@ -109,10 +133,17 @@ export type DebtAccountCountAggregateOutputType = {
   originalAmountMinor: number
   currencyCode: number
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: number
+  workspaceBalanceMinor: number
+  exchangeRate: number
+  exchangeRateDate: number
   interestRateBps: number
   termMonths: number
   monthlyAmountMinor: number
   residualValueMinor: number
+  workspaceMonthlyAmountMinor: number
+  workspaceResidualValueMinor: number
   frequency: number
   interval: number
   anchorDays: number
@@ -129,10 +160,15 @@ export type DebtAccountCountAggregateOutputType = {
 export type DebtAccountAvgAggregateInputType = {
   originalAmountMinor?: true
   currentBalanceMinor?: true
+  workspaceAmountMinor?: true
+  workspaceBalanceMinor?: true
+  exchangeRate?: true
   interestRateBps?: true
   termMonths?: true
   monthlyAmountMinor?: true
   residualValueMinor?: true
+  workspaceMonthlyAmountMinor?: true
+  workspaceResidualValueMinor?: true
   interval?: true
   anchorDays?: true
 }
@@ -140,10 +176,15 @@ export type DebtAccountAvgAggregateInputType = {
 export type DebtAccountSumAggregateInputType = {
   originalAmountMinor?: true
   currentBalanceMinor?: true
+  workspaceAmountMinor?: true
+  workspaceBalanceMinor?: true
+  exchangeRate?: true
   interestRateBps?: true
   termMonths?: true
   monthlyAmountMinor?: true
   residualValueMinor?: true
+  workspaceMonthlyAmountMinor?: true
+  workspaceResidualValueMinor?: true
   interval?: true
   anchorDays?: true
 }
@@ -159,10 +200,17 @@ export type DebtAccountMinAggregateInputType = {
   originalAmountMinor?: true
   currencyCode?: true
   currentBalanceMinor?: true
+  workspaceAmountMinor?: true
+  workspaceCurrencyCode?: true
+  workspaceBalanceMinor?: true
+  exchangeRate?: true
+  exchangeRateDate?: true
   interestRateBps?: true
   termMonths?: true
   monthlyAmountMinor?: true
   residualValueMinor?: true
+  workspaceMonthlyAmountMinor?: true
+  workspaceResidualValueMinor?: true
   frequency?: true
   interval?: true
   nextPaymentDate?: true
@@ -184,10 +232,17 @@ export type DebtAccountMaxAggregateInputType = {
   originalAmountMinor?: true
   currencyCode?: true
   currentBalanceMinor?: true
+  workspaceAmountMinor?: true
+  workspaceCurrencyCode?: true
+  workspaceBalanceMinor?: true
+  exchangeRate?: true
+  exchangeRateDate?: true
   interestRateBps?: true
   termMonths?: true
   monthlyAmountMinor?: true
   residualValueMinor?: true
+  workspaceMonthlyAmountMinor?: true
+  workspaceResidualValueMinor?: true
   frequency?: true
   interval?: true
   nextPaymentDate?: true
@@ -209,10 +264,17 @@ export type DebtAccountCountAggregateInputType = {
   originalAmountMinor?: true
   currencyCode?: true
   currentBalanceMinor?: true
+  workspaceAmountMinor?: true
+  workspaceCurrencyCode?: true
+  workspaceBalanceMinor?: true
+  exchangeRate?: true
+  exchangeRateDate?: true
   interestRateBps?: true
   termMonths?: true
   monthlyAmountMinor?: true
   residualValueMinor?: true
+  workspaceMonthlyAmountMinor?: true
+  workspaceResidualValueMinor?: true
   frequency?: true
   interval?: true
   anchorDays?: true
@@ -322,10 +384,17 @@ export type DebtAccountGroupByOutputType = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal
+  exchangeRateDate: Date
   interestRateBps: number | null
   termMonths: number | null
   monthlyAmountMinor: number | null
   residualValueMinor: number | null
+  workspaceMonthlyAmountMinor: number | null
+  workspaceResidualValueMinor: number | null
   frequency: $Enums.RecurringFrequency | null
   interval: number | null
   anchorDays: number[]
@@ -371,10 +440,17 @@ export type DebtAccountWhereInput = {
   originalAmountMinor?: Prisma.IntFilter<"DebtAccount"> | number
   currencyCode?: Prisma.StringFilter<"DebtAccount"> | string
   currentBalanceMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  workspaceAmountMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  workspaceCurrencyCode?: Prisma.StringFilter<"DebtAccount"> | string
+  workspaceBalanceMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  exchangeRate?: Prisma.DecimalFilter<"DebtAccount"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
   interestRateBps?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   termMonths?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   monthlyAmountMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   residualValueMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
+  workspaceMonthlyAmountMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
+  workspaceResidualValueMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   frequency?: Prisma.EnumRecurringFrequencyNullableFilter<"DebtAccount"> | $Enums.RecurringFrequency | null
   interval?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   anchorDays?: Prisma.IntNullableListFilter<"DebtAccount">
@@ -400,10 +476,17 @@ export type DebtAccountOrderByWithRelationInput = {
   originalAmountMinor?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceCurrencyCode?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrderInput | Prisma.SortOrder
   termMonths?: Prisma.SortOrderInput | Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   frequency?: Prisma.SortOrderInput | Prisma.SortOrder
   interval?: Prisma.SortOrderInput | Prisma.SortOrder
   anchorDays?: Prisma.SortOrder
@@ -432,10 +515,17 @@ export type DebtAccountWhereUniqueInput = Prisma.AtLeast<{
   originalAmountMinor?: Prisma.IntFilter<"DebtAccount"> | number
   currencyCode?: Prisma.StringFilter<"DebtAccount"> | string
   currentBalanceMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  workspaceAmountMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  workspaceCurrencyCode?: Prisma.StringFilter<"DebtAccount"> | string
+  workspaceBalanceMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  exchangeRate?: Prisma.DecimalFilter<"DebtAccount"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
   interestRateBps?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   termMonths?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   monthlyAmountMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   residualValueMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
+  workspaceMonthlyAmountMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
+  workspaceResidualValueMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   frequency?: Prisma.EnumRecurringFrequencyNullableFilter<"DebtAccount"> | $Enums.RecurringFrequency | null
   interval?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   anchorDays?: Prisma.IntNullableListFilter<"DebtAccount">
@@ -461,10 +551,17 @@ export type DebtAccountOrderByWithAggregationInput = {
   originalAmountMinor?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceCurrencyCode?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrderInput | Prisma.SortOrder
   termMonths?: Prisma.SortOrderInput | Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrderInput | Prisma.SortOrder
   frequency?: Prisma.SortOrderInput | Prisma.SortOrder
   interval?: Prisma.SortOrderInput | Prisma.SortOrder
   anchorDays?: Prisma.SortOrder
@@ -495,10 +592,17 @@ export type DebtAccountScalarWhereWithAggregatesInput = {
   originalAmountMinor?: Prisma.IntWithAggregatesFilter<"DebtAccount"> | number
   currencyCode?: Prisma.StringWithAggregatesFilter<"DebtAccount"> | string
   currentBalanceMinor?: Prisma.IntWithAggregatesFilter<"DebtAccount"> | number
+  workspaceAmountMinor?: Prisma.IntWithAggregatesFilter<"DebtAccount"> | number
+  workspaceCurrencyCode?: Prisma.StringWithAggregatesFilter<"DebtAccount"> | string
+  workspaceBalanceMinor?: Prisma.IntWithAggregatesFilter<"DebtAccount"> | number
+  exchangeRate?: Prisma.DecimalWithAggregatesFilter<"DebtAccount"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeWithAggregatesFilter<"DebtAccount"> | Date | string
   interestRateBps?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
   termMonths?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
   monthlyAmountMinor?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
   residualValueMinor?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
+  workspaceMonthlyAmountMinor?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
+  workspaceResidualValueMinor?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
   frequency?: Prisma.EnumRecurringFrequencyNullableWithAggregatesFilter<"DebtAccount"> | $Enums.RecurringFrequency | null
   interval?: Prisma.IntNullableWithAggregatesFilter<"DebtAccount"> | number | null
   anchorDays?: Prisma.IntNullableListFilter<"DebtAccount">
@@ -520,10 +624,17 @@ export type DebtAccountCreateInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -549,10 +660,17 @@ export type DebtAccountUncheckedCreateInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -576,10 +694,17 @@ export type DebtAccountUpdateInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -605,10 +730,17 @@ export type DebtAccountUncheckedUpdateInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -633,10 +765,17 @@ export type DebtAccountCreateManyInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -658,10 +797,17 @@ export type DebtAccountUpdateManyMutationInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -684,10 +830,17 @@ export type DebtAccountUncheckedUpdateManyInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -718,10 +871,17 @@ export type DebtAccountCountOrderByAggregateInput = {
   originalAmountMinor?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceCurrencyCode?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrder
   termMonths?: Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   anchorDays?: Prisma.SortOrder
@@ -736,10 +896,15 @@ export type DebtAccountCountOrderByAggregateInput = {
 export type DebtAccountAvgOrderByAggregateInput = {
   originalAmountMinor?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrder
   termMonths?: Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   anchorDays?: Prisma.SortOrder
 }
@@ -755,10 +920,17 @@ export type DebtAccountMaxOrderByAggregateInput = {
   originalAmountMinor?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceCurrencyCode?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrder
   termMonths?: Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   nextPaymentDate?: Prisma.SortOrder
@@ -780,10 +952,17 @@ export type DebtAccountMinOrderByAggregateInput = {
   originalAmountMinor?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceCurrencyCode?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
+  exchangeRateDate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrder
   termMonths?: Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   nextPaymentDate?: Prisma.SortOrder
@@ -797,10 +976,15 @@ export type DebtAccountMinOrderByAggregateInput = {
 export type DebtAccountSumOrderByAggregateInput = {
   originalAmountMinor?: Prisma.SortOrder
   currentBalanceMinor?: Prisma.SortOrder
+  workspaceAmountMinor?: Prisma.SortOrder
+  workspaceBalanceMinor?: Prisma.SortOrder
+  exchangeRate?: Prisma.SortOrder
   interestRateBps?: Prisma.SortOrder
   termMonths?: Prisma.SortOrder
   monthlyAmountMinor?: Prisma.SortOrder
   residualValueMinor?: Prisma.SortOrder
+  workspaceMonthlyAmountMinor?: Prisma.SortOrder
+  workspaceResidualValueMinor?: Prisma.SortOrder
   interval?: Prisma.SortOrder
   anchorDays?: Prisma.SortOrder
 }
@@ -835,6 +1019,14 @@ export type EnumDebtAccountKindFieldUpdateOperationsInput = {
 
 export type EnumDebtDirectionFieldUpdateOperationsInput = {
   set?: $Enums.DebtDirection
+}
+
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type NullableEnumRecurringFrequencyFieldUpdateOperationsInput = {
@@ -928,10 +1120,17 @@ export type DebtAccountCreateWithoutPaymentsInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -956,10 +1155,17 @@ export type DebtAccountUncheckedCreateWithoutPaymentsInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -998,10 +1204,17 @@ export type DebtAccountUpdateWithoutPaymentsInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1026,10 +1239,17 @@ export type DebtAccountUncheckedUpdateWithoutPaymentsInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1052,10 +1272,17 @@ export type DebtAccountCreateWithoutExpensesInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -1080,10 +1307,17 @@ export type DebtAccountUncheckedCreateWithoutExpensesInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -1122,10 +1356,17 @@ export type DebtAccountUpdateWithoutExpensesInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1150,10 +1391,17 @@ export type DebtAccountUncheckedUpdateWithoutExpensesInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1176,10 +1424,17 @@ export type DebtAccountCreateWithoutWorkspaceInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -1203,10 +1458,17 @@ export type DebtAccountUncheckedCreateWithoutWorkspaceInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -1260,10 +1522,17 @@ export type DebtAccountScalarWhereInput = {
   originalAmountMinor?: Prisma.IntFilter<"DebtAccount"> | number
   currencyCode?: Prisma.StringFilter<"DebtAccount"> | string
   currentBalanceMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  workspaceAmountMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  workspaceCurrencyCode?: Prisma.StringFilter<"DebtAccount"> | string
+  workspaceBalanceMinor?: Prisma.IntFilter<"DebtAccount"> | number
+  exchangeRate?: Prisma.DecimalFilter<"DebtAccount"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
   interestRateBps?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   termMonths?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   monthlyAmountMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   residualValueMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
+  workspaceMonthlyAmountMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
+  workspaceResidualValueMinor?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   frequency?: Prisma.EnumRecurringFrequencyNullableFilter<"DebtAccount"> | $Enums.RecurringFrequency | null
   interval?: Prisma.IntNullableFilter<"DebtAccount"> | number | null
   anchorDays?: Prisma.IntNullableListFilter<"DebtAccount">
@@ -1285,10 +1554,17 @@ export type DebtAccountCreateManyWorkspaceInput = {
   originalAmountMinor: number
   currencyCode: string
   currentBalanceMinor: number
+  workspaceAmountMinor: number
+  workspaceCurrencyCode: string
+  workspaceBalanceMinor: number
+  exchangeRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate: Date | string
   interestRateBps?: number | null
   termMonths?: number | null
   monthlyAmountMinor?: number | null
   residualValueMinor?: number | null
+  workspaceMonthlyAmountMinor?: number | null
+  workspaceResidualValueMinor?: number | null
   frequency?: $Enums.RecurringFrequency | null
   interval?: number | null
   anchorDays?: Prisma.DebtAccountCreateanchorDaysInput | number[]
@@ -1310,10 +1586,17 @@ export type DebtAccountUpdateWithoutWorkspaceInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1337,10 +1620,17 @@ export type DebtAccountUncheckedUpdateWithoutWorkspaceInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1364,10 +1654,17 @@ export type DebtAccountUncheckedUpdateManyWithoutWorkspaceInput = {
   originalAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   currentBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceAmountMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceCurrencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  workspaceBalanceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  exchangeRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  exchangeRateDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interestRateBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   termMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   residualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceMonthlyAmountMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workspaceResidualValueMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   frequency?: Prisma.NullableEnumRecurringFrequencyFieldUpdateOperationsInput | $Enums.RecurringFrequency | null
   interval?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   anchorDays?: Prisma.DebtAccountUpdateanchorDaysInput | number[]
@@ -1430,10 +1727,17 @@ export type DebtAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   originalAmountMinor?: boolean
   currencyCode?: boolean
   currentBalanceMinor?: boolean
+  workspaceAmountMinor?: boolean
+  workspaceCurrencyCode?: boolean
+  workspaceBalanceMinor?: boolean
+  exchangeRate?: boolean
+  exchangeRateDate?: boolean
   interestRateBps?: boolean
   termMonths?: boolean
   monthlyAmountMinor?: boolean
   residualValueMinor?: boolean
+  workspaceMonthlyAmountMinor?: boolean
+  workspaceResidualValueMinor?: boolean
   frequency?: boolean
   interval?: boolean
   anchorDays?: boolean
@@ -1460,10 +1764,17 @@ export type DebtAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   originalAmountMinor?: boolean
   currencyCode?: boolean
   currentBalanceMinor?: boolean
+  workspaceAmountMinor?: boolean
+  workspaceCurrencyCode?: boolean
+  workspaceBalanceMinor?: boolean
+  exchangeRate?: boolean
+  exchangeRateDate?: boolean
   interestRateBps?: boolean
   termMonths?: boolean
   monthlyAmountMinor?: boolean
   residualValueMinor?: boolean
+  workspaceMonthlyAmountMinor?: boolean
+  workspaceResidualValueMinor?: boolean
   frequency?: boolean
   interval?: boolean
   anchorDays?: boolean
@@ -1487,10 +1798,17 @@ export type DebtAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   originalAmountMinor?: boolean
   currencyCode?: boolean
   currentBalanceMinor?: boolean
+  workspaceAmountMinor?: boolean
+  workspaceCurrencyCode?: boolean
+  workspaceBalanceMinor?: boolean
+  exchangeRate?: boolean
+  exchangeRateDate?: boolean
   interestRateBps?: boolean
   termMonths?: boolean
   monthlyAmountMinor?: boolean
   residualValueMinor?: boolean
+  workspaceMonthlyAmountMinor?: boolean
+  workspaceResidualValueMinor?: boolean
   frequency?: boolean
   interval?: boolean
   anchorDays?: boolean
@@ -1514,10 +1832,17 @@ export type DebtAccountSelectScalar = {
   originalAmountMinor?: boolean
   currencyCode?: boolean
   currentBalanceMinor?: boolean
+  workspaceAmountMinor?: boolean
+  workspaceCurrencyCode?: boolean
+  workspaceBalanceMinor?: boolean
+  exchangeRate?: boolean
+  exchangeRateDate?: boolean
   interestRateBps?: boolean
   termMonths?: boolean
   monthlyAmountMinor?: boolean
   residualValueMinor?: boolean
+  workspaceMonthlyAmountMinor?: boolean
+  workspaceResidualValueMinor?: boolean
   frequency?: boolean
   interval?: boolean
   anchorDays?: boolean
@@ -1529,7 +1854,7 @@ export type DebtAccountSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DebtAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "kind" | "direction" | "name" | "provider" | "counterparty" | "originalAmountMinor" | "currencyCode" | "currentBalanceMinor" | "interestRateBps" | "termMonths" | "monthlyAmountMinor" | "residualValueMinor" | "frequency" | "interval" | "anchorDays" | "nextPaymentDate" | "openedAt" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["debtAccount"]>
+export type DebtAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "kind" | "direction" | "name" | "provider" | "counterparty" | "originalAmountMinor" | "currencyCode" | "currentBalanceMinor" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "workspaceBalanceMinor" | "exchangeRate" | "exchangeRateDate" | "interestRateBps" | "termMonths" | "monthlyAmountMinor" | "residualValueMinor" | "workspaceMonthlyAmountMinor" | "workspaceResidualValueMinor" | "frequency" | "interval" | "anchorDays" | "nextPaymentDate" | "openedAt" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["debtAccount"]>
 export type DebtAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   expenses?: boolean | Prisma.DebtAccount$expensesArgs<ExtArgs>
@@ -1561,10 +1886,17 @@ export type $DebtAccountPayload<ExtArgs extends runtime.Types.Extensions.Interna
     originalAmountMinor: number
     currencyCode: string
     currentBalanceMinor: number
+    workspaceAmountMinor: number
+    workspaceCurrencyCode: string
+    workspaceBalanceMinor: number
+    exchangeRate: runtime.Decimal
+    exchangeRateDate: Date
     interestRateBps: number | null
     termMonths: number | null
     monthlyAmountMinor: number | null
     residualValueMinor: number | null
+    workspaceMonthlyAmountMinor: number | null
+    workspaceResidualValueMinor: number | null
     frequency: $Enums.RecurringFrequency | null
     interval: number | null
     anchorDays: number[]
@@ -2010,10 +2342,17 @@ export interface DebtAccountFieldRefs {
   readonly originalAmountMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
   readonly currencyCode: Prisma.FieldRef<"DebtAccount", 'String'>
   readonly currentBalanceMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
+  readonly workspaceAmountMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
+  readonly workspaceCurrencyCode: Prisma.FieldRef<"DebtAccount", 'String'>
+  readonly workspaceBalanceMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
+  readonly exchangeRate: Prisma.FieldRef<"DebtAccount", 'Decimal'>
+  readonly exchangeRateDate: Prisma.FieldRef<"DebtAccount", 'DateTime'>
   readonly interestRateBps: Prisma.FieldRef<"DebtAccount", 'Int'>
   readonly termMonths: Prisma.FieldRef<"DebtAccount", 'Int'>
   readonly monthlyAmountMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
   readonly residualValueMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
+  readonly workspaceMonthlyAmountMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
+  readonly workspaceResidualValueMinor: Prisma.FieldRef<"DebtAccount", 'Int'>
   readonly frequency: Prisma.FieldRef<"DebtAccount", 'RecurringFrequency'>
   readonly interval: Prisma.FieldRef<"DebtAccount", 'Int'>
   readonly anchorDays: Prisma.FieldRef<"DebtAccount", 'Int[]'>
