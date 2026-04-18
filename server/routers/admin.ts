@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { adminService } from "@/server/services/admin-service";
 import { categoryService } from "@/server/services/category-service";
+import { platformConfigService } from "@/server/services/platform-config-service";
 import { createTRPCRouter, platformAdminProcedure } from "@/server/trpc";
 
 export const adminRouter = createTRPCRouter({
@@ -76,4 +77,39 @@ export const adminRouter = createTRPCRouter({
         color: input.color,
       }),
     ),
+
+  // Platform config
+  getConfig: platformAdminProcedure.query(async () => {
+    const [config, whitelistCount] = await Promise.all([
+      platformConfigService.getConfig(),
+      platformConfigService.listAllowedEmails({ perPage: 1 }).then((r) => r.total),
+    ]);
+    return { ...config, whitelistCount };
+  }),
+
+  updateConfig: platformAdminProcedure
+    .input(z.object({ signupsEnabled: z.boolean() }))
+    .mutation(({ input }) => platformConfigService.updateConfig(input)),
+
+  listAllowedEmails: platformAdminProcedure
+    .input(
+      z.object({
+        page: z.coerce.number().int().min(1).optional(),
+        perPage: z.coerce.number().int().min(1).max(100).optional(),
+      }),
+    )
+    .query(({ input }) => platformConfigService.listAllowedEmails(input)),
+
+  addAllowedEmail: platformAdminProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        note: z.string().max(200).optional(),
+      }),
+    )
+    .mutation(({ input }) => platformConfigService.addAllowedEmail(input.email, input.note)),
+
+  removeAllowedEmail: platformAdminProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(({ input }) => platformConfigService.removeAllowedEmail(input.id)),
 });

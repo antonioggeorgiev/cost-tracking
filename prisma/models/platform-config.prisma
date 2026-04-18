@@ -1,0 +1,12 @@
+model PlatformConfig {
+  id             String   @id @default("singleton")
+  signupsEnabled Boolean  @default(true)
+  updatedAt      DateTime @updatedAt
+}
+
+model AllowedSignupEmail {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  note      String?
+  createdAt DateTime @default(now())
+}

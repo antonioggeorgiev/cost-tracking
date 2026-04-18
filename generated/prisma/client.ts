@@ -77,6 +77,16 @@ export type ExpenseSplit = Prisma.ExpenseSplitModel
  */
 export type RecurringExpenseTemplate = Prisma.RecurringExpenseTemplateModel
 /**
+ * Model PlatformConfig
+ * 
+ */
+export type PlatformConfig = Prisma.PlatformConfigModel
+/**
+ * Model AllowedSignupEmail
+ * 
+ */
+export type AllowedSignupEmail = Prisma.AllowedSignupEmailModel
+/**
  * Model User
  * 
  */

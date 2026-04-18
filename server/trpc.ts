@@ -3,17 +3,38 @@ import superjson from "superjson";
 import { z } from "zod";
 import { currentUser } from "@clerk/nextjs/server";
 import { SpaceRole } from "@/generated/prisma/enums";
+import { db } from "@/lib/db";
 import { memberService } from "@/server/services/member-service";
+import { platformConfigService } from "@/server/services/platform-config-service";
 import { userService } from "@/server/services/user-service";
 
 export async function createTrpcContext() {
   const clerkUser = await currentUser();
-  const user = clerkUser ? await userService.syncFromClerk(clerkUser) : null;
 
-  return {
-    clerkUser,
-    user,
-  };
+  if (!clerkUser) {
+    return { clerkUser: null, user: null };
+  }
+
+  // Existing users always sync (name/avatar updates etc.)
+  const existingUser = await db.user.findUnique({
+    where: { clerkUserId: clerkUser.id },
+    select: { id: true },
+  });
+
+  if (existingUser) {
+    const user = await userService.syncFromClerk(clerkUser);
+    return { clerkUser, user };
+  }
+
+  // New user — check if sign-ups are allowed or email is whitelisted
+  const email = clerkUser.primaryEmailAddress?.emailAddress;
+  if (email && (await platformConfigService.isSignupAllowed(email))) {
+    const user = await userService.syncFromClerk(clerkUser);
+    return { clerkUser, user };
+  }
+
+  // Sign-ups disabled and not whitelisted
+  return { clerkUser, user: null };
 }
 
 type Context = Awaited<ReturnType<typeof createTrpcContext>>;

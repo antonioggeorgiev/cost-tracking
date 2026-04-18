@@ -391,6 +391,8 @@ export const ModelName = {
   Expense: 'Expense',
   ExpenseSplit: 'ExpenseSplit',
   RecurringExpenseTemplate: 'RecurringExpenseTemplate',
+  PlatformConfig: 'PlatformConfig',
+  AllowedSignupEmail: 'AllowedSignupEmail',
   User: 'User',
   Space: 'Space',
   SpaceMembership: 'SpaceMembership',
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "expenseAttachment" | "category" | "debtAccount" | "debtPayment" | "expense" | "expenseSplit" | "recurringExpenseTemplate" | "user" | "space" | "spaceMembership" | "spaceInvite"
+    modelProps: "expenseAttachment" | "category" | "debtAccount" | "debtPayment" | "expense" | "expenseSplit" | "recurringExpenseTemplate" | "platformConfig" | "allowedSignupEmail" | "user" | "space" | "spaceMembership" | "spaceInvite"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -932,6 +934,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlatformConfig: {
+      payload: Prisma.$PlatformConfigPayload<ExtArgs>
+      fields: Prisma.PlatformConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>
+        }
+        update: {
+          args: Prisma.PlatformConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformConfig>
+        }
+        groupBy: {
+          args: Prisma.PlatformConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformConfigCountAggregateOutputType> | number
+        }
+      }
+    }
+    AllowedSignupEmail: {
+      payload: Prisma.$AllowedSignupEmailPayload<ExtArgs>
+      fields: Prisma.AllowedSignupEmailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AllowedSignupEmailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AllowedSignupEmailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>
+        }
+        findFirst: {
+          args: Prisma.AllowedSignupEmailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AllowedSignupEmailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>
+        }
+        findMany: {
+          args: Prisma.AllowedSignupEmailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>[]
+        }
+        create: {
+          args: Prisma.AllowedSignupEmailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>
+        }
+        createMany: {
+          args: Prisma.AllowedSignupEmailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AllowedSignupEmailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>[]
+        }
+        delete: {
+          args: Prisma.AllowedSignupEmailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>
+        }
+        update: {
+          args: Prisma.AllowedSignupEmailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>
+        }
+        deleteMany: {
+          args: Prisma.AllowedSignupEmailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AllowedSignupEmailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AllowedSignupEmailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>[]
+        }
+        upsert: {
+          args: Prisma.AllowedSignupEmailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllowedSignupEmailPayload>
+        }
+        aggregate: {
+          args: Prisma.AllowedSignupEmailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAllowedSignupEmail>
+        }
+        groupBy: {
+          args: Prisma.AllowedSignupEmailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AllowedSignupEmailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AllowedSignupEmailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AllowedSignupEmailCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -1429,6 +1579,25 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
 export type RecurringExpenseTemplateScalarFieldEnum = (typeof RecurringExpenseTemplateScalarFieldEnum)[keyof typeof RecurringExpenseTemplateScalarFieldEnum]
 
 
+export const PlatformConfigScalarFieldEnum = {
+  id: 'id',
+  signupsEnabled: 'signupsEnabled',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformConfigScalarFieldEnum = (typeof PlatformConfigScalarFieldEnum)[keyof typeof PlatformConfigScalarFieldEnum]
+
+
+export const AllowedSignupEmailScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type AllowedSignupEmailScalarFieldEnum = (typeof AllowedSignupEmailScalarFieldEnum)[keyof typeof AllowedSignupEmailScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   clerkUserId: 'clerkUserId',
@@ -1806,6 +1975,8 @@ export type GlobalOmitConfig = {
   expense?: Prisma.ExpenseOmit
   expenseSplit?: Prisma.ExpenseSplitOmit
   recurringExpenseTemplate?: Prisma.RecurringExpenseTemplateOmit
+  platformConfig?: Prisma.PlatformConfigOmit
+  allowedSignupEmail?: Prisma.AllowedSignupEmailOmit
   user?: Prisma.UserOmit
   space?: Prisma.SpaceOmit
   spaceMembership?: Prisma.SpaceMembershipOmit

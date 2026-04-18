@@ -50,7 +50,12 @@ export const inviteService = {
   },
 
   async sendSpaceInviteEmail(input: { spaceName: string; recipientEmail: string; token: string }) {
-    if (!isResendConfigured || !process.env.APP_BASE_URL) {
+    if (!isResendConfigured) {
+      console.warn("[Invite Email] Skipped: RESEND_API_KEY is not set");
+      return;
+    }
+    if (!process.env.APP_BASE_URL) {
+      console.warn("[Invite Email] Skipped: APP_BASE_URL is not set");
       return;
     }
 

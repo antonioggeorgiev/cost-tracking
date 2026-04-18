@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { isClerkConfigured } from "@/lib/clerk";
 import {
-  LayoutDashboard, Users, Building2, FolderTree, ArrowLeft,
+  LayoutDashboard, Users, Building2, FolderTree, Settings, ArrowLeft,
   LogOut, ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,7 @@ const adminNavItems = [
   { label: "Users", icon: Users, href: "/admin/users" },
   { label: "Spaces", icon: Building2, href: "/admin/spaces" },
   { label: "Categories", icon: FolderTree, href: "/admin/categories" },
+  { label: "Settings", icon: Settings, href: "/admin/settings" },
 ] as const;
 
 export function AdminSidebar({ user }: AdminSidebarProps) {

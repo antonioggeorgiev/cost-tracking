@@ -58,6 +58,8 @@ export const ModelName = {
   Expense: 'Expense',
   ExpenseSplit: 'ExpenseSplit',
   RecurringExpenseTemplate: 'RecurringExpenseTemplate',
+  PlatformConfig: 'PlatformConfig',
+  AllowedSignupEmail: 'AllowedSignupEmail',
   User: 'User',
   Space: 'Space',
   SpaceMembership: 'SpaceMembership',
@@ -240,6 +242,25 @@ export const RecurringExpenseTemplateScalarFieldEnum = {
 } as const
 
 export type RecurringExpenseTemplateScalarFieldEnum = (typeof RecurringExpenseTemplateScalarFieldEnum)[keyof typeof RecurringExpenseTemplateScalarFieldEnum]
+
+
+export const PlatformConfigScalarFieldEnum = {
+  id: 'id',
+  signupsEnabled: 'signupsEnabled',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformConfigScalarFieldEnum = (typeof PlatformConfigScalarFieldEnum)[keyof typeof PlatformConfigScalarFieldEnum]
+
+
+export const AllowedSignupEmailScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type AllowedSignupEmailScalarFieldEnum = (typeof AllowedSignupEmailScalarFieldEnum)[keyof typeof AllowedSignupEmailScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
