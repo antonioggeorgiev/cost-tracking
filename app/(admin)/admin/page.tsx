@@ -6,11 +6,10 @@ import { format } from "date-fns";
 
 export default async function AdminDashboardPage() {
   const caller = await getServerCaller();
-  const [stats, recentUsers, recentSpaces] = await Promise.all([
-    caller.admin.stats(),
-    caller.admin.listUsers({ perPage: 5 }),
-    caller.admin.listSpaces({ perPage: 5 }),
-  ]);
+  const statsP = caller.admin.stats();
+  const usersP = caller.admin.listUsers({ perPage: 5 });
+  const spacesP = caller.admin.listSpaces({ perPage: 5 });
+  const [stats, recentUsers, recentSpaces] = await Promise.all([statsP, usersP, spacesP]);
 
   const statCards = [
     { label: "Total Users", value: stats.userCount, icon: Users, href: routes.adminUsers },
