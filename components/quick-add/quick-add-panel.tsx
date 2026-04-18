@@ -18,7 +18,7 @@ type QuickAddPanelProps = {
   categories: Category[];
   currencies: readonly string[];
   createExpense: (formData: FormData) => Promise<{ id: string } | { error: string }>;
-  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  createCategory?: (formData: FormData) => Promise<{ id: string }>;
   createRecurring: (formData: FormData) => Promise<{ success: true } | { error: string }>;
   createDebtAccount: (formData: FormData) => Promise<void>;
 };

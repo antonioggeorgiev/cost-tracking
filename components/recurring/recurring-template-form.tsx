@@ -33,7 +33,7 @@ type RecurringTemplateFormProps = {
   categories: Category[];
   currencies: readonly string[];
   createRecurring: (formData: FormData) => Promise<{ success: true } | { error: string }>;
-  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  createCategory?: (formData: FormData) => Promise<{ id: string }>;
   submitLabel?: string;
   onSuccess?: () => void;
 };

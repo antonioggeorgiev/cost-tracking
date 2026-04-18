@@ -1,6 +1,5 @@
-import { createCategoryFormAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { getServerCaller } from "@/server/trpc-caller";
-import { FolderTree, Plus, ChevronRight } from "lucide-react";
+import { FolderTree, ChevronRight, Info } from "lucide-react";
 
 type CategoriesPageProps = {
   params: Promise<{ workspaceSlug: string }>;
@@ -18,9 +17,6 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
     return null;
   }
 
-  const role = workspace.memberships[0]?.role ?? "viewer";
-  const canManage = role === "owner" || role === "editor";
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -28,55 +24,18 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">{workspace.name}</p>
           <h1 className="mt-1 font-heading text-2xl font-bold text-heading">Categories</h1>
-          <p className="mt-2 text-sm text-body">Organize expenses with parent and child categories.</p>
+          <p className="mt-2 text-sm text-body">Expense categories available for this workspace.</p>
         </div>
         <span className="rounded-full bg-primary-lighter px-3 py-1 text-xs font-semibold text-primary">{categories.length} parents</span>
       </div>
 
-      {/* Create forms */}
-      {canManage ? (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <h2 className="font-heading text-base font-semibold text-heading">Create parent category</h2>
-            <form action={createCategoryFormAction} className="mt-5 space-y-4">
-              <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
-              <input type="hidden" name="parentCategoryId" value="" />
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Name</span>
-                <input name="name" required placeholder="Renovation" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-              <button className="flex items-center gap-2 rounded-xl bg-heading px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90">
-                <Plus size={16} />
-                Create Parent
-              </button>
-            </form>
-          </section>
-
-          <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <h2 className="font-heading text-base font-semibold text-heading">Create child category</h2>
-            <form action={createCategoryFormAction} className="mt-5 space-y-4">
-              <input type="hidden" name="workspaceSlug" value={workspaceSlug} />
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Parent</span>
-                <select name="parentCategoryId" required className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
-                  <option value="">Select parent</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium text-heading">Name</span>
-                <input name="name" required placeholder="Bathroom" className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10" />
-              </label>
-              <button className="flex items-center gap-2 rounded-xl bg-heading px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90">
-                <Plus size={16} />
-                Create Child
-              </button>
-            </form>
-          </section>
-        </div>
-      ) : null}
+      {/* Info notice */}
+      <div className="flex items-start gap-3 rounded-2xl border border-border bg-surface-secondary px-5 py-4">
+        <Info size={16} className="mt-0.5 shrink-0 text-primary" />
+        <p className="text-sm text-body">
+          Categories are managed by platform administrators and shared across all workspaces.
+        </p>
+      </div>
 
       {/* Category tree */}
       <section className="rounded-2xl border border-border bg-surface shadow-sm">
@@ -91,7 +50,11 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
               <div key={category.id} className="px-6 py-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-primary">
-                    <FolderTree size={18} />
+                    {category.color ? (
+                      <div className="h-5 w-5 rounded-full" style={{ backgroundColor: category.color }} />
+                    ) : (
+                      <FolderTree size={18} />
+                    )}
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-heading">{category.name}</p>
@@ -119,7 +82,7 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
           </div>
         ) : (
           <div className="px-6 py-12 text-center text-sm text-body">
-            No categories yet. Create a parent category to start.
+            No categories available. Contact a platform administrator.
           </div>
         )}
       </section>

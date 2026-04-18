@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { createRecurringTemplateAction, markFixedAsPaidAction, recordVariableRecurringExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/recurring/actions";
 import { RecurringCard } from "@/components/recurring/recurring-card";
 import { RecurringDueSection } from "@/components/recurring/recurring-due-section";
@@ -271,7 +270,6 @@ export default async function RecurringPage({ params, searchParams }: RecurringP
           categories={categoryTree}
           currencies={supportedCurrencies}
           createRecurring={createRecurringTemplateAction}
-          createCategory={createCategoryAction}
         />
       )}
     </div>

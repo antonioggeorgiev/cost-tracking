@@ -21,4 +21,12 @@ export const routes = {
   workspaceProfile: (slug: string) => `/workspaces/${slug}/profile`,
 
   acceptInvite: (token: string) => `/accept-invite/${token}`,
+
+  // Admin routes
+  admin: "/admin",
+  adminUsers: "/admin/users",
+  adminUser: (userId: string) => `/admin/users/${userId}`,
+  adminWorkspaces: "/admin/workspaces",
+  adminWorkspace: (workspaceId: string) => `/admin/workspaces/${workspaceId}`,
+  adminCategories: "/admin/categories",
 } as const;

@@ -18,7 +18,7 @@ type CategorySelectProps = {
   categoryId: string;
   onCategoryChange: (value: string) => void;
   workspaceSlug: string;
-  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  createCategory?: (formData: FormData) => Promise<{ id: string }>;
   parentError?: string;
   categoryError?: string;
 };
@@ -64,7 +64,7 @@ export function CategorySelect({
             placeholder="Select category"
             searchPlaceholder="Search categories..."
             emptyMessage="No categories found."
-            onCreateNew={() => setCategoryDialogOpen(true)}
+            onCreateNew={createCategory ? () => setCategoryDialogOpen(true) : undefined}
             createNewLabel="Create category"
           />
           {parentError && <span className="text-xs text-destructive">{parentError}</span>}
@@ -80,35 +80,39 @@ export function CategorySelect({
             searchPlaceholder="Search subcategories..."
             emptyMessage="No subcategories found."
             disabled={!parentCategoryId}
-            onCreateNew={parentCategoryId ? () => setSubcategoryDialogOpen(true) : undefined}
+            onCreateNew={parentCategoryId && createCategory ? () => setSubcategoryDialogOpen(true) : undefined}
             createNewLabel="Create subcategory"
           />
           {categoryError && <span className="text-xs text-destructive">{categoryError}</span>}
         </div>
       </div>
 
-      <CreateCategoryDialog
-        type="category"
-        workspaceSlug={workspaceSlug}
-        createCategory={createCategory}
-        open={categoryDialogOpen}
-        onOpenChange={setCategoryDialogOpen}
-        onCreated={(id) => {
-          onParentChange(id);
-          onCategoryChange("");
-        }}
-      />
-      <CreateCategoryDialog
-        type="subcategory"
-        workspaceSlug={workspaceSlug}
-        parentCategoryId={parentCategoryId}
-        createCategory={createCategory}
-        open={subcategoryDialogOpen}
-        onOpenChange={setSubcategoryDialogOpen}
-        onCreated={(id) => {
-          onCategoryChange(id);
-        }}
-      />
+      {createCategory && (
+        <>
+          <CreateCategoryDialog
+            type="category"
+            workspaceSlug={workspaceSlug}
+            createCategory={createCategory}
+            open={categoryDialogOpen}
+            onOpenChange={setCategoryDialogOpen}
+            onCreated={(id) => {
+              onParentChange(id);
+              onCategoryChange("");
+            }}
+          />
+          <CreateCategoryDialog
+            type="subcategory"
+            workspaceSlug={workspaceSlug}
+            parentCategoryId={parentCategoryId}
+            createCategory={createCategory}
+            open={subcategoryDialogOpen}
+            onOpenChange={setSubcategoryDialogOpen}
+            onCreated={(id) => {
+              onCategoryChange(id);
+            }}
+          />
+        </>
+      )}
     </>
   );
 }

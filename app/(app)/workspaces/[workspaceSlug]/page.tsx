@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { createExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/actions";
 import { createDebtAccountAction } from "@/app/(app)/workspaces/[workspaceSlug]/debts/actions";
 import { createRecurringTemplateAction } from "@/app/(app)/workspaces/[workspaceSlug]/recurring/actions";
@@ -54,7 +53,6 @@ export default async function WorkspacePage({ params, searchParams }: WorkspaceP
         categories={categoryTree}
         currencies={supportedCurrencies}
         createExpense={createExpenseAction}
-        createCategory={createCategoryAction}
         createRecurring={createRecurringTemplateAction}
         createDebtAccount={createDebtAccountAction}
       />

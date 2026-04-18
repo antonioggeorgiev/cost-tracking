@@ -59,11 +59,21 @@ async function getDebtPaymentCategoryId(
   tx: Omit<typeof db, "$connect" | "$disconnect" | "$on" | "$transaction" | "$extends">,
   workspaceId: string,
 ) {
+  // First check for a platform-wide "Debt Payments" category
+  const platform = await tx.category.findFirst({
+    where: { workspaceId: null, parentCategoryId: null, slug: "debt-and-loan-payments" },
+    select: { id: true },
+  });
+  if (platform) return platform.id;
+
+  // Fallback: check workspace-specific
   const existing = await tx.category.findFirst({
     where: { workspaceId, parentCategoryId: null, slug: "debt-payments" },
     select: { id: true },
   });
   if (existing) return existing.id;
+
+  // Last resort: create workspace-specific
   const category = await tx.category.create({ data: { workspaceId, name: "Debt Payments", slug: "debt-payments" } });
   return category.id;
 }

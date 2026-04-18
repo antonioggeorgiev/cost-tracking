@@ -3,6 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
 import { isClerkConfigured } from "@/lib/clerk";
+import { db } from "@/lib/db";
 import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
@@ -26,9 +27,13 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     redirect(routes.signIn);
   }
 
-  const [caller, clerkUser] = await Promise.all([
+  const [caller, clerkUser, dbUser] = await Promise.all([
     getServerCaller(),
     currentUser(),
+    db.user.findUnique({
+      where: { clerkUserId: session.userId },
+      select: { isPlatformAdmin: true },
+    }),
   ]);
   const workspaces = await caller.workspaces.listMine();
 
@@ -40,6 +45,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           "User",
         email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
         imageUrl: clerkUser.imageUrl,
+        isPlatformAdmin: dbUser?.isPlatformAdmin ?? false,
       }
     : undefined;
 

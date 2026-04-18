@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { createCategoryAction } from "@/app/(app)/workspaces/[workspaceSlug]/categories/actions";
 import { createExpenseAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/actions";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
 import { ExpenseModal } from "@/components/expenses/expense-modal";
@@ -287,7 +286,6 @@ export default async function ExpensesPage({ params, searchParams }: ExpensesPag
           categories={categoryTree}
           currencies={supportedCurrencies}
           createExpense={createExpenseAction}
-          createCategory={createCategoryAction}
         />
       ) : null}
     </div>

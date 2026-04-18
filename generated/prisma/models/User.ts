@@ -30,6 +30,7 @@ export type UserMinAggregateOutputType = {
   email: string | null
   name: string | null
   imageUrl: string | null
+  isPlatformAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,6 +41,7 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   name: string | null
   imageUrl: string | null
+  isPlatformAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +52,7 @@ export type UserCountAggregateOutputType = {
   email: number
   name: number
   imageUrl: number
+  isPlatformAdmin: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -62,6 +65,7 @@ export type UserMinAggregateInputType = {
   email?: true
   name?: true
   imageUrl?: true
+  isPlatformAdmin?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -72,6 +76,7 @@ export type UserMaxAggregateInputType = {
   email?: true
   name?: true
   imageUrl?: true
+  isPlatformAdmin?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +87,7 @@ export type UserCountAggregateInputType = {
   email?: true
   name?: true
   imageUrl?: true
+  isPlatformAdmin?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -165,6 +171,7 @@ export type UserGroupByOutputType = {
   email: string
   name: string | null
   imageUrl: string | null
+  isPlatformAdmin: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -196,6 +203,7 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  isPlatformAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdWorkspaces?: Prisma.WorkspaceListRelationFilter
@@ -213,6 +221,7 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPlatformAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdWorkspaces?: Prisma.WorkspaceOrderByRelationAggregateInput
@@ -233,6 +242,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringNullableFilter<"User"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  isPlatformAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdWorkspaces?: Prisma.WorkspaceListRelationFilter
@@ -250,6 +260,7 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPlatformAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -266,6 +277,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  isPlatformAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -276,6 +288,7 @@ export type UserCreateInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -293,6 +306,7 @@ export type UserUncheckedCreateInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -310,6 +324,7 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -327,6 +342,7 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -344,6 +360,7 @@ export type UserCreateManyInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -354,6 +371,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -364,6 +382,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -379,6 +398,7 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  isPlatformAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -389,6 +409,7 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  isPlatformAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -399,6 +420,7 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  isPlatformAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -514,6 +536,7 @@ export type UserCreateWithoutDebtPaymentsInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -530,6 +553,7 @@ export type UserUncheckedCreateWithoutDebtPaymentsInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -562,6 +586,7 @@ export type UserUpdateWithoutDebtPaymentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -578,6 +603,7 @@ export type UserUncheckedUpdateWithoutDebtPaymentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -594,6 +620,7 @@ export type UserCreateWithoutExpensesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -610,6 +637,7 @@ export type UserUncheckedCreateWithoutExpensesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -642,6 +670,7 @@ export type UserUpdateWithoutExpensesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -658,6 +687,7 @@ export type UserUncheckedUpdateWithoutExpensesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -674,6 +704,7 @@ export type UserCreateWithoutRecurringTemplatesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -690,6 +721,7 @@ export type UserUncheckedCreateWithoutRecurringTemplatesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -722,6 +754,7 @@ export type UserUpdateWithoutRecurringTemplatesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -738,6 +771,7 @@ export type UserUncheckedUpdateWithoutRecurringTemplatesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -754,6 +788,7 @@ export type UserCreateWithoutCreatedWorkspacesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
@@ -770,6 +805,7 @@ export type UserUncheckedCreateWithoutCreatedWorkspacesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
@@ -802,6 +838,7 @@ export type UserUpdateWithoutCreatedWorkspacesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
@@ -818,6 +855,7 @@ export type UserUncheckedUpdateWithoutCreatedWorkspacesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
@@ -834,6 +872,7 @@ export type UserCreateWithoutMembershipsInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -850,6 +889,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -882,6 +922,7 @@ export type UserUpdateWithoutMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -898,6 +939,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -914,6 +956,7 @@ export type UserCreateWithoutSentInvitesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -930,6 +973,7 @@ export type UserUncheckedCreateWithoutSentInvitesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -951,6 +995,7 @@ export type UserCreateWithoutAcceptedInvitesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
@@ -967,6 +1012,7 @@ export type UserUncheckedCreateWithoutAcceptedInvitesInput = {
   email: string
   name?: string | null
   imageUrl?: string | null
+  isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -999,6 +1045,7 @@ export type UserUpdateWithoutSentInvitesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -1015,6 +1062,7 @@ export type UserUncheckedUpdateWithoutSentInvitesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -1042,6 +1090,7 @@ export type UserUpdateWithoutAcceptedInvitesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
@@ -1058,6 +1107,7 @@ export type UserUncheckedUpdateWithoutAcceptedInvitesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -1159,6 +1209,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   name?: boolean
   imageUrl?: boolean
+  isPlatformAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdWorkspaces?: boolean | Prisma.User$createdWorkspacesArgs<ExtArgs>
@@ -1177,6 +1228,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   name?: boolean
   imageUrl?: boolean
+  isPlatformAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1187,6 +1239,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   name?: boolean
   imageUrl?: boolean
+  isPlatformAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1197,11 +1250,12 @@ export type UserSelectScalar = {
   email?: boolean
   name?: boolean
   imageUrl?: boolean
+  isPlatformAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkUserId" | "email" | "name" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkUserId" | "email" | "name" | "imageUrl" | "isPlatformAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdWorkspaces?: boolean | Prisma.User$createdWorkspacesArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
@@ -1232,6 +1286,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string
     name: string | null
     imageUrl: string | null
+    isPlatformAdmin: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1669,6 +1724,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly imageUrl: Prisma.FieldRef<"User", 'String'>
+  readonly isPlatformAdmin: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

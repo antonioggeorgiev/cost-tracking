@@ -9,7 +9,7 @@ import { isClerkConfigured } from "@/lib/clerk";
 import {
   Activity, Receipt, RefreshCw, Landmark, FolderTree, Settings, LogOut,
   ChevronDown, ChevronUp, User, Check, PlusCircle, Wallet,
-  ArrowLeftRight, Users,
+  ArrowLeftRight, Users, Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routes, WORKSPACE_SLUG_PATTERN } from "@/lib/routes";
@@ -37,6 +37,7 @@ type DesktopSidebarProps = {
     name: string;
     email: string;
     imageUrl: string;
+    isPlatformAdmin?: boolean;
   };
 };
 
@@ -51,9 +52,7 @@ const financeNavItems = [
   { label: "Debts", icon: Landmark, segment: "/debts" },
 ] as const;
 
-const bottomNavItems = [
-  { label: "Categories", icon: FolderTree, segment: "/categories" },
-] as const;
+const bottomNavItems = [] as const;
 
 export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
   const pathname = usePathname();
@@ -273,6 +272,18 @@ export function DesktopSidebar({ workspaces, user }: DesktopSidebarProps) {
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuGroup>
+
+                {user?.isPlatformAdmin && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem render={<Link href="/admin" />}>
+                        <Shield size={14} />
+                        Admin Panel
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </>
+                )}
 
                 {isClerkConfigured && (
                   <>

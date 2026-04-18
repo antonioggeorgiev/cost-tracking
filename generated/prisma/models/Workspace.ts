@@ -370,6 +370,11 @@ export type WorkspaceUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type WorkspaceNullableScalarRelationFilter = {
+  is?: Prisma.WorkspaceWhereInput | null
+  isNot?: Prisma.WorkspaceWhereInput | null
+}
+
 export type WorkspaceScalarRelationFilter = {
   is?: Prisma.WorkspaceWhereInput
   isNot?: Prisma.WorkspaceWhereInput
@@ -421,10 +426,12 @@ export type WorkspaceCreateNestedOneWithoutCategoriesInput = {
   connect?: Prisma.WorkspaceWhereUniqueInput
 }
 
-export type WorkspaceUpdateOneRequiredWithoutCategoriesNestedInput = {
+export type WorkspaceUpdateOneWithoutCategoriesNestedInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCategoriesInput, Prisma.WorkspaceUncheckedCreateWithoutCategoriesInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCategoriesInput
   upsert?: Prisma.WorkspaceUpsertWithoutCategoriesInput
+  disconnect?: Prisma.WorkspaceWhereInput | boolean
+  delete?: Prisma.WorkspaceWhereInput | boolean
   connect?: Prisma.WorkspaceWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutCategoriesInput, Prisma.WorkspaceUpdateWithoutCategoriesInput>, Prisma.WorkspaceUncheckedUpdateWithoutCategoriesInput>
 }

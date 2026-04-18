@@ -33,7 +33,7 @@ type QuickAddExpenseFormProps = {
   categories: Category[];
   currencies: readonly string[];
   createExpense: (formData: FormData) => Promise<{ id: string } | { error: string }>;
-  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  createCategory?: (formData: FormData) => Promise<{ id: string }>;
   submitLabel?: string;
   onSuccess?: () => void;
 };

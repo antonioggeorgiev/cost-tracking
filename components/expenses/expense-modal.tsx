@@ -17,7 +17,7 @@ type ExpenseModalProps = {
   categories: Category[];
   currencies: readonly string[];
   createExpense: (formData: FormData) => Promise<{ id: string } | { error: string }>;
-  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  createCategory?: (formData: FormData) => Promise<{ id: string }>;
 };
 
 export function ExpenseModal({ workspaceSlug, baseCurrencyCode, categories, currencies, createExpense, createCategory }: ExpenseModalProps) {

@@ -120,7 +120,7 @@ export const expenseService = {
     if (input.categoryId !== undefined) {
       if (input.categoryId) {
         const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-        if (!category || category.workspaceId !== workspaceId) throw new Error("Category does not belong to this workspace.");
+        if (!category || (category.workspaceId !== null && category.workspaceId !== workspaceId)) throw new Error("Category does not belong to this workspace.");
         if (category.isArchived) throw new Error("Archived categories cannot be used.");
       }
       data.categoryId = input.categoryId || null;
@@ -168,7 +168,7 @@ export const expenseService = {
 
     if (input.categoryId) {
       const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-      if (!category || category.workspaceId !== input.workspaceId) throw new Error("Category does not belong to this workspace.");
+      if (!category || (category.workspaceId !== null && category.workspaceId !== input.workspaceId)) throw new Error("Category does not belong to this workspace.");
       if (category.isArchived) throw new Error("Archived categories cannot be used for new expenses.");
     }
 

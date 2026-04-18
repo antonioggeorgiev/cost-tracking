@@ -80,6 +80,14 @@ export const workspaceEditorProcedure = workspaceMemberProcedure.use(({ ctx, nex
   });
 });
 
+export const platformAdminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (!ctx.user.isPlatformAdmin) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Platform admin access required." });
+  }
+
+  return next({ ctx });
+});
+
 export const workspaceOwnerProcedure = workspaceMemberProcedure.use(({ ctx, next }) => {
   if (ctx.membership.role !== WorkspaceRole.owner) {
     throw new TRPCError({ code: "FORBIDDEN", message: "Only workspace owners can perform this action." });

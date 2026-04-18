@@ -4,6 +4,7 @@ model User {
   email              String                     @unique
   name               String?
   imageUrl           String?
+  isPlatformAdmin    Boolean                    @default(false)
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
   createdWorkspaces  Workspace[]                @relation("WorkspaceCreator")

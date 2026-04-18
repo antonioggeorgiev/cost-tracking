@@ -136,7 +136,7 @@ export const recurringService = {
 
     if (input.categoryId !== undefined) {
       const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-      if (!category || category.workspaceId !== workspaceId) throw new Error("Category does not belong to this workspace.");
+      if (!category || (category.workspaceId !== null && category.workspaceId !== workspaceId)) throw new Error("Category does not belong to this workspace.");
       if (category.isArchived) throw new Error("Archived categories cannot be used.");
       data.categoryId = input.categoryId;
     }
@@ -233,7 +233,7 @@ export const recurringService = {
     if (!workspace) throw new Error("Workspace not found.");
 
     const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-    if (!category || category.workspaceId !== input.workspaceId) throw new Error("Category does not belong to this workspace.");
+    if (!category || (category.workspaceId !== null && category.workspaceId !== input.workspaceId)) throw new Error("Category does not belong to this workspace.");
     if (category.isArchived) throw new Error("Archived categories cannot be used for recurring templates.");
 
     if (input.endDate && input.endDate < input.startDate) {

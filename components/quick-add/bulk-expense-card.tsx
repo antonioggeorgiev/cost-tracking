@@ -46,7 +46,7 @@ type BulkExpenseCardProps = {
   categories: Category[];
   currencies: readonly string[];
   workspaceSlug: string;
-  createCategory: (formData: FormData) => Promise<{ id: string }>;
+  createCategory?: (formData: FormData) => Promise<{ id: string }>;
   onRemove: () => void;
   formRef?: (handle: BulkCardHandle) => void;
 };
