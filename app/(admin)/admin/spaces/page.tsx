@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import { AdminSearchForm } from "@/components/admin/admin-search-form";
+import { createAdminListPageHref, parseAdminListSearchParams } from "@/lib/admin-list";
 import { getServerCaller } from "@/server/trpc-caller";
 import { routes } from "@/lib/routes";
 import { format } from "date-fns";
-import { Search } from "lucide-react";
 
 type SpacesPageProps = {
   searchParams: Promise<{ search?: string; page?: string }>;
@@ -10,8 +12,7 @@ type SpacesPageProps = {
 
 export default async function AdminSpacesPage({ searchParams }: SpacesPageProps) {
   const params = await searchParams;
-  const search = params.search ?? "";
-  const page = Number(params.page) || 1;
+  const { search, page } = parseAdminListSearchParams(params);
 
   const caller = await getServerCaller();
   const spaces = await caller.admin.listSpaces({ search: search || undefined, page, perPage: 20 });
@@ -27,15 +28,7 @@ export default async function AdminSpacesPage({ searchParams }: SpacesPageProps)
       </div>
 
       {/* Search */}
-      <form className="relative max-w-md">
-        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-body" />
-        <input
-          name="search"
-          defaultValue={search}
-          placeholder="Search by name or slug..."
-          className="w-full rounded-xl border border-border bg-surface pl-11 pr-4 py-3 text-sm text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10"
-        />
-      </form>
+      <AdminSearchForm defaultValue={search} placeholder="Search by name or slug..." />
 
       {/* Spaces table */}
       <section className="rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
@@ -77,32 +70,12 @@ export default async function AdminSpacesPage({ searchParams }: SpacesPageProps)
           </table>
         </div>
 
-        {/* Pagination */}
-        {spaces.totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-border px-6 py-3">
-            <p className="text-sm text-body">
-              Page {spaces.page} of {spaces.totalPages}
-            </p>
-            <div className="flex gap-2">
-              {page > 1 && (
-                <Link
-                  href={{ pathname: routes.adminSpaces, query: { search: search || undefined, page: page - 1 } }}
-                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-heading hover:bg-surface-secondary"
-                >
-                  Previous
-                </Link>
-              )}
-              {page < spaces.totalPages && (
-                <Link
-                  href={{ pathname: routes.adminSpaces, query: { search: search || undefined, page: page + 1 } }}
-                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-heading hover:bg-surface-secondary"
-                >
-                  Next
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
+        <AdminPagination
+          page={spaces.page}
+          totalPages={spaces.totalPages}
+          previousHref={page > 1 ? createAdminListPageHref(routes.adminSpaces, { search, page: page - 1 }) : null}
+          nextHref={page < spaces.totalPages ? createAdminListPageHref(routes.adminSpaces, { search, page: page + 1 }) : null}
+        />
       </section>
     </div>
   );

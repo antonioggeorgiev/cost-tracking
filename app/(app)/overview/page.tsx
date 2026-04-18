@@ -1,30 +1,18 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { SpendingChart } from "@/components/charts/spending-chart";
+import { formatMonthDay, formatMonthYear, formatRelativeTime } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { routes } from "@/lib/routes";
+import { clearSelectedSpaceCookie } from "@/lib/space-cookie";
 import { getSelectedSpaceSlug } from "@/lib/space-context";
 import { getServerCaller } from "@/server/trpc-caller";
 import {
   Receipt, RefreshCw, Landmark, ExternalLink, FolderTree,
   TrendingUp, TrendingDown, ArrowRight, AlertCircle, Clock, Calendar, Users,
 } from "lucide-react";
-
-function timeAgo(date: Date) {
-  const now = new Date();
-  const diffMs = now.getTime() - new Date(date).getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 1) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24) return `${diffHr}h ago`;
-  const diffDay = Math.floor(diffHr / 24);
-  if (diffDay === 1) return "yesterday";
-  return `${diffDay}d ago`;
-}
 
 export default async function OverviewPage() {
   const spaceSlug = await getSelectedSpaceSlug();
@@ -83,16 +71,15 @@ export default async function OverviewPage() {
     ]);
   } catch {
     // Stale cookie — clear it and redirect to show all-spaces view
-    const cookieStore = await cookies();
-    cookieStore.delete("selectedSpace");
-    redirect("/overview");
+    await clearSelectedSpaceCookie();
+    redirect(routes.overview);
   }
 
   if (!space) {
     notFound();
   }
 
-  const monthLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const monthLabel = formatMonthYear(new Date());
   const progressPct = data.totalDueMinor > 0 ? Math.min(100, Math.round((data.totalPaidMinor / data.totalDueMinor) * 100)) : 0;
   const allClear = data.totalDueMinor > 0 && data.totalRemainingMinor === 0;
   const changeIsUp = data.monthOverMonthChangePct > 0;
@@ -340,7 +327,7 @@ export default async function OverviewPage() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-heading">{item.name}</p>
                   <p className="text-xs text-body">
-                    Due {new Date(item.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    Due {formatMonthDay(item.dueDate)}
                   </p>
                 </div>
                 <span className="shrink-0 font-medium text-heading">
@@ -437,7 +424,7 @@ export default async function OverviewPage() {
                       <StatusBadge status={expense.status} />
                     </div>
                     <p className="mt-0.5 text-xs text-body">
-                      {expense.categoryPath} · {timeAgo(expense.expenseDate)}
+                      {expense.categoryPath} · {formatRelativeTime(expense.expenseDate)}
                     </p>
                   </div>
                   <p className="shrink-0 text-sm font-medium text-heading">

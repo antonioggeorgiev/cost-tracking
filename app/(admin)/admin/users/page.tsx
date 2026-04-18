@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import { AdminSearchForm } from "@/components/admin/admin-search-form";
+import { createAdminListPageHref, parseAdminListSearchParams } from "@/lib/admin-list";
 import { getServerCaller } from "@/server/trpc-caller";
 import { routes } from "@/lib/routes";
+import { getUserInitials } from "@/lib/user-display";
 import { format } from "date-fns";
-import { Search } from "lucide-react";
 
 type UsersPageProps = {
   searchParams: Promise<{ search?: string; page?: string }>;
@@ -10,8 +13,7 @@ type UsersPageProps = {
 
 export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
   const params = await searchParams;
-  const search = params.search ?? "";
-  const page = Number(params.page) || 1;
+  const { search, page } = parseAdminListSearchParams(params);
 
   const caller = await getServerCaller();
   const users = await caller.admin.listUsers({ search: search || undefined, page, perPage: 20 });
@@ -27,15 +29,7 @@ export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
       </div>
 
       {/* Search */}
-      <form className="relative max-w-md">
-        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-body" />
-        <input
-          name="search"
-          defaultValue={search}
-          placeholder="Search by name or email..."
-          className="w-full rounded-xl border border-border bg-surface pl-11 pr-4 py-3 text-sm text-heading outline-none placeholder:text-body focus:border-primary focus:ring-2 focus:ring-primary/10"
-        />
-      </form>
+      <AdminSearchForm defaultValue={search} placeholder="Search by name or email..." />
 
       {/* Users table */}
       <section className="rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
@@ -56,7 +50,7 @@ export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
                   <td className="px-6 py-3">
                     <Link href={routes.adminUser(user.id)} className="flex items-center gap-3">
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-xs font-bold text-primary">
-                        {user.name ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?"}
+                        {getUserInitials(user.name)}
                       </div>
                       <span className="font-medium text-heading hover:underline">{user.name || "—"}</span>
                     </Link>
@@ -82,32 +76,12 @@ export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
           </table>
         </div>
 
-        {/* Pagination */}
-        {users.totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-border px-6 py-3">
-            <p className="text-sm text-body">
-              Page {users.page} of {users.totalPages}
-            </p>
-            <div className="flex gap-2">
-              {page > 1 && (
-                <Link
-                  href={{ pathname: routes.adminUsers, query: { search: search || undefined, page: page - 1 } }}
-                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-heading hover:bg-surface-secondary"
-                >
-                  Previous
-                </Link>
-              )}
-              {page < users.totalPages && (
-                <Link
-                  href={{ pathname: routes.adminUsers, query: { search: search || undefined, page: page + 1 } }}
-                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-heading hover:bg-surface-secondary"
-                >
-                  Next
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
+        <AdminPagination
+          page={users.page}
+          totalPages={users.totalPages}
+          previousHref={page > 1 ? createAdminListPageHref(routes.adminUsers, { search, page: page - 1 }) : null}
+          nextHref={page < users.totalPages ? createAdminListPageHref(routes.adminUsers, { search, page: page + 1 }) : null}
+        />
       </section>
     </div>
   );

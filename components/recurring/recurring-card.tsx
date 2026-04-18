@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { RefreshCw, ExternalLink, AlertTriangle, Clock, Check, CheckCircle } from "lucide-react";
+import { formatMonthDay } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { formatFrequencyDescription, getDueStatus } from "@/lib/recurring-display";
 import { routes } from "@/lib/routes";
@@ -38,6 +39,7 @@ type RecurringCardProps = {
 export function RecurringCard({ template, spaceSlug, canManage, markPaidAction }: RecurringCardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [renderedAt] = useState(() => Date.now());
 
   const categoryPath = template.category.parentCategory
     ? `${template.category.parentCategory.name} / ${template.category.name}`
@@ -51,7 +53,7 @@ export function RecurringCard({ template, spaceSlug, canManage, markPaidAction }
   const recentlyPaid =
     isFixed &&
     template.lastGeneratedAt &&
-    (Date.now() - new Date(template.lastGeneratedAt).getTime()) < 7 * 24 * 60 * 60 * 1000 &&
+    (renderedAt - new Date(template.lastGeneratedAt).getTime()) < 7 * 24 * 60 * 60 * 1000 &&
     dueStatus.status !== "overdue";
 
   const showMarkPaid = canManage && isFixed && !recentlyPaid && (dueStatus.status === "overdue" || dueStatus.days === 0);
@@ -114,7 +116,7 @@ export function RecurringCard({ template, spaceSlug, canManage, markPaidAction }
           <div className="flex items-center gap-2 rounded-lg bg-posted-bg px-3 py-2">
             <Check size={14} className="text-posted" />
             <span className="text-sm font-medium text-posted">
-              Paid {new Date(template.lastGeneratedAt!).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              Paid {formatMonthDay(template.lastGeneratedAt!)}
             </span>
           </div>
         ) : dueStatus.status === "overdue" ? (
@@ -135,7 +137,7 @@ export function RecurringCard({ template, spaceSlug, canManage, markPaidAction }
           <div className="flex items-center gap-2 rounded-lg bg-surface-secondary px-3 py-2">
             <Clock size={14} className="text-body" />
             <span className="text-sm text-body">
-              Next: {new Date(template.nextOccurrenceDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              Next: {formatMonthDay(template.nextOccurrenceDate)}
             </span>
           </div>
         )}

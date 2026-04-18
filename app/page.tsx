@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
 import { routes } from "@/lib/routes";
+import { getSelectedSpaceCookieValue } from "@/lib/space-cookie";
 import { getServerCaller } from "@/server/trpc-caller";
 
 export default async function HomePage() {
@@ -14,8 +14,7 @@ export default async function HomePage() {
   const spaces = await caller.spaces.listMine();
 
   if (spaces.length > 0) {
-    const cookieStore = await cookies();
-    const existing = cookieStore.get("selectedSpace")?.value;
+    const existing = await getSelectedSpaceCookieValue();
 
     // If the user doesn't have a valid space selected, redirect to overview
     // The user can select a space from the sidebar dropdown

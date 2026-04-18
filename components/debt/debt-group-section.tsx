@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { DebtCard } from "@/components/debt/debt-card";
+import { formatMonthDay } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 
 type SerializedMonthStatus = {
@@ -89,7 +90,7 @@ export function DebtGroupSection({ title, icon, debts, baseCurrencyCode, spaceSl
             <span className="text-body">
               Next:{" "}
               <span className="font-medium text-heading">
-                {new Date(nextPayment.nextPaymentDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                {formatMonthDay(nextPayment.nextPaymentDate)}
               </span>
             </span>
           )}

@@ -5,8 +5,11 @@ import { ExpenseModal } from "@/components/expenses/expense-modal";
 import { MonthSummaryBar } from "@/components/shared/month-summary-bar";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { supportedCurrencies } from "@/lib/currency";
+import { buildExpensesUrl, getDefaultExpenseDateRange } from "@/lib/expense-filters";
+import { formatMonthDay } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
+import { canManageSpace } from "@/lib/space-permissions";
 import { getSelectedSpaceSlug } from "@/lib/space-context";
 import { getServerCaller } from "@/server/trpc-caller";
 import { Search, Download, Plus, Receipt } from "lucide-react";
@@ -25,16 +28,6 @@ type ExpensesPageProps = {
   }>;
 };
 
-function getDefaultMonthRange() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const dateFrom = `${year}-${String(month + 1).padStart(2, "0")}-01`;
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  const dateTo = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
-  return { dateFrom, dateTo };
-}
-
 export default async function ExpensesPage({ searchParams }: ExpensesPageProps) {
   const spaceSlug = await getSelectedSpaceSlug();
 
@@ -44,7 +37,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
     const caller = await getServerCaller();
     const currentPage = sp.page ? parseInt(sp.page, 10) : 1;
     const isAllTime = sp.period === "all";
-    const defaultRange = getDefaultMonthRange();
+      const defaultRange = getDefaultExpenseDateRange();
     const effectiveDateFrom = isAllTime ? undefined : (sp.dateFrom || defaultRange.dateFrom);
     const effectiveDateTo = isAllTime ? undefined : (sp.dateTo || defaultRange.dateTo);
 
@@ -62,23 +55,6 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
     const startIdx = (page - 1) * 20 + 1;
     const endIdx = Math.min(page * 20, total);
     const hasFilters = !!(sp.search || sp.status || sp.categoryId || sp.dateFrom || sp.dateTo || sp.period);
-
-    function buildAllSpacesUrl(overrides: Record<string, string | undefined>) {
-      const base: Record<string, string> = {};
-      if (sp.search) base.search = sp.search;
-      if (sp.status) base.status = sp.status;
-      if (sp.categoryId) base.categoryId = sp.categoryId;
-      if (sp.dateFrom) base.dateFrom = sp.dateFrom;
-      if (sp.dateTo) base.dateTo = sp.dateTo;
-      if (sp.period) base.period = sp.period;
-      const merged = { ...base, ...overrides };
-      const filtered: Record<string, string> = {};
-      for (const [k, v] of Object.entries(merged)) {
-        if (v !== undefined) filtered[k] = v;
-      }
-      const qs = new URLSearchParams(filtered).toString();
-      return `${routes.expenses}${qs ? `?${qs}` : ""}`;
-    }
 
     return (
       <div className="space-y-6">
@@ -124,7 +100,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
 
           {expenses.length > 0 ? (
             <div className="divide-y divide-border">
-              {expenses.map((expense: any) => (
+              {expenses.map((expense) => (
                 <Link
                   key={expense.id}
                   href={routes.expense(expense.id)}
@@ -140,10 +116,10 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-body sm:mt-0">
-                    {new Date(expense.expenseDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    {formatMonthDay(expense.expenseDate)}
                   </p>
                   <p className="mt-1 text-sm text-body sm:mt-0">
-                    {new Date(expense.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    {formatMonthDay(expense.createdAt)}
                   </p>
                   <div className="mt-1 sm:mt-0 sm:text-right">
                     <p className="font-medium text-heading">
@@ -179,7 +155,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
               <div className="flex items-center gap-1">
                 {page > 1 && (
                   <Link
-                    href={buildAllSpacesUrl({ page: String(page - 1) })}
+                    href={buildExpensesUrl(sp, { page: String(page - 1) })}
                     className="rounded-lg border border-border px-3 py-1.5 text-sm text-heading hover:bg-surface-secondary"
                   >
                     Prev
@@ -190,7 +166,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
                   return (
                     <Link
                       key={p}
-                      href={buildAllSpacesUrl({ page: p === 1 ? undefined : String(p) })}
+                      href={buildExpensesUrl(sp, { page: p === 1 ? undefined : String(p) })}
                       className={`rounded-lg px-3 py-1.5 text-sm ${
                         p === page
                           ? "bg-primary text-on-primary"
@@ -203,7 +179,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
                 })}
                 {page < totalPages && (
                   <Link
-                    href={buildAllSpacesUrl({ page: String(page + 1) })}
+                    href={buildExpensesUrl(sp, { page: String(page + 1) })}
                     className="rounded-lg border border-border px-3 py-1.5 text-sm text-heading hover:bg-surface-secondary"
                   >
                     Next
@@ -223,7 +199,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
 
   // Default to current month unless "all" period or explicit dates are set
   const isAllTime = sp.period === "all";
-  const defaultRange = getDefaultMonthRange();
+  const defaultRange = getDefaultExpenseDateRange();
   const effectiveDateFrom = isAllTime ? undefined : (sp.dateFrom || defaultRange.dateFrom);
   const effectiveDateTo = isAllTime ? undefined : (sp.dateTo || defaultRange.dateTo);
 
@@ -248,7 +224,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
   }
 
   const role = workspace.memberships[0]?.role ?? "viewer";
-  const canManage = role === "owner" || role === "editor";
+  const canManage = canManageSpace(workspace.memberships[0]?.role);
   const categoryOptions = categories.flatMap((category) => [
     { value: category.id, label: category.name },
     ...category.children.map((child) => ({ value: child.id, label: `${category.name} / ${child.name}` })),
@@ -264,23 +240,6 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
   const endIdx = Math.min(page * 20, total);
 
   const hasFilters = !!(sp.search || sp.status || sp.categoryId || sp.dateFrom || sp.dateTo || sp.period);
-
-  function buildUrl(overrides: Record<string, string | undefined>) {
-    const base: Record<string, string> = {};
-    if (sp.search) base.search = sp.search;
-    if (sp.status) base.status = sp.status;
-    if (sp.categoryId) base.categoryId = sp.categoryId;
-    if (sp.dateFrom) base.dateFrom = sp.dateFrom;
-    if (sp.dateTo) base.dateTo = sp.dateTo;
-    if (sp.period) base.period = sp.period;
-    const merged = { ...base, ...overrides };
-    const filtered: Record<string, string> = {};
-    for (const [k, v] of Object.entries(merged)) {
-      if (v !== undefined) filtered[k] = v;
-    }
-    const qs = new URLSearchParams(filtered).toString();
-    return `${routes.expenses}${qs ? `?${qs}` : ""}`;
-  }
 
   return (
     <div className="space-y-6">
@@ -333,7 +292,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
           </form>
         </div>
 
-        <ExpenseFilters categories={categoryOptions} spaceSlug={spaceSlug} />
+        <ExpenseFilters categories={categoryOptions} />
       </div>
 
       {/* Monthly summary stats */}
@@ -374,10 +333,10 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">{expense.categoryPath} · {expense.createdByLabel}</p>
                 </div>
                 <p className="mt-1 text-sm text-body sm:mt-0">
-                  {new Date(expense.expenseDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  {formatMonthDay(expense.expenseDate)}
                 </p>
                 <p className="mt-1 text-sm text-body sm:mt-0">
-                  {new Date(expense.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  {formatMonthDay(expense.createdAt)}
                 </p>
                 <div className="mt-1 sm:mt-0 sm:text-right">
                   <p className="font-medium text-heading">
@@ -422,7 +381,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
             <div className="flex items-center gap-1">
               {page > 1 && (
                 <Link
-                  href={buildUrl({ page: String(page - 1) })}
+                  href={buildExpensesUrl(sp, { page: String(page - 1) })}
                   className="rounded-lg border border-border px-3 py-1.5 text-sm text-heading hover:bg-surface-secondary"
                 >
                   Prev
@@ -433,7 +392,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
                 return (
                   <Link
                     key={p}
-                    href={buildUrl({ page: p === 1 ? undefined : String(p) })}
+                      href={buildExpensesUrl(sp, { page: p === 1 ? undefined : String(p) })}
                     className={`rounded-lg px-3 py-1.5 text-sm ${
                       p === page
                         ? "bg-primary text-on-primary"
@@ -446,7 +405,7 @@ export default async function ExpensesPage({ searchParams }: ExpensesPageProps) 
               })}
               {page < totalPages && (
                 <Link
-                  href={buildUrl({ page: String(page + 1) })}
+                  href={buildExpensesUrl(sp, { page: String(page + 1) })}
                   className="rounded-lg border border-border px-3 py-1.5 text-sm text-heading hover:bg-surface-secondary"
                 >
                   Next

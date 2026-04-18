@@ -7,6 +7,7 @@ import { DebtSummaryBar } from "@/components/debt/debt-summary-bar";
 import { supportedCurrencies } from "@/lib/currency";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
+import { canManageSpace } from "@/lib/space-permissions";
 import { getSelectedSpaceSlug } from "@/lib/space-context";
 import { getServerCaller } from "@/server/trpc-caller";
 import { db } from "@/lib/db";
@@ -41,7 +42,7 @@ export default async function DebtsPage({ searchParams }: DebtsPageProps) {
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground text-right">Monthly</span>
             </div>
             <div className="divide-y divide-border">
-              {allDebts.map((debt: any) => (
+              {allDebts.map((debt) => (
                 <div
                   key={debt.id}
                   className="px-6 py-3.5 sm:grid sm:grid-cols-[1fr_80px_100px_100px_100px] sm:items-center sm:gap-4"
@@ -106,8 +107,7 @@ export default async function DebtsPage({ searchParams }: DebtsPageProps) {
     return null;
   }
 
-  const role = workspace.memberships[0]?.role ?? "viewer";
-  const canManage = role === "owner" || role === "editor";
+  const canManage = canManageSpace(workspace.memberships[0]?.role);
 
   // Serialize debts to strip Decimal objects (not serializable to client components)
   const serializedDebts = debts.map((d) => ({

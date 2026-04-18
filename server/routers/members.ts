@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { assignableSpaceRoleSchema } from "@/lib/member-roles";
 import { inviteService } from "@/server/services/invite-service";
 import { memberService } from "@/server/services/member-service";
 import { createTRPCRouter, protectedProcedure, spaceMemberProcedure, spaceOwnerProcedure } from "@/server/trpc";
@@ -36,7 +37,7 @@ export const membersRouter = createTRPCRouter({
       z.object({
         spaceSlug: z.string().min(1),
         email: z.email(),
-        role: z.enum(["editor", "viewer"]),
+        role: assignableSpaceRoleSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -61,7 +62,7 @@ export const membersRouter = createTRPCRouter({
       z.object({
         spaceSlug: z.string().min(1),
         membershipId: z.string().cuid(),
-        role: z.enum(["editor", "viewer"]),
+        role: assignableSpaceRoleSchema,
       }),
     )
     .mutation(({ ctx, input }) => {

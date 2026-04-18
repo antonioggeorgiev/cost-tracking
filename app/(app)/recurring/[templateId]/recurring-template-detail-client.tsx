@@ -3,26 +3,20 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon, ExternalLink, Pause, Play, Pencil, RefreshCw } from "lucide-react";
+import { RecurringTemplateEditForm } from "@/components/recurring/recurring-template-edit-form";
+import { RecurringTemplateScheduleCard } from "@/components/recurring/recurring-template-schedule-card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SearchableSelect } from "@/components/ui/searchable-select";
 import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  toCategorySelectItems,
+  toSubcategorySelectItems,
+  type CategoryTreeNode,
+} from "@/lib/category-tree";
+import { formatShortDateTime } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
-import { cn } from "@/lib/utils";
 import { updateRecurringTemplateAction, toggleRecurringTemplateAction } from "../actions";
-
-type Category = {
-  id: string;
-  name: string;
-  children: Array<{ id: string; name: string }>;
-};
 
 type TemplateData = {
   id: string;
@@ -67,18 +61,11 @@ type RecurringTemplateDetailClientProps = {
   spaceSlug: string;
   template: TemplateData;
   generatedExpenses: GeneratedExpense[];
-  categories: Category[];
+  categories: CategoryTreeNode[];
   currencies: readonly string[];
   baseCurrencyCode: string;
   canManage: boolean;
 };
-
-const statusItems = [
-  { value: "planned", label: "Planned" },
-  { value: "pending", label: "Pending" },
-  { value: "posted", label: "Posted" },
-  { value: "cancelled", label: "Cancelled" },
-];
 
 export function RecurringTemplateDetailClient({
   spaceSlug,
@@ -107,10 +94,8 @@ export function RecurringTemplateDetailClient({
   const [notes, setNotes] = useState(template.notes ?? "");
   const [endDate, setEndDate] = useState(template.endDate ?? "");
 
-  const selectedParent = categories.find((c) => c.id === parentCategoryId);
-  const childCategories = selectedParent?.children ?? [];
-  const categoryItems = categories.map((c) => ({ value: c.id, label: c.name }));
-  const subcategoryItems = childCategories.map((c) => ({ value: c.id, label: c.name }));
+  const categoryItems = toCategorySelectItems(categories);
+  const subcategoryItems = toSubcategorySelectItems(categories, parentCategoryId);
   const currencyItems = currencies.map((c) => ({ value: c, label: c }));
 
   const isFixed = template.kind === "fixed_amount";
@@ -215,101 +200,38 @@ export function RecurringTemplateDetailClient({
         <div className="px-6 py-5">
           {isEditing ? (
             /* ---------- EDIT MODE ---------- */
-            <div className="space-y-4">
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-title">Title</Label>
-                <Input id="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-amount">Amount</Label>
-                  <Input
-                    id="edit-amount"
-                    type="number"
-                    min="0.01"
-                    step="0.01"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value === "" ? "" : e.target.valueAsNumber || 0)}
-                    disabled={!isFixed}
-                    placeholder={isFixed ? "0.00" : "Set when due"}
-                  />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Currency</Label>
-                  <SearchableSelect items={currencyItems} value={currencyCode} onValueChange={setCurrencyCode} placeholder="Currency" searchPlaceholder="Search..." />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Category</Label>
-                  <SearchableSelect
-                    items={categoryItems}
-                    value={parentCategoryId}
-                    onValueChange={(val) => { setParentCategoryId(val); setCategoryId(""); }}
-                    placeholder="Select category"
-                    searchPlaceholder="Search categories..."
-                    emptyMessage="No categories found."
-                  />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Subcategory</Label>
-                  <SearchableSelect
-                    items={subcategoryItems}
-                    value={categoryId}
-                    onValueChange={setCategoryId}
-                    placeholder={childCategories.length === 0 ? "Select category first" : "Select subcategory"}
-                    searchPlaceholder="Search..."
-                    emptyMessage="No subcategories found."
-                    disabled={childCategories.length === 0}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Default Status</Label>
-                  <SearchableSelect items={statusItems} value={defaultStatus} onValueChange={setDefaultStatus} placeholder="Status" searchPlaceholder="Search..." />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>End Date</Label>
-                  <Popover open={endDateCalendarOpen} onOpenChange={setEndDateCalendarOpen}>
-                    <PopoverTrigger className={cn("flex h-9 w-full items-center justify-between rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50", !endDate && "text-muted-foreground")}>
-                      {endDateValue ? format(endDateValue, "MMM d, yyyy") : "No end date"}
-                      <CalendarIcon className="size-4 text-muted-foreground" />
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={endDateValue} onSelect={(date) => { setEndDate(date ? format(date, "yyyy-MM-dd") : ""); setEndDateCalendarOpen(false); }} defaultMonth={endDateValue} />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-payment-url">Payment URL</Label>
-                <Input id="edit-payment-url" type="url" value={paymentUrl} onChange={(e) => setPaymentUrl(e.target.value)} placeholder="https://..." />
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-description">Description</Label>
-                <Input id="edit-description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional short description" />
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-notes">Notes</Label>
-                <Textarea id="edit-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional notes" />
-              </div>
-
-              <div className="flex items-center gap-2 pt-2">
-                <Button onClick={handleSave} disabled={isPending}>
-                  {isPending ? "Saving..." : "Save Changes"}
-                </Button>
-                <Button variant="ghost" onClick={handleCancel} disabled={isPending}>
-                  Cancel
-                </Button>
-              </div>
-            </div>
+              <RecurringTemplateEditForm
+                title={title}
+                amount={amount}
+                currencyCode={currencyCode}
+                parentCategoryId={parentCategoryId}
+                categoryId={categoryId}
+                defaultStatus={defaultStatus}
+                endDate={endDate}
+                paymentUrl={paymentUrl}
+                description={description}
+                notes={notes}
+                isFixed={isFixed}
+                endDateCalendarOpen={endDateCalendarOpen}
+                endDateValue={endDateValue}
+                categoryItems={categoryItems}
+                subcategoryItems={subcategoryItems}
+                currencyItems={currencyItems}
+                isPending={isPending}
+                onTitleChange={setTitle}
+                onAmountChange={setAmount}
+                onCurrencyCodeChange={setCurrencyCode}
+                onParentCategoryChange={setParentCategoryId}
+                onCategoryChange={setCategoryId}
+                onDefaultStatusChange={setDefaultStatus}
+                onEndDateChange={setEndDate}
+                onPaymentUrlChange={setPaymentUrl}
+                onDescriptionChange={setDescription}
+                onNotesChange={setNotes}
+                onEndDateCalendarOpenChange={setEndDateCalendarOpen}
+                onSave={handleSave}
+                onCancel={handleCancel}
+              />
           ) : (
             /* ---------- VIEW MODE ---------- */
             <div className="space-y-5">
@@ -367,7 +289,7 @@ export function RecurringTemplateDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Last updated</p>
                   <p className="mt-1 font-medium text-heading">
-                    {new Date(template.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
+                    {formatShortDateTime(template.updatedAt)}
                   </p>
                 </div>
 
@@ -394,104 +316,7 @@ export function RecurringTemplateDetailClient({
         </div>
       </section>
 
-      {/* Schedule card */}
-      <section className="rounded-2xl border border-border bg-surface shadow-sm">
-        <div className="border-b border-border px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Schedule</h2>
-        </div>
-        <div className="px-6 py-4">
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Frequency</p>
-              <p className="mt-1 font-medium text-heading capitalize">
-                Every {template.interval > 1 ? `${template.interval} ` : ""}{template.frequency.replace("ly", template.interval > 1 ? "s" : "")}
-              </p>
-            </div>
-
-            {template.anchorDays.length > 0 && (
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Anchor Days</p>
-                <p className="mt-1 font-medium text-heading">
-                  {template.frequency === "weekly"
-                    ? template.anchorDays.map((d) => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d]).join(", ")
-                    : template.anchorDays.join(", ")}
-                </p>
-              </div>
-            )}
-
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Start Date</p>
-              <p className="mt-1 font-medium text-heading">
-                {new Date(template.startDate + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">End Date</p>
-              <p className="mt-1 font-medium text-heading">
-                {template.endDate
-                  ? new Date(template.endDate + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
-                  : "No end date"}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Next Occurrence</p>
-              <p className="mt-1 font-medium text-heading">
-                {new Date(template.nextOccurrenceDate + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-              </p>
-            </div>
-
-            {template.lastGeneratedAt && (
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Last Generated</p>
-                <p className="mt-1 font-medium text-heading">
-                  {new Date(template.lastGeneratedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Generated Expenses */}
-      <section className="rounded-2xl border border-border bg-surface shadow-sm">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Generated Expenses</h2>
-          <span className="text-sm text-muted">{generatedExpenses.length} shown</span>
-        </div>
-
-        {generatedExpenses.length > 0 ? (
-          <div className="divide-y divide-border">
-            {generatedExpenses.map((expense) => (
-              <Link
-                key={expense.id}
-                href={routes.expense(expense.id)}
-                className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-surface-secondary/50"
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-medium text-heading">{expense.title}</p>
-                  <p className="mt-0.5 text-xs text-muted">
-                    {new Date(expense.expenseDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="font-medium text-heading">
-                    {formatMoney(expense.workspaceAmountMinor, expense.workspaceCurrencyCode)}
-                  </p>
-                  <div className="mt-1">
-                    <StatusBadge status={expense.status} />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="px-6 py-12 text-center text-sm text-muted">
-            No expenses generated from this template yet.
-          </div>
-        )}
-      </section>
+      <RecurringTemplateScheduleCard template={template} generatedExpenses={generatedExpenses} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getServerCaller } from "@/server/trpc-caller";
 import { routes } from "@/lib/routes";
+import { getUserInitials } from "@/lib/user-display";
 import { Users, Building2, Receipt, FolderTree } from "lucide-react";
 import { format } from "date-fns";
 
@@ -66,7 +67,7 @@ export default async function AdminDashboardPage() {
                 className="flex items-center gap-3 px-6 py-3 transition hover:bg-surface-secondary"
               >
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-xs font-bold text-primary">
-                  {user.name ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?"}
+                  {getUserInitials(user.name)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-heading truncate">

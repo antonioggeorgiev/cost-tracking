@@ -1,11 +1,13 @@
 import { z } from "zod";
-import { adminService } from "@/server/services/admin-service";
 import { categoryService } from "@/server/services/category-service";
+import { adminSpaceService } from "@/server/services/admin/admin-space-service";
+import { adminStatsService } from "@/server/services/admin/admin-stats-service";
+import { adminUserService } from "@/server/services/admin/admin-user-service";
 import { platformConfigService } from "@/server/services/platform-config-service";
 import { createTRPCRouter, platformAdminProcedure } from "@/server/trpc";
 
 export const adminRouter = createTRPCRouter({
-  stats: platformAdminProcedure.query(() => adminService.getStats()),
+  stats: platformAdminProcedure.query(() => adminStatsService.getStats()),
 
   listUsers: platformAdminProcedure
     .input(
@@ -15,15 +17,15 @@ export const adminRouter = createTRPCRouter({
         perPage: z.coerce.number().int().min(1).max(100).optional(),
       }),
     )
-    .query(({ input }) => adminService.listUsers(input)),
+    .query(({ input }) => adminUserService.listUsers(input)),
 
   getUserDetail: platformAdminProcedure
     .input(z.object({ userId: z.string().cuid() }))
-    .query(({ input }) => adminService.getUserDetail(input.userId)),
+    .query(({ input }) => adminUserService.getUserDetail(input.userId)),
 
   setUserAdmin: platformAdminProcedure
     .input(z.object({ userId: z.string().cuid(), isPlatformAdmin: z.boolean() }))
-    .mutation(({ input }) => adminService.setUserAdmin(input.userId, input.isPlatformAdmin)),
+    .mutation(({ input }) => adminUserService.setUserAdmin(input.userId, input.isPlatformAdmin)),
 
   listSpaces: platformAdminProcedure
     .input(
@@ -33,11 +35,11 @@ export const adminRouter = createTRPCRouter({
         perPage: z.coerce.number().int().min(1).max(100).optional(),
       }),
     )
-    .query(({ input }) => adminService.listSpaces(input)),
+    .query(({ input }) => adminSpaceService.listSpaces(input)),
 
   getSpaceDetail: platformAdminProcedure
     .input(z.object({ spaceId: z.string().cuid() }))
-    .query(({ input }) => adminService.getSpaceDetail(input.spaceId)),
+    .query(({ input }) => adminSpaceService.getSpaceDetail(input.spaceId)),
 
   listPlatformCategories: platformAdminProcedure.query(() =>
     categoryService.listPlatformCategoriesTree(),

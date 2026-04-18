@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { MemberRoleBadge } from "@/components/member-role-badge";
 import { notFound } from "next/navigation";
+import { getUserInitials } from "@/lib/user-display";
 import { getServerCaller } from "@/server/trpc-caller";
 import { routes } from "@/lib/routes";
 import { format } from "date-fns";
@@ -33,7 +35,7 @@ export default async function AdminUserDetailPage({ params }: UserDetailPageProp
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-lg font-bold text-primary">
-              {user.name ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?"}
+              {getUserInitials(user.name)}
             </div>
             <div>
               <p className="font-heading text-lg font-semibold text-heading">{user.name || "—"}</p>
@@ -103,15 +105,7 @@ export default async function AdminUserDetailPage({ params }: UserDetailPageProp
                     </td>
                     <td className="px-6 py-3 text-body">{ws.baseCurrencyCode}</td>
                     <td className="px-6 py-3">
-                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                        ws.role === "owner"
-                          ? "bg-primary-lighter text-primary"
-                          : ws.role === "editor"
-                            ? "bg-surface-secondary text-heading"
-                            : "bg-surface-secondary text-body"
-                      }`}>
-                        {ws.role}
-                      </span>
+                      <MemberRoleBadge role={ws.role} />
                     </td>
                     <td className="px-6 py-3 text-body">{format(ws.joinedAt, "MMM d, yyyy")}</td>
                   </tr>

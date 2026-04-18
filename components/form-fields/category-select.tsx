@@ -37,16 +37,16 @@ export function CategorySelect({
   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const [subcategoryDialogOpen, setSubcategoryDialogOpen] = useState(false);
 
-  const selectedParent = categories.find((c) => c.id === parentCategoryId);
-  const childCategories = selectedParent?.children ?? [];
-
   const categoryItems = useMemo(
     () => categories.map((c) => ({ value: c.id, label: c.name })),
     [categories],
   );
   const subcategoryItems = useMemo(
-    () => childCategories.map((c) => ({ value: c.id, label: c.name })),
-    [childCategories],
+    () => (categories.find((category) => category.id === parentCategoryId)?.children ?? []).map((category) => ({
+      value: category.id,
+      label: category.name,
+    })),
+    [categories, parentCategoryId],
   );
 
   return (

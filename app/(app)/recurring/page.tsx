@@ -7,9 +7,11 @@ import { RecurringSummaryStats } from "@/components/recurring/recurring-summary-
 import { StatusBadge } from "@/components/ui/status-badge";
 import { supportedCurrencies } from "@/lib/currency";
 import { db } from "@/lib/db";
+import { formatMonthDay, formatMonthDayYear } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { normalizeToMonthlyMinor } from "@/lib/recurring-display";
 import { routes } from "@/lib/routes";
+import { canManageSpace } from "@/lib/space-permissions";
 import { getSelectedSpaceSlug } from "@/lib/space-context";
 import { getServerCaller } from "@/server/trpc-caller";
 import { Plus, RefreshCw } from "lucide-react";
@@ -43,7 +45,7 @@ export default async function RecurringPage({ searchParams }: RecurringPageProps
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Next Due</span>
             </div>
             <div className="divide-y divide-border">
-              {allTemplates.map((template: any) => (
+              {allTemplates.map((template) => (
                 <div
                   key={template.id}
                   className="px-6 py-3.5 sm:grid sm:grid-cols-[1fr_80px_100px_80px_120px] sm:items-center sm:gap-4"
@@ -72,7 +74,7 @@ export default async function RecurringPage({ searchParams }: RecurringPageProps
                     {template.frequency}
                   </p>
                   <p className="mt-1 text-sm text-body sm:mt-0">
-                    {new Date(template.nextOccurrenceDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    {formatMonthDayYear(template.nextOccurrenceDate)}
                   </p>
                 </div>
               ))}
@@ -107,8 +109,7 @@ export default async function RecurringPage({ searchParams }: RecurringPageProps
     return null;
   }
 
-  const role = workspace.memberships[0]?.role ?? "viewer";
-  const canManage = role === "owner" || role === "editor";
+  const canManage = canManageSpace(workspace.memberships[0]?.role);
   const categoryTree = categories.map((category) => ({
     id: category.id,
     name: category.name,
@@ -316,7 +317,7 @@ export default async function RecurringPage({ searchParams }: RecurringPageProps
                   <p className="truncate font-medium text-heading">{expense.title}</p>
                   <p className="mt-0.5 text-xs text-body">
                     {expense.categoryPath} ·{" "}
-                    {new Date(expense.expenseDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    {formatMonthDay(expense.expenseDate)}
                   </p>
                 </div>
                 <div className="shrink-0 text-right">

@@ -95,7 +95,6 @@ export default async function QuickAddPage() {
           workspaceCurrencyCode: e.workspaceCurrencyCode,
           status: e.status,
         }))}
-        spaceSlug={spaceSlug}
       />
     </div>
   );

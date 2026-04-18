@@ -5,16 +5,26 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon, Landmark, Users, Car, CreditCard, Pencil, Archive, RotateCcw, Pause, Play } from "lucide-react";
+import { DebtAccountEditForm } from "@/components/debt/debt-account-edit-form";
 import { Button } from "@/components/ui/button";
+import { DebtPaymentSchedule } from "@/components/debt/debt-payment-schedule";
+import { DebtRecordPaymentForm } from "@/components/debt/debt-record-payment-form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SearchableSelect } from "@/components/ui/searchable-select";
+import { buildDebtMonthSchedule } from "@/lib/debt-schedule";
+import {
+  debtDirectionItems,
+  debtKindItems,
+  debtKindLabels,
+  formatBasisPointsPercent,
+} from "@/lib/finance-options";
+import {
+  formatLongMonthDayYear,
+  formatMonthDay,
+  formatMonthDayYear,
+  formatShortDateTime,
+} from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
-import { cn } from "@/lib/utils";
 import { updateDebtAccountAction, toggleDebtActiveAction, createDebtPaymentAction } from "../actions";
 
 type DebtData = {
@@ -83,27 +93,6 @@ const kindIcon: Record<string, typeof Landmark> = {
   leasing: Car,
 };
 
-const kindLabel: Record<string, string> = {
-  bank_loan: "Bank Loan",
-  personal_loan: "Personal",
-  leasing: "Leasing",
-};
-
-const kindItems = [
-  { value: "bank_loan", label: "Bank Loan" },
-  { value: "personal_loan", label: "Personal" },
-  { value: "leasing", label: "Leasing" },
-];
-
-const directionItems = [
-  { value: "i_owe", label: "I owe" },
-  { value: "they_owe_me", label: "They owe me" },
-];
-
-function formatPercent(bps: number) {
-  return (bps / 100).toFixed(2) + "%";
-}
-
 export function DebtAccountDetailClient({
   spaceSlug,
   debt,
@@ -153,6 +142,7 @@ export function DebtAccountDetailClient({
   const paidPercent = debt.workspaceAmountMinor > 0
     ? Math.round(((debt.workspaceAmountMinor - debt.workspaceBalanceMinor) / debt.workspaceAmountMinor) * 100)
     : 0;
+  const paymentSchedule = buildDebtMonthSchedule(payments, monthStatus.unpaidDueDates);
 
   function resetForm() {
     setKind(debt.kind);
@@ -291,106 +281,45 @@ export function DebtAccountDetailClient({
         <div className="px-6 py-5">
           {isEditing ? (
             /* ---------- EDIT MODE ---------- */
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Type</Label>
-                  <SearchableSelect items={kindItems} value={kind} onValueChange={setKind} placeholder="Type" />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Direction</Label>
-                  <SearchableSelect items={directionItems} value={direction} onValueChange={setDirection} placeholder="Direction" />
-                </div>
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-name">Name</Label>
-                <Input id="edit-name" value={name} onChange={(e) => setName(e.target.value)} required />
-              </div>
-
-              {(kind === "bank_loan" || kind === "leasing") && (
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-provider">Provider</Label>
-                  <Input id="edit-provider" value={provider} onChange={(e) => setProvider(e.target.value)} placeholder="Bank or company name" />
-                </div>
-              )}
-
-              {kind === "personal_loan" && (
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-counterparty">Counterparty</Label>
-                  <Input id="edit-counterparty" value={counterparty} onChange={(e) => setCounterparty(e.target.value)} placeholder="Person name" />
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-amount">Original Amount</Label>
-                  <Input id="edit-amount" type="number" min="0.01" step="0.01" value={originalAmount || ""} onChange={(e) => setOriginalAmount(e.target.valueAsNumber || 0)} required />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-already-paid">Already Paid</Label>
-                  <Input id="edit-already-paid" type="number" min="0" step="0.01" value={alreadyPaid || ""} onChange={(e) => setAlreadyPaid(e.target.valueAsNumber || 0)} placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Currency</Label>
-                  <SearchableSelect items={currencyItems} value={currencyCode} onValueChange={setCurrencyCode} placeholder="Currency" searchPlaceholder="Search..." />
-                </div>
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label>Opened At</Label>
-                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                  <PopoverTrigger className={cn("flex h-9 w-full items-center justify-between rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50", !openedAt && "text-muted-foreground")}>
-                    {openedDateValue ? format(openedDateValue, "MMM d, yyyy") : "Pick a date"}
-                    <CalendarIcon className="size-4 text-muted-foreground" />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={openedDateValue} onSelect={(date) => { if (date) setOpenedAt(format(date, "yyyy-MM-dd")); setCalendarOpen(false); }} defaultMonth={openedDateValue} />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-interest">Interest Rate (%)</Label>
-                  <Input id="edit-interest" type="number" min="0" step="0.01" value={interestRateBps} onChange={(e) => setInterestRateBps(e.target.value === "" ? "" : e.target.valueAsNumber)} placeholder="e.g. 5.25" />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-term">Term (months)</Label>
-                  <Input id="edit-term" type="number" min="1" step="1" value={termMonths} onChange={(e) => setTermMonths(e.target.value === "" ? "" : e.target.valueAsNumber)} placeholder="e.g. 24" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-monthly">Monthly Payment</Label>
-                  <Input id="edit-monthly" type="number" min="0.01" step="0.01" value={monthlyAmount} onChange={(e) => setMonthlyAmount(e.target.value === "" ? "" : e.target.valueAsNumber)} placeholder="Amount" />
-                </div>
-                {kind === "leasing" && (
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="edit-residual">Residual Value</Label>
-                    <Input id="edit-residual" type="number" min="0" step="0.01" value={residualValue} onChange={(e) => setResidualValue(e.target.value === "" ? "" : e.target.valueAsNumber)} placeholder="Amount" />
-                  </div>
-                )}
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-notes">Notes</Label>
-                <Textarea id="edit-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional notes" />
-              </div>
-
-              <div className="flex items-center gap-2 pt-2">
-                <Button onClick={handleSave} disabled={isPending}>
-                  {isPending ? "Saving..." : "Save Changes"}
-                </Button>
-                <Button variant="ghost" onClick={handleCancel} disabled={isPending}>
-                  Cancel
-                </Button>
-              </div>
-            </div>
+            <DebtAccountEditForm
+              kind={kind}
+              direction={direction}
+              name={name}
+              provider={provider}
+              counterparty={counterparty}
+              originalAmount={originalAmount}
+              alreadyPaid={alreadyPaid}
+              currencyCode={currencyCode}
+              openedAt={openedAt}
+              interestRateBps={interestRateBps}
+              termMonths={termMonths}
+              monthlyAmount={monthlyAmount}
+              residualValue={residualValue}
+              notes={notes}
+              kindItems={kindItems}
+              directionItems={debtDirectionItems}
+              currencyItems={currencyItems}
+              calendarOpen={calendarOpen}
+              openedDateValue={openedDateValue}
+              isPending={isPending}
+              onKindChange={setKind}
+              onDirectionChange={setDirection}
+              onNameChange={setName}
+              onProviderChange={setProvider}
+              onCounterpartyChange={setCounterparty}
+              onOriginalAmountChange={setOriginalAmount}
+              onAlreadyPaidChange={setAlreadyPaid}
+              onCurrencyCodeChange={setCurrencyCode}
+              onOpenedAtChange={setOpenedAt}
+              onInterestRateBpsChange={setInterestRateBps}
+              onTermMonthsChange={setTermMonths}
+              onMonthlyAmountChange={setMonthlyAmount}
+              onResidualValueChange={setResidualValue}
+              onNotesChange={setNotes}
+              onCalendarOpenChange={setCalendarOpen}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
           ) : (
             /* ---------- VIEW MODE ---------- */
             <div className="space-y-5">
@@ -411,7 +340,7 @@ export function DebtAccountDetailClient({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="rounded-full bg-surface-secondary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-body">
-                    {kindLabel[debt.kind] ?? "Debt"}
+                    {debtKindLabels[debt.kind] ?? "Debt"}
                   </span>
                   {theyOweMe && (
                     <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase text-primary">
@@ -435,78 +364,16 @@ export function DebtAccountDetailClient({
                 </div>
               </div>
 
-              {/* Payment schedule for this month */}
-              {debt.isActive && monthStatus.dueCount > 0 && (
-                <div className="rounded-xl border border-border bg-surface-secondary p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-heading">
-                      Payment Schedule &mdash; {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-                    </h3>
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${monthStatus.unpaidCount === 0 ? "bg-posted/10 text-posted" : "bg-warning/10 text-warning"}`}>
-                      {monthStatus.unpaidCount === 0 ? "All paid" : `${monthStatus.paidCount}/${monthStatus.dueCount} paid`}
-                    </span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {/* Build combined list: paid dates from payments + unpaid dates from monthStatus */}
-                    {(() => {
-                      const now = new Date();
-                      const currentMonthPayments = payments.filter((p) => {
-                        if (!p.dueDate) return false;
-                        const d = new Date(p.dueDate + "T00:00:00");
-                        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-                      });
-                      const paidDateMap = new Map(currentMonthPayments.map((p) => [p.dueDate!, p]));
-                      const allDates = [
-                        ...currentMonthPayments.map((p) => ({ date: p.dueDate!, paid: true as const, payment: p })),
-                        ...monthStatus.unpaidDueDates.map((d) => ({ date: d, paid: false as const, payment: null })),
-                      ].sort((a, b) => a.date.localeCompare(b.date));
-                      // Deduplicate (in case a paid date also appears in unpaid list due to timing)
-                      const seen = new Set<string>();
-                      const unique = allDates.filter((item) => {
-                        if (seen.has(item.date)) return false;
-                        seen.add(item.date);
-                        return true;
-                      });
-                      return unique.map((item) => (
-                        <div key={item.date} className={`flex items-center gap-3 rounded-lg px-3 py-2 ${item.paid ? "bg-posted/5" : "bg-surface"}`}>
-                          <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold ${item.paid ? "bg-posted/20 text-posted" : "bg-surface-secondary text-body"}`}>
-                            {item.paid ? "\u2713" : "\u00B7"}
-                          </span>
-                          <span className="text-sm font-medium text-heading">
-                            {new Date(item.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                          </span>
-                          {item.paid && item.payment ? (
-                            <span className="text-xs text-posted">
-                              Paid &mdash; {formatMoney(item.payment.workspaceAmountMinor, item.payment.workspaceCurrencyCode)} on{" "}
-                              {new Date(item.payment.paymentDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                            </span>
-                          ) : (
-                            <span className="text-xs text-body">
-                              {new Date(item.date + "T00:00:00") < now ? "Overdue" : "Due"}
-                              {debt.workspaceMonthlyAmountMinor != null && ` \u2014 ${formatMoney(debt.workspaceMonthlyAmountMinor, debt.workspaceCurrencyCode)}`}
-                            </span>
-                          )}
-                        </div>
-                      ));
-                    })()}
-                  </div>
-                </div>
-              )}
-
-              {/* Next payment due (fallback for debts without monthly schedule) */}
-              {debt.nextPaymentDate && debt.isActive && monthStatus.dueCount === 0 && (
-                <div className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5">
-                  <span className="text-sm font-medium text-primary">Next payment due:</span>
-                  <span className="text-sm font-semibold text-heading">
-                    {new Date(debt.nextPaymentDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </span>
-                  {debt.workspaceMonthlyAmountMinor != null && (
-                    <span className="ml-auto text-sm font-semibold text-heading">
-                      {formatMoney(debt.workspaceMonthlyAmountMinor, debt.workspaceCurrencyCode)}
-                    </span>
-                  )}
-                </div>
-              )}
+              <DebtPaymentSchedule
+                dueCount={monthStatus.dueCount}
+                paidCount={monthStatus.paidCount}
+                unpaidCount={monthStatus.unpaidCount}
+                paymentSchedule={paymentSchedule}
+                workspaceMonthlyAmountMinor={debt.workspaceMonthlyAmountMinor}
+                workspaceCurrencyCode={debt.workspaceCurrencyCode}
+                nextPaymentDate={debt.nextPaymentDate}
+                isActive={debt.isActive}
+              />
 
               {/* Key details grid */}
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
@@ -523,14 +390,14 @@ export function DebtAccountDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Opened</p>
                   <p className="mt-1 font-medium text-heading">
-                    {new Date(debt.openedAt + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                    {formatLongMonthDayYear(`${debt.openedAt}T00:00:00`)}
                   </p>
                 </div>
 
                 {debt.interestRateBps != null && (
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Interest Rate</p>
-                    <p className="mt-1 font-medium text-heading">{formatPercent(debt.interestRateBps)}</p>
+                    <p className="mt-1 font-medium text-heading">{formatBasisPointsPercent(debt.interestRateBps)}</p>
                   </div>
                 )}
 
@@ -563,7 +430,7 @@ export function DebtAccountDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Last updated</p>
                   <p className="mt-1 font-medium text-heading">
-                    {new Date(debt.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
+                    {formatShortDateTime(debt.updatedAt)}
                   </p>
                 </div>
               </div>
@@ -592,84 +459,29 @@ export function DebtAccountDetailClient({
             )}
           </div>
 
-          {showPaymentForm && (
-            <div className="border-t border-border px-6 py-4 space-y-4">
-              {/* Due date selector */}
-              {monthStatus.unpaidDueDates.length > 0 && (
-                <div className="grid gap-1.5">
-                  <Label>Due date</Label>
-                  <select
-                    value={paymentDueDate}
-                    onChange={(e) => setPaymentDueDate(e.target.value)}
-                    className="flex h-9 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-                  >
-                    {monthStatus.unpaidDueDates.map((d) => (
-                      <option key={d} value={d}>
-                        {new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {monthStatus.dueCount > 0 && monthStatus.unpaidDueDates.length === 0 && (
-                <div className="rounded-lg border border-posted/20 bg-posted/5 px-4 py-3 text-sm text-posted">
-                  All scheduled payments for this month have been recorded.
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="payment-amount">Amount ({debt.currencyCode})</Label>
-                  <Input
-                    id="payment-amount"
-                    type="number"
-                    min="0.01"
-                    step="0.01"
-                    value={paymentAmount}
-                    onChange={(e) => setPaymentAmount(e.target.value)}
-                    placeholder="0.00"
-                  />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Payment Date</Label>
-                  <Popover open={paymentCalendarOpen} onOpenChange={setPaymentCalendarOpen}>
-                    <PopoverTrigger className={cn("flex h-9 w-full items-center justify-between rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50", !paymentDate && "text-muted-foreground")}>
-                      {paymentDateValue ? format(paymentDateValue, "MMM d, yyyy") : "Pick a date"}
-                      <CalendarIcon className="size-4 text-muted-foreground" />
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={paymentDateValue} onSelect={(date) => { if (date) setPaymentDate(format(date, "yyyy-MM-dd")); setPaymentCalendarOpen(false); }} defaultMonth={paymentDateValue} />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="payment-notes">Notes</Label>
-                <Input id="payment-notes" value={paymentNotes} onChange={(e) => setPaymentNotes(e.target.value)} placeholder="Optional" />
-              </div>
-
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={createLinkedExpense}
-                  onChange={(e) => setCreateLinkedExpense(e.target.checked)}
-                  className="rounded border-input"
-                />
-                Create linked expense record
-              </label>
-
-              <div className="flex items-center gap-2">
-                <Button onClick={handleRecordPayment} disabled={isPending || !paymentAmount}>
-                  {isPending ? "Recording..." : "Record Payment"}
-                </Button>
-                <Button variant="ghost" onClick={() => setShowPaymentForm(false)} disabled={isPending}>
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
+          {showPaymentForm ? (
+            <DebtRecordPaymentForm
+              unpaidDueDates={monthStatus.unpaidDueDates}
+              dueCount={monthStatus.dueCount}
+              paymentDueDate={paymentDueDate}
+              paymentAmount={paymentAmount}
+              paymentDate={paymentDate}
+              paymentNotes={paymentNotes}
+              createLinkedExpense={createLinkedExpense}
+              paymentCalendarOpen={paymentCalendarOpen}
+              paymentDateValue={paymentDateValue}
+              currencyCode={debt.currencyCode}
+              isPending={isPending}
+              onPaymentDueDateChange={setPaymentDueDate}
+              onPaymentAmountChange={setPaymentAmount}
+              onPaymentDateChange={setPaymentDate}
+              onPaymentNotesChange={setPaymentNotes}
+              onCreateLinkedExpenseChange={setCreateLinkedExpense}
+              onPaymentCalendarOpenChange={setPaymentCalendarOpen}
+              onSubmit={handleRecordPayment}
+              onCancel={() => setShowPaymentForm(false)}
+            />
+          ) : null}
         </section>
       )}
 
@@ -689,12 +501,12 @@ export function DebtAccountDetailClient({
                     {formatMoney(payment.workspaceAmountMinor, payment.workspaceCurrencyCode)}
                     {payment.dueDate && (
                       <span className="ml-2 text-xs font-normal text-muted">
-                        For: {new Date(payment.dueDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        For: {formatMonthDay(`${payment.dueDate}T00:00:00`)}
                       </span>
                     )}
                   </p>
                   <p className="mt-0.5 text-xs text-muted">
-                    {new Date(payment.paymentDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    {formatMonthDayYear(`${payment.paymentDate}T00:00:00`)}
                     {" · "}
                     {payment.paidByLabel}
                     {payment.notes && ` · ${payment.notes}`}

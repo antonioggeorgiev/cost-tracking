@@ -1,13 +1,16 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, Calendar, X } from "lucide-react";
 import { SearchableSelect, type SearchableSelectItem } from "@/components/ui/searchable-select";
+import {
+  formatExpensePeriodLabel,
+  getExpenseMonthRange,
+} from "@/lib/expense-filters";
 
 type ExpenseFiltersProps = {
   categories: SearchableSelectItem[];
-  spaceSlug: string;
 };
 
 const statusOptions: SearchableSelectItem[] = [
@@ -18,31 +21,6 @@ const statusOptions: SearchableSelectItem[] = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
-function getMonthRange(year: number, month: number) {
-  const dateFrom = `${year}-${String(month + 1).padStart(2, "0")}-01`;
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  const dateTo = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
-  return { dateFrom, dateTo };
-}
-
-function formatMonthLabel(dateFrom: string, dateTo: string) {
-  const from = new Date(dateFrom + "T00:00:00");
-  const to = new Date(dateTo + "T00:00:00");
-
-  // Check if it's a full month
-  if (from.getDate() === 1) {
-    const lastDay = new Date(from.getFullYear(), from.getMonth() + 1, 0).getDate();
-    if (to.getDate() === lastDay && from.getMonth() === to.getMonth() && from.getFullYear() === to.getFullYear()) {
-      return from.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-    }
-  }
-
-  // Custom range
-  const fmtFrom = from.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  const fmtTo = to.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  return `${fmtFrom} – ${fmtTo}`;
-}
-
 export function ExpenseFilters({ categories }: ExpenseFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -50,7 +28,7 @@ export function ExpenseFilters({ categories }: ExpenseFiltersProps) {
   const [showCustomRange, setShowCustomRange] = useState(false);
 
   const now = new Date();
-  const thisMonth = getMonthRange(now.getFullYear(), now.getMonth());
+  const thisMonth = getExpenseMonthRange(now.getFullYear(), now.getMonth());
 
   const currentStatus = searchParams.get("status") ?? "all";
   const currentCategoryId = searchParams.get("categoryId") ?? "all";
@@ -60,22 +38,19 @@ export function ExpenseFilters({ categories }: ExpenseFiltersProps) {
   // Determine if period is "all time" (no date params and user explicitly cleared them)
   const isAllTime = searchParams.get("period") === "all";
 
-  const navigate = useCallback(
-    (overrides: Record<string, string | undefined>) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("page");
-      for (const [key, value] of Object.entries(overrides)) {
-        if (value === undefined || value === "" || value === "all") {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
+  function navigate(overrides: Record<string, string | undefined>) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    for (const [key, value] of Object.entries(overrides)) {
+      if (value === undefined || value === "" || value === "all") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
       }
-      const qs = params.toString();
-      router.push(`${pathname}${qs ? `?${qs}` : ""}`);
-    },
-    [router, searchParams, pathname],
-  );
+    }
+    const qs = params.toString();
+    router.push(`${pathname}${qs ? `?${qs}` : ""}`);
+  }
 
   const categoryItems: SearchableSelectItem[] = [
     { value: "all", label: "All categories" },
@@ -83,40 +58,38 @@ export function ExpenseFilters({ categories }: ExpenseFiltersProps) {
   ];
 
   // Current month being viewed
-  const currentMonthDate = useMemo(() => {
-    if (isAllTime) return null;
-    return new Date(currentDateFrom + "T00:00:00");
-  }, [currentDateFrom, isAllTime]);
+  const currentMonthDate = isAllTime ? null : new Date(`${currentDateFrom}T00:00:00`);
 
-  const goToPrevMonth = useCallback(() => {
+  function goToPrevMonth() {
     if (!currentMonthDate) return;
     const prev = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1, 1);
-    const range = getMonthRange(prev.getFullYear(), prev.getMonth());
+    const range = getExpenseMonthRange(prev.getFullYear(), prev.getMonth());
     navigate({ dateFrom: range.dateFrom, dateTo: range.dateTo, period: undefined });
     setShowCustomRange(false);
-  }, [currentMonthDate, navigate]);
+  }
 
-  const goToNextMonth = useCallback(() => {
+  function goToNextMonth() {
     if (!currentMonthDate) return;
     const next = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1, 1);
-    const range = getMonthRange(next.getFullYear(), next.getMonth());
+    const range = getExpenseMonthRange(next.getFullYear(), next.getMonth());
     navigate({ dateFrom: range.dateFrom, dateTo: range.dateTo, period: undefined });
     setShowCustomRange(false);
-  }, [currentMonthDate, navigate]);
+  }
 
-  const goToThisMonth = useCallback(() => {
-    navigate({ dateFrom: thisMonth.dateFrom, dateTo: thisMonth.dateTo, period: undefined });
+  function goToThisMonth() {
+    const currentMonth = getExpenseMonthRange(now.getFullYear(), now.getMonth());
+    navigate({ dateFrom: currentMonth.dateFrom, dateTo: currentMonth.dateTo, period: undefined });
     setShowCustomRange(false);
-  }, [navigate, thisMonth]);
+  }
 
-  const goToAllTime = useCallback(() => {
+  function goToAllTime() {
     navigate({ dateFrom: undefined, dateTo: undefined, period: "all" });
     setShowCustomRange(false);
-  }, [navigate]);
+  }
 
   const periodLabel = isAllTime
     ? "All Time"
-    : formatMonthLabel(currentDateFrom, currentDateTo);
+    : formatExpensePeriodLabel(currentDateFrom, currentDateTo);
 
   const isCurrentMonth =
     !isAllTime &&

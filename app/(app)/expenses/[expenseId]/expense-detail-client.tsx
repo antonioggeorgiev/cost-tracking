@@ -1,29 +1,23 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
-import { format } from "date-fns";
-import { ArrowLeft, CalendarIcon, Download, FileText, Paperclip, Pencil, RefreshCw, Trash2, X, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Pencil, X } from "lucide-react";
+import { ExpenseAttachmentSection } from "@/components/expenses/expense-attachment-section";
+import { ExpenseDetailEditForm } from "@/components/expenses/expense-detail-edit-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SearchableSelect } from "@/components/ui/searchable-select";
 import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  toCategorySelectItems,
+  toSubcategorySelectItems,
+  type CategoryTreeNode,
+} from "@/lib/category-tree";
+import { formatExpenseTypeLabel } from "@/lib/finance-options";
+import { formatLongMonthDayYear, formatShortDateTime } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
-import { cn } from "@/lib/utils";
 import { updateExpenseAction, deleteAttachmentAction } from "../actions";
 import { saveAttachmentsAction } from "../attachment-action";
-
-type Category = {
-  id: string;
-  name: string;
-  children: Array<{ id: string; name: string }>;
-};
 
 type ExpenseData = {
   id: string;
@@ -59,28 +53,11 @@ type ExpenseDetailClientProps = {
   spaceSlug: string;
   expense: ExpenseData;
   attachment: AttachmentData;
-  categories: Category[];
+  categories: CategoryTreeNode[];
   currencies: readonly string[];
   baseCurrencyCode: string;
   canManage: boolean;
 };
-
-const statusItems = [
-  { value: "planned", label: "Planned" },
-  { value: "pending", label: "Pending" },
-  { value: "posted", label: "Posted" },
-  { value: "cancelled", label: "Cancelled" },
-];
-
-function formatFileSize(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function isImageType(contentType: string) {
-  return contentType.startsWith("image/");
-}
 
 export function ExpenseDetailClient({
   spaceSlug,
@@ -111,10 +88,8 @@ export function ExpenseDetailClient({
   const [parentCategoryId, setParentCategoryId] = useState(expense.parentCategoryId ?? "");
   const [categoryId, setCategoryId] = useState(expense.categoryId ?? "");
 
-  const selectedParent = categories.find((c) => c.id === parentCategoryId);
-  const childCategories = selectedParent?.children ?? [];
-  const categoryItems = categories.map((c) => ({ value: c.id, label: c.name }));
-  const subcategoryItems = childCategories.map((c) => ({ value: c.id, label: c.name }));
+  const categoryItems = toCategorySelectItems(categories);
+  const subcategoryItems = toSubcategorySelectItems(categories, parentCategoryId);
   const currencyItems = currencies.map((c) => ({ value: c, label: c }));
 
   function resetForm() {
@@ -227,138 +202,35 @@ export function ExpenseDetailClient({
         <div className="px-6 py-5">
           {isEditing ? (
             /* ---------- EDIT MODE ---------- */
-            <div className="space-y-4">
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-title">Title</Label>
-                <Input
-                  id="edit-title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="edit-amount">Amount</Label>
-                  <Input
-                    id="edit-amount"
-                    type="number"
-                    min="0.01"
-                    step="0.01"
-                    value={amount || ""}
-                    onChange={(e) => setAmount(e.target.valueAsNumber || 0)}
-                    required
-                  />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Currency</Label>
-                  <SearchableSelect
-                    items={currencyItems}
-                    value={currencyCode}
-                    onValueChange={setCurrencyCode}
-                    placeholder="Currency"
-                    searchPlaceholder="Search..."
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Date</Label>
-                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                    <PopoverTrigger
-                      className={cn(
-                        "flex h-9 w-full items-center justify-between rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-                        !expenseDate && "text-muted-foreground"
-                      )}
-                    >
-                      {dateValue ? format(dateValue, "MMM d, yyyy") : "Pick a date"}
-                      <CalendarIcon className="size-4 text-muted-foreground" />
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={dateValue}
-                        onSelect={(date) => {
-                          if (date) setExpenseDate(format(date, "yyyy-MM-dd"));
-                          setCalendarOpen(false);
-                        }}
-                        defaultMonth={dateValue}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Status</Label>
-                  <SearchableSelect
-                    items={statusItems}
-                    value={status}
-                    onValueChange={setStatus}
-                    placeholder="Status"
-                    searchPlaceholder="Search..."
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Category</Label>
-                  <SearchableSelect
-                    items={categoryItems}
-                    value={parentCategoryId}
-                    onValueChange={(val) => {
-                      setParentCategoryId(val);
-                      setCategoryId("");
-                    }}
-                    placeholder="Select category"
-                    searchPlaceholder="Search categories..."
-                    emptyMessage="No categories found."
-                  />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Subcategory</Label>
-                  <SearchableSelect
-                    items={subcategoryItems}
-                    value={categoryId}
-                    onValueChange={setCategoryId}
-                    placeholder={childCategories.length === 0 ? "Select category first" : "Select subcategory"}
-                    searchPlaceholder="Search..."
-                    emptyMessage="No subcategories found."
-                    disabled={childCategories.length === 0}
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-description">Description</Label>
-                <Input
-                  id="edit-description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Optional short description"
-                />
-              </div>
-
-              <div className="grid gap-1.5">
-                <Label htmlFor="edit-notes">Notes</Label>
-                <Textarea
-                  id="edit-notes"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Optional notes"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 pt-2">
-                <Button onClick={handleSave} disabled={isPending}>
-                  {isPending ? "Saving..." : "Save Changes"}
-                </Button>
-                <Button variant="ghost" onClick={handleCancel} disabled={isPending}>
-                  Cancel
-                </Button>
-              </div>
-            </div>
+              <ExpenseDetailEditForm
+                title={title}
+                amount={amount}
+                currencyCode={currencyCode}
+                expenseDate={expenseDate}
+                status={status}
+                description={description}
+                notes={notes}
+                parentCategoryId={parentCategoryId}
+                categoryId={categoryId}
+                categoryItems={categoryItems}
+                subcategoryItems={subcategoryItems}
+                currencyItems={currencyItems}
+                calendarOpen={calendarOpen}
+                dateValue={dateValue}
+                isPending={isPending}
+                onTitleChange={setTitle}
+                onAmountChange={setAmount}
+                onCurrencyCodeChange={setCurrencyCode}
+                onExpenseDateChange={setExpenseDate}
+                onStatusChange={setStatus}
+                onDescriptionChange={setDescription}
+                onNotesChange={setNotes}
+                onParentCategoryChange={setParentCategoryId}
+                onCategoryChange={setCategoryId}
+                onCalendarOpenChange={setCalendarOpen}
+                onSave={handleSave}
+                onCancel={handleCancel}
+              />
           ) : (
             /* ---------- VIEW MODE ---------- */
             <div className="space-y-5">
@@ -385,11 +257,7 @@ export function ExpenseDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Date</p>
                   <p className="mt-1 font-medium text-heading">
-                    {new Date(expense.expenseDate + "T00:00:00").toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {formatLongMonthDayYear(`${expense.expenseDate}T00:00:00`)}
                   </p>
                 </div>
 
@@ -400,7 +268,7 @@ export function ExpenseDetailClient({
 
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Type</p>
-                  <p className="mt-1 font-medium capitalize text-heading">{expense.type.replace(/_/g, " ")}</p>
+                  <p className="mt-1 font-medium capitalize text-heading">{formatExpenseTypeLabel(expense.type)}</p>
                 </div>
 
                 <div>
@@ -411,13 +279,7 @@ export function ExpenseDetailClient({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Last updated</p>
                   <p className="mt-1 font-medium text-heading">
-                    {new Date(expense.updatedAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
+                    {formatShortDateTime(expense.updatedAt)}
                   </p>
                 </div>
               </div>
@@ -434,119 +296,17 @@ export function ExpenseDetailClient({
         </div>
       </section>
 
-      {/* Attachment section */}
-      <section className="rounded-2xl border border-border bg-surface shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Attachment</h2>
-          {canManage && (
-            <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileUpload(file);
-                  e.target.value = "";
-                }}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isPending || isUploadingFile || !!attachment}
-                title={attachment ? "Limited to 1 file per expense" : undefined}
-              >
-                <Paperclip size={14} data-icon="inline-start" />
-                {isUploadingFile ? "Uploading..." : "Attach file"}
-              </Button>
-            </>
-          )}
-        </div>
-
-        <div className="border-t border-border px-6 py-4">
-          {attachment ? (
-            <div className="overflow-hidden rounded-lg border border-border">
-              {/* Image preview */}
-              {isImageType(attachment.contentType) && attachment.imageWidth && attachment.imageHeight && (
-                <div className="border-b border-border bg-muted/40 p-4">
-                  <Image
-                    src={`/api/download?url=${encodeURIComponent(attachment.url)}`}
-                    alt={attachment.fileName}
-                    width={attachment.imageWidth}
-                    height={attachment.imageHeight}
-                    className="mx-auto max-h-96 w-auto rounded object-contain"
-                    unoptimized
-                  />
-                </div>
-              )}
-
-              {/* File info + actions */}
-              <div className="flex items-center justify-between bg-surface-secondary/50 px-4 py-3">
-                <div className="flex items-center gap-3 min-w-0">
-                  {isImageType(attachment.contentType) ? (
-                    <ImageIcon size={20} className="shrink-0 text-primary" />
-                  ) : (
-                    <FileText size={20} className="shrink-0 text-primary" />
-                  )}
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-heading">{attachment.fileName}</p>
-                    <p className="text-xs text-muted-foreground">{formatFileSize(attachment.fileSize)}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <a
-                    href={`/api/download?url=${encodeURIComponent(attachment.url)}`}
-                    download={attachment.fileName}
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-8 w-8 hover:bg-accent hover:text-accent-foreground transition-colors"
-                    title="Download file"
-                  >
-                    <Download size={14} />
-                  </a>
-                  {canManage && (
-                    <>
-                      <input
-                        ref={replaceFileInputRef}
-                        type="file"
-                        accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleReplaceAttachment(attachment.id, file);
-                          e.target.value = "";
-                        }}
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => replaceFileInputRef.current?.click()}
-                        disabled={isPending || isUploadingFile}
-                        title="Replace file"
-                      >
-                        <RefreshCw size={14} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => handleDeleteAttachment(attachment.id)}
-                        disabled={isPending || isUploadingFile}
-                        title="Delete file"
-                      >
-                        <Trash2 size={14} className="text-destructive" />
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-center text-sm text-muted-foreground py-4">
-              No file attached to this expense.
-            </p>
-          )}
-        </div>
-      </section>
+      <ExpenseAttachmentSection
+        attachment={attachment}
+        canManage={canManage}
+        isPending={isPending}
+        isUploadingFile={isUploadingFile}
+        fileInputRef={fileInputRef}
+        replaceFileInputRef={replaceFileInputRef}
+        onUpload={handleFileUpload}
+        onReplace={handleReplaceAttachment}
+        onDelete={handleDeleteAttachment}
+      />
     </div>
   );
 }

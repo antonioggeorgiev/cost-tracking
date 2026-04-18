@@ -1,11 +1,11 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { supportedCurrencies } from "@/lib/currency";
 import { routes } from "@/lib/routes";
+import { clearSelectedSpaceCookie } from "@/lib/space-cookie";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const updateSettingsSchema = z.object({
@@ -44,8 +44,7 @@ export async function deleteSpaceAction(formData: FormData) {
   const caller = await getServerCaller();
   await caller.spaces.delete({ spaceSlug: input.spaceSlug });
 
-  const cookieStore = await cookies();
-  cookieStore.delete("selectedSpace");
+  await clearSelectedSpaceCookie();
 
   revalidatePath(routes.spaces);
   redirect(routes.spaces);

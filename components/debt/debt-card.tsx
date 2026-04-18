@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Landmark, Users, Car, CreditCard, ArrowRight, Plus, CheckCircle } from "lucide-react";
 import { ProgressRing } from "@/components/debt/progress-ring";
+import { debtKindLabels } from "@/lib/finance-options";
+import { formatMonthDay } from "@/lib/format-date";
 import { formatMoney } from "@/lib/money";
 import { routes } from "@/lib/routes";
 
@@ -12,12 +14,6 @@ const kindIcon: Record<string, typeof Landmark> = {
   bank_loan: Landmark,
   personal_loan: Users,
   leasing: Car,
-};
-
-const kindLabel: Record<string, string> = {
-  bank_loan: "Bank Loan",
-  personal_loan: "Personal",
-  leasing: "Leasing",
 };
 
 export type DebtMonthStatus = {
@@ -65,7 +61,7 @@ export function DebtCard({ debt, spaceSlug, canManage, quickPayAction, monthStat
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const Icon = kindIcon[debt.kind] ?? CreditCard;
-  const label = kindLabel[debt.kind] ?? "Debt";
+  const label = debtKindLabels[debt.kind] ?? "Debt";
   const isPersonal = debt.kind === "personal_loan";
   const theyOweMe = debt.direction === "they_owe_me";
 
@@ -170,7 +166,7 @@ export function DebtCard({ debt, spaceSlug, canManage, quickPayAction, monthStat
           <div className="rounded-lg bg-surface-secondary px-3 py-2">
             <p className="text-[10px] font-semibold uppercase tracking-wide text-body">Next due</p>
             <p className="mt-0.5 text-sm font-medium text-heading">
-              {nextUnpaidDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              {formatMonthDay(nextUnpaidDate)}
             </p>
           </div>
         )}
@@ -179,7 +175,7 @@ export function DebtCard({ debt, spaceSlug, canManage, quickPayAction, monthStat
           <div className="rounded-lg bg-surface-secondary px-3 py-2">
             <p className="text-[10px] font-semibold uppercase tracking-wide text-body">Next payment</p>
             <p className="mt-0.5 text-sm font-medium text-heading">
-              {new Date(debt.nextPaymentDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              {formatMonthDay(debt.nextPaymentDate)}
             </p>
           </div>
         )}
@@ -219,7 +215,7 @@ export function DebtCard({ debt, spaceSlug, canManage, quickPayAction, monthStat
               <CheckCircle size={14} />
               {isPending
                 ? "Paying..."
-                : `Pay ${nextUnpaidDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} \u2014 ${formatMoney(debt.workspaceMonthlyAmountMinor!, debt.workspaceCurrencyCode)}`}
+                : `Pay ${formatMonthDay(nextUnpaidDate)} - ${formatMoney(debt.workspaceMonthlyAmountMinor!, debt.workspaceCurrencyCode)}`}
             </button>
           ) : hasMonthlyAmount && quickPayAction ? (
             <button

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { MemberRoleBadge } from "@/components/member-role-badge";
 import { notFound } from "next/navigation";
+import { getUserInitials } from "@/lib/user-display";
 import { getServerCaller } from "@/server/trpc-caller";
 import { routes } from "@/lib/routes";
 import { format } from "date-fns";
@@ -113,22 +115,14 @@ export default async function AdminSpaceDetailPage({ params }: SpaceDetailPagePr
                   <td className="px-6 py-3">
                     <Link href={routes.adminUser(member.userId)} className="flex items-center gap-3">
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-lighter text-xs font-bold text-primary">
-                        {member.name ? member.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?"}
+                        {getUserInitials(member.name)}
                       </div>
                       <span className="font-medium text-heading hover:underline">{member.name || "—"}</span>
                     </Link>
                   </td>
                   <td className="px-6 py-3 text-body">{member.email}</td>
                   <td className="px-6 py-3">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                      member.role === "owner"
-                        ? "bg-primary-lighter text-primary"
-                        : member.role === "editor"
-                          ? "bg-surface-secondary text-heading"
-                          : "bg-surface-secondary text-body"
-                    }`}>
-                      {member.role}
-                    </span>
+                    <MemberRoleBadge role={member.role} />
                   </td>
                   <td className="px-6 py-3 text-body">{format(member.joinedAt, "MMM d, yyyy")}</td>
                 </tr>

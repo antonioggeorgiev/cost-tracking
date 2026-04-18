@@ -1,5 +1,6 @@
 import { ExpenseType, RecurringFrequency, RecurringTemplateKind } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
+import type { ExpenseStatus } from "@/lib/expense-status";
 import { toMinorUnits } from "@/lib/money";
 import { expenseService } from "@/server/services/expense-service";
 import { fxService } from "@/server/services/fx";
@@ -114,7 +115,7 @@ export const recurringService = {
     anchorDays?: number[];
     startDate?: Date;
     endDate?: Date | null;
-    defaultStatus?: "planned" | "pending" | "posted" | "cancelled";
+    defaultStatus?: ExpenseStatus;
     paymentUrl?: string | null;
     isActive?: boolean;
   }) {
@@ -247,7 +248,7 @@ export const recurringService = {
     frequency: (typeof RecurringFrequency)[keyof typeof RecurringFrequency];
     interval: number;
     anchorDays?: number[];
-    defaultStatus: "planned" | "pending" | "posted" | "cancelled";
+    defaultStatus: ExpenseStatus;
     paymentUrl?: string | null;
     description?: string | null;
     notes?: string | null;

@@ -1,20 +1,14 @@
 "use server";
 
-import { cookies } from "next/headers";
-
-const COOKIE_NAME = "selectedSpace";
+import {
+  clearSelectedSpaceCookie,
+  setSelectedSpaceCookie,
+} from "@/lib/space-cookie";
 
 export async function switchSpace(slug: string | null) {
-  const cookieStore = await cookies();
-
   if (slug) {
-    cookieStore.set(COOKIE_NAME, slug, {
-      path: "/",
-      httpOnly: false,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 365,
-    });
+    await setSelectedSpaceCookie(slug);
   } else {
-    cookieStore.delete(COOKIE_NAME);
+    await clearSelectedSpaceCookie();
   }
 }

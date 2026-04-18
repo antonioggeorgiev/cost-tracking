@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { Resend } from "resend";
 import { InviteStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
+import type { AssignableSpaceRole } from "@/lib/member-roles";
 import { isResendConfigured } from "@/lib/resend";
 import { routes } from "@/lib/routes";
 
@@ -10,7 +11,7 @@ function normalizeEmail(email: string) {
 }
 
 export const inviteService = {
-  async createSpaceInvite(input: { spaceId: string; invitedByUserId: string; email: string; role: "editor" | "viewer" }) {
+  async createSpaceInvite(input: { spaceId: string; invitedByUserId: string; email: string; role: AssignableSpaceRole }) {
     const email = normalizeEmail(input.email);
 
     const existingMember = await db.spaceMembership.findFirst({

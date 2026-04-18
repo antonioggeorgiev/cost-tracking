@@ -10,6 +10,7 @@ import {
   LogOut, ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getUserInitials } from "@/lib/user-display";
 import { routes } from "@/lib/routes";
 import {
   DropdownMenu,
@@ -29,11 +30,11 @@ type AdminSidebarProps = {
 };
 
 const adminNavItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
-  { label: "Users", icon: Users, href: "/admin/users" },
-  { label: "Spaces", icon: Building2, href: "/admin/spaces" },
-  { label: "Categories", icon: FolderTree, href: "/admin/categories" },
-  { label: "Settings", icon: Settings, href: "/admin/settings" },
+  { label: "Dashboard", icon: LayoutDashboard, href: routes.admin },
+  { label: "Users", icon: Users, href: routes.adminUsers },
+  { label: "Spaces", icon: Building2, href: routes.adminSpaces },
+  { label: "Categories", icon: FolderTree, href: routes.adminCategories },
+  { label: "Settings", icon: Settings, href: routes.adminSettings },
 ] as const;
 
 export function AdminSidebar({ user }: AdminSidebarProps) {
@@ -41,14 +42,14 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   const { signOut } = useClerk();
 
   function isActive(href: string) {
-    if (href === "/admin") return pathname === "/admin";
+    if (href === routes.admin) return pathname === routes.admin;
     return pathname.startsWith(href);
   }
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-[260px] lg:border-r lg:border-border lg:bg-surface">
       <div className="flex flex-col h-full p-5 overflow-y-auto">
-        <Link href="/admin" className="flex items-center gap-3 mb-8">
+        <Link href={routes.admin} className="flex items-center gap-3 mb-8">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-heading">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
@@ -111,9 +112,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                   />
                 ) : (
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-                    {user?.name
-                      ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
-                      : "?"}
+                    {getUserInitials(user?.name)}
                   </div>
                 )}
                 <div className="flex-1 min-w-0 text-left">

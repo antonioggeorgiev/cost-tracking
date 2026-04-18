@@ -1,4 +1,5 @@
 import { MonthSummaryBar } from "@/components/shared/month-summary-bar";
+import { formatMonthDay } from "@/lib/format-date";
 
 type RecurringSummaryStatsProps = {
   dueThisMonthMinor: number;
@@ -17,7 +18,7 @@ export function RecurringSummaryStats({
 }: RecurringSummaryStatsProps) {
   const nextDate = nextPaymentDate ? new Date(nextPaymentDate) : null;
   const nextLabel = nextDate
-    ? nextDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    ? formatMonthDay(nextDate)
     : "None";
 
   return (

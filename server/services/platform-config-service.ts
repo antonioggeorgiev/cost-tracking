@@ -1,9 +1,11 @@
 import type { PlatformConfig } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import { createPaginatedResult, resolvePagination } from "@/lib/pagination";
 
 let cachedConfig: PlatformConfig | null = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 60_000;
+const PLATFORM_CONFIG_ID = "singleton";
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
@@ -16,9 +18,9 @@ export const platformConfigService = {
     }
 
     const config = await db.platformConfig.upsert({
-      where: { id: "singleton" },
+      where: { id: PLATFORM_CONFIG_ID },
       update: {},
-      create: { id: "singleton" },
+      create: { id: PLATFORM_CONFIG_ID },
     });
 
     cachedConfig = config;
@@ -28,9 +30,9 @@ export const platformConfigService = {
 
   async updateConfig(data: { signupsEnabled: boolean }) {
     const config = await db.platformConfig.upsert({
-      where: { id: "singleton" },
+      where: { id: PLATFORM_CONFIG_ID },
       update: { signupsEnabled: data.signupsEnabled },
-      create: { id: "singleton", signupsEnabled: data.signupsEnabled },
+      create: { id: PLATFORM_CONFIG_ID, signupsEnabled: data.signupsEnabled },
     });
 
     cachedConfig = config;
@@ -51,26 +53,18 @@ export const platformConfigService = {
   },
 
   async listAllowedEmails(options?: { page?: number; perPage?: number }) {
-    const page = options?.page ?? 1;
-    const perPage = options?.perPage ?? 20;
-    const skip = (page - 1) * perPage;
+    const pagination = resolvePagination(options);
 
     const [items, total] = await Promise.all([
       db.allowedSignupEmail.findMany({
         orderBy: { createdAt: "desc" },
-        skip,
-        take: perPage,
+        skip: pagination.skip,
+        take: pagination.perPage,
       }),
       db.allowedSignupEmail.count(),
     ]);
 
-    return {
-      items,
-      total,
-      page,
-      perPage,
-      totalPages: Math.ceil(total / perPage),
-    };
+    return createPaginatedResult(items, total, pagination);
   },
 
   async addAllowedEmail(email: string, note?: string) {

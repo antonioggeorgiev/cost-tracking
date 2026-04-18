@@ -15,6 +15,7 @@ import {
   FormSection,
   SchedulePicker,
 } from "@/components/form-fields";
+import { debtDirectionItems, debtKindItems } from "@/lib/finance-options";
 import { type FrequencyOption, deriveScheduleFields } from "@/lib/schedule-utils";
 import { cn } from "@/lib/utils";
 
@@ -26,17 +27,6 @@ type QuickAddDebtFormProps = {
   submitLabel?: string;
   onSuccess?: () => void;
 };
-
-const kindItems = [
-  { value: DebtAccountKind.bank_loan, label: "Bank Loan", description: "Mortgage, personal loan, etc." },
-  { value: DebtAccountKind.personal_loan, label: "Personal", description: "Money lent to/from someone" },
-  { value: DebtAccountKind.leasing, label: "Leasing", description: "Car, equipment, etc." },
-] satisfies Array<{ value: DebtAccountKind; label: string; description: string }>;
-
-const directionItems = [
-  { value: DebtDirection.i_owe, label: "I owe" },
-  { value: DebtDirection.they_owe_me, label: "They owe me" },
-] satisfies Array<{ value: DebtDirection; label: string }>;
 
 export function QuickAddDebtForm({
   spaceSlug,

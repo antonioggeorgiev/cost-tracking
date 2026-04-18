@@ -1,5 +1,6 @@
 import { SpaceRole } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
+import type { AssignableSpaceRole } from "@/lib/member-roles";
 
 export const memberService = {
   async getSpaceMembershipBySlug(input: { spaceSlug: string; userId: string }) {
@@ -72,7 +73,7 @@ export const memberService = {
     return { memberships, invites };
   },
 
-  async updateSpaceMemberRole(input: { spaceId: string; membershipId: string; role: "editor" | "viewer" }) {
+  async updateSpaceMemberRole(input: { spaceId: string; membershipId: string; role: AssignableSpaceRole }) {
     const membership = await db.spaceMembership.findUnique({
       where: { id: input.membershipId },
       select: { id: true, spaceId: true, role: true },

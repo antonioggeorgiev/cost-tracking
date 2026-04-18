@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { formatLongMonthDayYear } from "@/lib/format-date";
 import {
   AmountInput,
   CurrencySelect,
@@ -63,20 +64,23 @@ export function DebtPaymentForm({
   const unpaidDates = selectedAccount?.unpaidDueDates ?? [];
   const hasSchedule = unpaidDates.length > 0;
 
-  // Auto-select first unpaid date and auto-fill amount when account changes
-  useEffect(() => {
-    if (selectedAccount) {
-      setCurrencyCode(selectedAccount.currencyCode);
-      if (unpaidDates.length > 0) {
-        setDueDate(unpaidDates[0]);
-        if (selectedAccount.monthlyAmountMinor != null && selectedAccount.monthlyAmountMinor > 0) {
-          setAmount(selectedAccount.monthlyAmountMinor / 100);
-        }
-      } else {
-        setDueDate("");
-      }
+  function handleDebtAccountChange(nextDebtAccountId: string) {
+    setDebtAccountId(nextDebtAccountId);
+
+    const nextAccount = activeAccounts.find((account) => account.id === nextDebtAccountId);
+    if (!nextAccount) {
+      return;
     }
-  }, [debtAccountId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    setCurrencyCode(nextAccount.currencyCode);
+
+    const nextUnpaidDate = nextAccount.unpaidDueDates?.[0] ?? "";
+    setDueDate(nextUnpaidDate);
+
+    if (nextUnpaidDate && nextAccount.monthlyAmountMinor != null && nextAccount.monthlyAmountMinor > 0) {
+      setAmount(nextAccount.monthlyAmountMinor / 100);
+    }
+  }
 
   function resetForm() {
     setDebtAccountId("");
@@ -121,13 +125,13 @@ export function DebtPaymentForm({
 
       <div className="grid gap-1.5">
         <Label>Debt account</Label>
-        <SearchableSelect
-          items={accountItems}
-          value={debtAccountId}
-          onValueChange={setDebtAccountId}
-          placeholder="Select account"
-          searchPlaceholder="Search accounts..."
-        />
+          <SearchableSelect
+            items={accountItems}
+            value={debtAccountId}
+            onValueChange={handleDebtAccountChange}
+            placeholder="Select account"
+            searchPlaceholder="Search accounts..."
+          />
       </div>
 
       {/* Due date selector when account has scheduled payments */}
@@ -141,7 +145,7 @@ export function DebtPaymentForm({
           >
             {unpaidDates.map((d) => (
               <option key={d} value={d}>
-                {new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                {formatLongMonthDayYear(`${d}T00:00:00`)}
               </option>
             ))}
           </select>

@@ -1,11 +1,11 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { supportedCurrencies } from "@/lib/currency";
 import { routes } from "@/lib/routes";
+import { setSelectedSpaceCookie } from "@/lib/space-cookie";
 import { getServerCaller } from "@/server/trpc-caller";
 
 const createSpaceSchema = z.object({
@@ -22,8 +22,7 @@ export async function createSpaceAction(formData: FormData) {
   const caller = await getServerCaller();
   const space = await caller.spaces.create(input);
 
-  const cookieStore = await cookies();
-  cookieStore.set("selectedSpace", space.slug, { path: "/" });
+  await setSelectedSpaceCookie(space.slug);
 
   revalidatePath(routes.spaces);
   redirect(routes.overview);

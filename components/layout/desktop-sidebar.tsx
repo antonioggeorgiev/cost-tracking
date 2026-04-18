@@ -12,6 +12,7 @@ import {
   Users, Shield, Check, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getUserInitials } from "@/lib/user-display";
 import { routes } from "@/lib/routes";
 import { switchSpace } from "@/app/(app)/actions";
 import {
@@ -259,9 +260,7 @@ export function DesktopSidebar({ spaces, selectedSpace, user }: DesktopSidebarPr
                   />
                 ) : (
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-                    {user?.name
-                      ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
-                      : "?"}
+                    {getUserInitials(user?.name)}
                   </div>
                 )}
                 <div className="flex-1 min-w-0 text-left">
