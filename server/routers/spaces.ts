@@ -44,4 +44,10 @@ export const spacesRouter = createTRPCRouter({
         baseCurrencyCode: input.baseCurrencyCode,
       });
     }),
+
+  delete: spaceOwnerProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .mutation(({ ctx }) => {
+      return spaceService.softDelete(ctx.membership.spaceId);
+    }),
 });

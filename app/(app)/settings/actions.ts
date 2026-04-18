@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -29,4 +30,23 @@ export async function updateSpaceSettingsAction(formData: FormData) {
     const message = error instanceof Error ? error.message : "Unable to update space settings.";
     redirect(`${routes.settings}?error=${encodeURIComponent(message)}`);
   }
+}
+
+const deleteSpaceSchema = z.object({
+  spaceSlug: z.string().min(1),
+});
+
+export async function deleteSpaceAction(formData: FormData) {
+  const input = deleteSpaceSchema.parse({
+    spaceSlug: formData.get("spaceSlug"),
+  });
+
+  const caller = await getServerCaller();
+  await caller.spaces.delete({ spaceSlug: input.spaceSlug });
+
+  const cookieStore = await cookies();
+  cookieStore.delete("selectedSpace");
+
+  revalidatePath(routes.spaces);
+  redirect(routes.spaces);
 }

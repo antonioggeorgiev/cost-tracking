@@ -8,6 +8,7 @@ export const memberService = {
         userId: input.userId,
         space: {
           slug: input.spaceSlug,
+          deletedAt: null,
         },
       },
       include: {

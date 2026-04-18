@@ -113,6 +113,16 @@ export function DesktopSidebar({ spaces, selectedSpace, user }: DesktopSidebarPr
               )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem
+              render={<Link href={routes.spaces} />}
+              className="flex items-center gap-3 py-2"
+            >
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <PlusCircle size={14} />
+              </div>
+              <span className="flex-1 text-sm font-medium text-primary">Create Space</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             {spaces.map((space) => (
               <DropdownMenuItem
                 key={space.id}

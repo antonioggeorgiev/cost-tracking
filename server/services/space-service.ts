@@ -5,7 +5,7 @@ import { slugify } from "@/lib/slug";
 export const spaceService = {
   async listForUser(userId: string) {
     const memberships = await db.spaceMembership.findMany({
-      where: { userId },
+      where: { userId, space: { deletedAt: null } },
       include: { space: true },
       orderBy: { createdAt: "asc" },
     });
@@ -24,7 +24,7 @@ export const spaceService = {
 
     for (let suffix = 0; suffix < 50; suffix += 1) {
       const candidate = suffix === 0 ? baseSlug : `${baseSlug}-${suffix + 1}`;
-      const existing = await db.space.findUnique({ where: { slug: candidate }, select: { id: true } });
+      const existing = await db.space.findFirst({ where: { slug: candidate, deletedAt: null }, select: { id: true } });
 
       if (!existing) {
         return candidate;
@@ -63,6 +63,7 @@ export const spaceService = {
     return db.space.findFirst({
       where: {
         slug: input.slug,
+        deletedAt: null,
         memberships: {
           some: {
             userId: input.userId,
@@ -94,6 +95,13 @@ export const spaceService = {
         name: input.name.trim(),
         baseCurrencyCode: input.baseCurrencyCode,
       },
+    });
+  },
+
+  async softDelete(spaceId: string) {
+    return db.space.update({
+      where: { id: spaceId },
+      data: { deletedAt: new Date() },
     });
   },
 };

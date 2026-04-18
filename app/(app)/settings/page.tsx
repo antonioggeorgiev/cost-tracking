@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { updateSpaceSettingsAction } from "@/app/(app)/settings/actions";
+import { DeleteSpaceDialog } from "@/components/delete-space-dialog";
 import { MemberRoleBadge } from "@/components/member-role-badge";
 import { supportedCurrencies } from "@/lib/currency";
 import { getSelectedSpaceSlug } from "@/lib/space-context";
 import { getServerCaller } from "@/server/trpc-caller";
-import { Settings as SettingsIcon, Shield } from "lucide-react";
+import { Settings as SettingsIcon, Shield, AlertTriangle } from "lucide-react";
 
 type SettingsPageProps = {
   searchParams: Promise<{ error?: string }>;
@@ -110,6 +111,30 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           </div>
         </div>
       </section>
+
+      {/* Danger Zone */}
+      {canManage && (
+        <section className="rounded-2xl border border-danger/30 bg-surface p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-danger/10 text-danger">
+              <AlertTriangle size={18} />
+            </div>
+            <div>
+              <h2 className="font-heading text-base font-semibold text-heading">Danger Zone</h2>
+              <p className="text-xs text-body">Irreversible actions</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between rounded-xl border border-danger/20 p-4">
+            <div>
+              <p className="text-sm font-medium text-heading">Delete this space</p>
+              <p className="mt-0.5 text-xs text-body">
+                All expenses, categories, and member data will become inaccessible.
+              </p>
+            </div>
+            <DeleteSpaceDialog spaceSlug={spaceSlug} spaceName={space.name} />
+          </div>
+        </section>
+      )}
     </div>
   );
 }

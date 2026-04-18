@@ -4,7 +4,7 @@ export const adminService = {
   async getStats() {
     const [userCount, spaceCount, expenseCount, categoryCount] = await Promise.all([
       db.user.count(),
-      db.space.count(),
+      db.space.count({ where: { deletedAt: null } }),
       db.expense.count(),
       db.category.count({ where: { spaceId: null } }),
     ]);
@@ -104,7 +104,7 @@ export const adminService = {
     const perPage = options?.perPage ?? 20;
     const skip = (page - 1) * perPage;
 
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { deletedAt: null };
     if (options?.search) {
       where.OR = [
         { name: { contains: options.search, mode: "insensitive" } },
@@ -145,8 +145,8 @@ export const adminService = {
   },
 
   async getSpaceDetail(spaceId: string) {
-    const space = await db.space.findUnique({
-      where: { id: spaceId },
+    const space = await db.space.findFirst({
+      where: { id: spaceId, deletedAt: null },
       include: {
         createdByUser: { select: { name: true, email: true } },
         memberships: {
