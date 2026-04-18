@@ -15,14 +15,14 @@ type DebtAccountOption = {
 };
 
 type DebtPaymentModalProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   currencies: readonly string[];
   debtAccounts: DebtAccountOption[];
   createDebtPayment: (formData: FormData) => Promise<void>;
 };
 
-export function DebtPaymentModal({ workspaceSlug, baseCurrencyCode, currencies, debtAccounts, createDebtPayment }: DebtPaymentModalProps) {
+export function DebtPaymentModal({ spaceSlug, baseCurrencyCode, currencies, debtAccounts, createDebtPayment }: DebtPaymentModalProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.get("modal") === "record-payment";
@@ -70,7 +70,7 @@ export function DebtPaymentModal({ workspaceSlug, baseCurrencyCode, currencies, 
         </div>
 
         <DebtPaymentForm
-          workspaceSlug={workspaceSlug}
+          spaceSlug={spaceSlug}
           baseCurrencyCode={baseCurrencyCode}
           currencies={currencies}
           debtAccounts={debtAccounts}

@@ -6,11 +6,11 @@ import { expensesRouter } from "@/server/routers/expenses";
 import { membersRouter } from "@/server/routers/members";
 import { reportingRouter } from "@/server/routers/reporting";
 import { recurringRouter } from "@/server/routers/recurring";
-import { workspacesRouter } from "@/server/routers/workspaces";
+import { spacesRouter } from "@/server/routers/spaces";
 
 export const appRouter = createTRPCRouter({
   admin: adminRouter,
-  workspaces: workspacesRouter,
+  spaces: spacesRouter,
   members: membersRouter,
   categories: categoriesRouter,
   expenses: expensesRouter,

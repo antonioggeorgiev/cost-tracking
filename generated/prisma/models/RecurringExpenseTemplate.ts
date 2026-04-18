@@ -44,7 +44,7 @@ export type RecurringExpenseTemplateSumAggregateOutputType = {
 
 export type RecurringExpenseTemplateMinAggregateOutputType = {
   id: string | null
-  workspaceId: string | null
+  spaceId: string | null
   categoryId: string | null
   createdByUserId: string | null
   kind: $Enums.RecurringTemplateKind | null
@@ -72,7 +72,7 @@ export type RecurringExpenseTemplateMinAggregateOutputType = {
 
 export type RecurringExpenseTemplateMaxAggregateOutputType = {
   id: string | null
-  workspaceId: string | null
+  spaceId: string | null
   categoryId: string | null
   createdByUserId: string | null
   kind: $Enums.RecurringTemplateKind | null
@@ -100,7 +100,7 @@ export type RecurringExpenseTemplateMaxAggregateOutputType = {
 
 export type RecurringExpenseTemplateCountAggregateOutputType = {
   id: number
-  workspaceId: number
+  spaceId: number
   categoryId: number
   createdByUserId: number
   kind: number
@@ -147,7 +147,7 @@ export type RecurringExpenseTemplateSumAggregateInputType = {
 
 export type RecurringExpenseTemplateMinAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   categoryId?: true
   createdByUserId?: true
   kind?: true
@@ -175,7 +175,7 @@ export type RecurringExpenseTemplateMinAggregateInputType = {
 
 export type RecurringExpenseTemplateMaxAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   categoryId?: true
   createdByUserId?: true
   kind?: true
@@ -203,7 +203,7 @@ export type RecurringExpenseTemplateMaxAggregateInputType = {
 
 export type RecurringExpenseTemplateCountAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   categoryId?: true
   createdByUserId?: true
   kind?: true
@@ -319,7 +319,7 @@ export type RecurringExpenseTemplateGroupByArgs<ExtArgs extends runtime.Types.Ex
 
 export type RecurringExpenseTemplateGroupByOutputType = {
   id: string
-  workspaceId: string
+  spaceId: string
   categoryId: string
   createdByUserId: string
   kind: $Enums.RecurringTemplateKind
@@ -371,7 +371,7 @@ export type RecurringExpenseTemplateWhereInput = {
   OR?: Prisma.RecurringExpenseTemplateWhereInput[]
   NOT?: Prisma.RecurringExpenseTemplateWhereInput | Prisma.RecurringExpenseTemplateWhereInput[]
   id?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  workspaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
+  spaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   kind?: Prisma.EnumRecurringTemplateKindFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
@@ -396,7 +396,7 @@ export type RecurringExpenseTemplateWhereInput = {
   notes?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
-  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceScalarRelationFilter, Prisma.SpaceWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   expenses?: Prisma.ExpenseListRelationFilter
@@ -404,7 +404,7 @@ export type RecurringExpenseTemplateWhereInput = {
 
 export type RecurringExpenseTemplateOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
@@ -429,7 +429,7 @@ export type RecurringExpenseTemplateOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  workspace?: Prisma.WorkspaceOrderByWithRelationInput
+  space?: Prisma.SpaceOrderByWithRelationInput
   category?: Prisma.CategoryOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
@@ -440,7 +440,7 @@ export type RecurringExpenseTemplateWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RecurringExpenseTemplateWhereInput | Prisma.RecurringExpenseTemplateWhereInput[]
   OR?: Prisma.RecurringExpenseTemplateWhereInput[]
   NOT?: Prisma.RecurringExpenseTemplateWhereInput | Prisma.RecurringExpenseTemplateWhereInput[]
-  workspaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
+  spaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   kind?: Prisma.EnumRecurringTemplateKindFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
@@ -465,7 +465,7 @@ export type RecurringExpenseTemplateWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"RecurringExpenseTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RecurringExpenseTemplate"> | Date | string
-  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceScalarRelationFilter, Prisma.SpaceWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   expenses?: Prisma.ExpenseListRelationFilter
@@ -473,7 +473,7 @@ export type RecurringExpenseTemplateWhereUniqueInput = Prisma.AtLeast<{
 
 export type RecurringExpenseTemplateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
@@ -510,7 +510,7 @@ export type RecurringExpenseTemplateScalarWhereWithAggregatesInput = {
   OR?: Prisma.RecurringExpenseTemplateScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RecurringExpenseTemplateScalarWhereWithAggregatesInput | Prisma.RecurringExpenseTemplateScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
-  workspaceId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
+  spaceId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringWithAggregatesFilter<"RecurringExpenseTemplate"> | string
   kind?: Prisma.EnumRecurringTemplateKindWithAggregatesFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
@@ -561,7 +561,7 @@ export type RecurringExpenseTemplateCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutRecurringTemplatesInput
+  space: Prisma.SpaceCreateNestedOneWithoutRecurringTemplatesInput
   category: Prisma.CategoryCreateNestedOneWithoutRecurringTemplatesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutRecurringTemplatesInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutRecurringTemplateInput
@@ -569,7 +569,7 @@ export type RecurringExpenseTemplateCreateInput = {
 
 export type RecurringExpenseTemplateUncheckedCreateInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   categoryId: string
   createdByUserId: string
   kind?: $Enums.RecurringTemplateKind
@@ -621,7 +621,7 @@ export type RecurringExpenseTemplateUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutRecurringTemplateNestedInput
@@ -629,7 +629,7 @@ export type RecurringExpenseTemplateUpdateInput = {
 
 export type RecurringExpenseTemplateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
@@ -659,7 +659,7 @@ export type RecurringExpenseTemplateUncheckedUpdateInput = {
 
 export type RecurringExpenseTemplateCreateManyInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   categoryId: string
   createdByUserId: string
   kind?: $Enums.RecurringTemplateKind
@@ -714,7 +714,7 @@ export type RecurringExpenseTemplateUpdateManyMutationInput = {
 
 export type RecurringExpenseTemplateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
@@ -758,7 +758,7 @@ export type RecurringExpenseTemplateNullableScalarRelationFilter = {
 
 export type RecurringExpenseTemplateCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
@@ -795,7 +795,7 @@ export type RecurringExpenseTemplateAvgOrderByAggregateInput = {
 
 export type RecurringExpenseTemplateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
@@ -823,7 +823,7 @@ export type RecurringExpenseTemplateMaxOrderByAggregateInput = {
 
 export type RecurringExpenseTemplateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
@@ -982,45 +982,45 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNeste
   deleteMany?: Prisma.RecurringExpenseTemplateScalarWhereInput | Prisma.RecurringExpenseTemplateScalarWhereInput[]
 }
 
-export type RecurringExpenseTemplateCreateNestedManyWithoutWorkspaceInput = {
-  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput[]
-  createMany?: Prisma.RecurringExpenseTemplateCreateManyWorkspaceInputEnvelope
+export type RecurringExpenseTemplateCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.RecurringExpenseTemplateCreateManySpaceInputEnvelope
   connect?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
 }
 
-export type RecurringExpenseTemplateUncheckedCreateNestedManyWithoutWorkspaceInput = {
-  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput[]
-  createMany?: Prisma.RecurringExpenseTemplateCreateManyWorkspaceInputEnvelope
+export type RecurringExpenseTemplateUncheckedCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.RecurringExpenseTemplateCreateManySpaceInputEnvelope
   connect?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
 }
 
-export type RecurringExpenseTemplateUpdateManyWithoutWorkspaceNestedInput = {
-  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput[]
-  upsert?: Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutWorkspaceInput[]
-  createMany?: Prisma.RecurringExpenseTemplateCreateManyWorkspaceInputEnvelope
+export type RecurringExpenseTemplateUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutSpaceInput | Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.RecurringExpenseTemplateCreateManySpaceInputEnvelope
   set?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
   disconnect?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
   delete?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
   connect?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
-  update?: Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutWorkspaceInput[]
-  updateMany?: Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutWorkspaceInput[]
+  update?: Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutSpaceInput | Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutSpaceInput | Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutSpaceInput[]
   deleteMany?: Prisma.RecurringExpenseTemplateScalarWhereInput | Prisma.RecurringExpenseTemplateScalarWhereInput[]
 }
 
-export type RecurringExpenseTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput = {
-  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput[]
-  upsert?: Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutWorkspaceInput[]
-  createMany?: Prisma.RecurringExpenseTemplateCreateManyWorkspaceInputEnvelope
+export type RecurringExpenseTemplateUncheckedUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput> | Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput[] | Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput | Prisma.RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutSpaceInput | Prisma.RecurringExpenseTemplateUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.RecurringExpenseTemplateCreateManySpaceInputEnvelope
   set?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
   disconnect?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
   delete?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
   connect?: Prisma.RecurringExpenseTemplateWhereUniqueInput | Prisma.RecurringExpenseTemplateWhereUniqueInput[]
-  update?: Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutWorkspaceInput[]
-  updateMany?: Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutWorkspaceInput | Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutWorkspaceInput[]
+  update?: Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutSpaceInput | Prisma.RecurringExpenseTemplateUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutSpaceInput | Prisma.RecurringExpenseTemplateUpdateManyWithWhereWithoutSpaceInput[]
   deleteMany?: Prisma.RecurringExpenseTemplateScalarWhereInput | Prisma.RecurringExpenseTemplateScalarWhereInput[]
 }
 
@@ -1048,14 +1048,14 @@ export type RecurringExpenseTemplateCreateWithoutCategoryInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutRecurringTemplatesInput
+  space: Prisma.SpaceCreateNestedOneWithoutRecurringTemplatesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutRecurringTemplatesInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutRecurringTemplateInput
 }
 
 export type RecurringExpenseTemplateUncheckedCreateWithoutCategoryInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   createdByUserId: string
   kind?: $Enums.RecurringTemplateKind
   title: string
@@ -1113,7 +1113,7 @@ export type RecurringExpenseTemplateScalarWhereInput = {
   OR?: Prisma.RecurringExpenseTemplateScalarWhereInput[]
   NOT?: Prisma.RecurringExpenseTemplateScalarWhereInput | Prisma.RecurringExpenseTemplateScalarWhereInput[]
   id?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
-  workspaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
+  spaceId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   categoryId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   createdByUserId?: Prisma.StringFilter<"RecurringExpenseTemplate"> | string
   kind?: Prisma.EnumRecurringTemplateKindFilter<"RecurringExpenseTemplate"> | $Enums.RecurringTemplateKind
@@ -1164,14 +1164,14 @@ export type RecurringExpenseTemplateCreateWithoutExpensesInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutRecurringTemplatesInput
+  space: Prisma.SpaceCreateNestedOneWithoutRecurringTemplatesInput
   category: Prisma.CategoryCreateNestedOneWithoutRecurringTemplatesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutRecurringTemplatesInput
 }
 
 export type RecurringExpenseTemplateUncheckedCreateWithoutExpensesInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   categoryId: string
   createdByUserId: string
   kind?: $Enums.RecurringTemplateKind
@@ -1238,14 +1238,14 @@ export type RecurringExpenseTemplateUpdateWithoutExpensesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutRecurringTemplatesNestedInput
 }
 
 export type RecurringExpenseTemplateUncheckedUpdateWithoutExpensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
@@ -1296,14 +1296,14 @@ export type RecurringExpenseTemplateCreateWithoutCreatedByUserInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutRecurringTemplatesInput
+  space: Prisma.SpaceCreateNestedOneWithoutRecurringTemplatesInput
   category: Prisma.CategoryCreateNestedOneWithoutRecurringTemplatesInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutRecurringTemplateInput
 }
 
 export type RecurringExpenseTemplateUncheckedCreateWithoutCreatedByUserInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   categoryId: string
   kind?: $Enums.RecurringTemplateKind
   title: string
@@ -1356,7 +1356,7 @@ export type RecurringExpenseTemplateUpdateManyWithWhereWithoutCreatedByUserInput
   data: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateManyMutationInput, Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserInput>
 }
 
-export type RecurringExpenseTemplateCreateWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateCreateWithoutSpaceInput = {
   id?: string
   kind?: $Enums.RecurringTemplateKind
   title: string
@@ -1385,7 +1385,7 @@ export type RecurringExpenseTemplateCreateWithoutWorkspaceInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutRecurringTemplateInput
 }
 
-export type RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput = {
   id?: string
   categoryId: string
   createdByUserId: string
@@ -1414,35 +1414,35 @@ export type RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutRecurringTemplateInput
 }
 
-export type RecurringExpenseTemplateCreateOrConnectWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateCreateOrConnectWithoutSpaceInput = {
   where: Prisma.RecurringExpenseTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput>
 }
 
-export type RecurringExpenseTemplateCreateManyWorkspaceInputEnvelope = {
-  data: Prisma.RecurringExpenseTemplateCreateManyWorkspaceInput | Prisma.RecurringExpenseTemplateCreateManyWorkspaceInput[]
+export type RecurringExpenseTemplateCreateManySpaceInputEnvelope = {
+  data: Prisma.RecurringExpenseTemplateCreateManySpaceInput | Prisma.RecurringExpenseTemplateCreateManySpaceInput[]
   skipDuplicates?: boolean
 }
 
-export type RecurringExpenseTemplateUpsertWithWhereUniqueWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUpsertWithWhereUniqueWithoutSpaceInput = {
   where: Prisma.RecurringExpenseTemplateWhereUniqueInput
-  update: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedUpdateWithoutWorkspaceInput>
-  create: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutWorkspaceInput>
+  update: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedUpdateWithoutSpaceInput>
+  create: Prisma.XOR<Prisma.RecurringExpenseTemplateCreateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedCreateWithoutSpaceInput>
 }
 
-export type RecurringExpenseTemplateUpdateWithWhereUniqueWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUpdateWithWhereUniqueWithoutSpaceInput = {
   where: Prisma.RecurringExpenseTemplateWhereUniqueInput
-  data: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateWithoutWorkspaceInput, Prisma.RecurringExpenseTemplateUncheckedUpdateWithoutWorkspaceInput>
+  data: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateWithoutSpaceInput, Prisma.RecurringExpenseTemplateUncheckedUpdateWithoutSpaceInput>
 }
 
-export type RecurringExpenseTemplateUpdateManyWithWhereWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUpdateManyWithWhereWithoutSpaceInput = {
   where: Prisma.RecurringExpenseTemplateScalarWhereInput
-  data: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateManyMutationInput, Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutWorkspaceInput>
+  data: Prisma.XOR<Prisma.RecurringExpenseTemplateUpdateManyMutationInput, Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutSpaceInput>
 }
 
 export type RecurringExpenseTemplateCreateManyCategoryInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   createdByUserId: string
   kind?: $Enums.RecurringTemplateKind
   title: string
@@ -1492,14 +1492,14 @@ export type RecurringExpenseTemplateUpdateWithoutCategoryInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutRecurringTemplateNestedInput
 }
 
 export type RecurringExpenseTemplateUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1528,7 +1528,7 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutCategoryInput = {
 
 export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1556,7 +1556,7 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCategoryInput = {
 
 export type RecurringExpenseTemplateCreateManyCreatedByUserInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   categoryId: string
   kind?: $Enums.RecurringTemplateKind
   title: string
@@ -1606,14 +1606,14 @@ export type RecurringExpenseTemplateUpdateWithoutCreatedByUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutRecurringTemplatesNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutRecurringTemplateNestedInput
 }
 
 export type RecurringExpenseTemplateUncheckedUpdateWithoutCreatedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1642,7 +1642,7 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutCreatedByUserInput = {
 
 export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1668,7 +1668,7 @@ export type RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserInput
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type RecurringExpenseTemplateCreateManyWorkspaceInput = {
+export type RecurringExpenseTemplateCreateManySpaceInput = {
   id?: string
   categoryId: string
   createdByUserId: string
@@ -1696,7 +1696,7 @@ export type RecurringExpenseTemplateCreateManyWorkspaceInput = {
   updatedAt?: Date | string
 }
 
-export type RecurringExpenseTemplateUpdateWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumRecurringTemplateKindFieldUpdateOperationsInput | $Enums.RecurringTemplateKind
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1725,7 +1725,7 @@ export type RecurringExpenseTemplateUpdateWithoutWorkspaceInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutRecurringTemplateNestedInput
 }
 
-export type RecurringExpenseTemplateUncheckedUpdateWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUncheckedUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1754,7 +1754,7 @@ export type RecurringExpenseTemplateUncheckedUpdateWithoutWorkspaceInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutRecurringTemplateNestedInput
 }
 
-export type RecurringExpenseTemplateUncheckedUpdateManyWithoutWorkspaceInput = {
+export type RecurringExpenseTemplateUncheckedUpdateManyWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1815,7 +1815,7 @@ export type RecurringExpenseTemplateCountOutputTypeCountExpensesArgs<ExtArgs ext
 
 export type RecurringExpenseTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
   kind?: boolean
@@ -1840,7 +1840,7 @@ export type RecurringExpenseTemplateSelect<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   expenses?: boolean | Prisma.RecurringExpenseTemplate$expensesArgs<ExtArgs>
@@ -1849,7 +1849,7 @@ export type RecurringExpenseTemplateSelect<ExtArgs extends runtime.Types.Extensi
 
 export type RecurringExpenseTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
   kind?: boolean
@@ -1874,14 +1874,14 @@ export type RecurringExpenseTemplateSelectCreateManyAndReturn<ExtArgs extends ru
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["recurringExpenseTemplate"]>
 
 export type RecurringExpenseTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
   kind?: boolean
@@ -1906,14 +1906,14 @@ export type RecurringExpenseTemplateSelectUpdateManyAndReturn<ExtArgs extends ru
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["recurringExpenseTemplate"]>
 
 export type RecurringExpenseTemplateSelectScalar = {
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   categoryId?: boolean
   createdByUserId?: boolean
   kind?: boolean
@@ -1940,21 +1940,21 @@ export type RecurringExpenseTemplateSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RecurringExpenseTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "categoryId" | "createdByUserId" | "kind" | "title" | "description" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "frequency" | "interval" | "anchorDays" | "startDate" | "endDate" | "nextOccurrenceDate" | "lastGeneratedAt" | "defaultStatus" | "isActive" | "paymentUrl" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["recurringExpenseTemplate"]>
+export type RecurringExpenseTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "spaceId" | "categoryId" | "createdByUserId" | "kind" | "title" | "description" | "originalAmountMinor" | "originalCurrencyCode" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "exchangeRate" | "exchangeRateDate" | "frequency" | "interval" | "anchorDays" | "startDate" | "endDate" | "nextOccurrenceDate" | "lastGeneratedAt" | "defaultStatus" | "isActive" | "paymentUrl" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["recurringExpenseTemplate"]>
 export type RecurringExpenseTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   expenses?: boolean | Prisma.RecurringExpenseTemplate$expensesArgs<ExtArgs>
   _count?: boolean | Prisma.RecurringExpenseTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RecurringExpenseTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type RecurringExpenseTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1962,14 +1962,14 @@ export type RecurringExpenseTemplateIncludeUpdateManyAndReturn<ExtArgs extends r
 export type $RecurringExpenseTemplatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RecurringExpenseTemplate"
   objects: {
-    workspace: Prisma.$WorkspacePayload<ExtArgs>
+    space: Prisma.$SpacePayload<ExtArgs>
     category: Prisma.$CategoryPayload<ExtArgs>
     createdByUser: Prisma.$UserPayload<ExtArgs>
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    workspaceId: string
+    spaceId: string
     categoryId: string
     createdByUserId: string
     kind: $Enums.RecurringTemplateKind
@@ -2388,7 +2388,7 @@ readonly fields: RecurringExpenseTemplateFieldRefs;
  */
 export interface Prisma__RecurringExpenseTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  space<T extends Prisma.SpaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SpaceDefaultArgs<ExtArgs>>): Prisma.Prisma__SpaceClient<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   expenses<T extends Prisma.RecurringExpenseTemplate$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RecurringExpenseTemplate$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2422,7 +2422,7 @@ export interface Prisma__RecurringExpenseTemplateClient<T, Null = never, ExtArgs
  */
 export interface RecurringExpenseTemplateFieldRefs {
   readonly id: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
-  readonly workspaceId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
+  readonly spaceId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly categoryId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly createdByUserId: Prisma.FieldRef<"RecurringExpenseTemplate", 'String'>
   readonly kind: Prisma.FieldRef<"RecurringExpenseTemplate", 'RecurringTemplateKind'>

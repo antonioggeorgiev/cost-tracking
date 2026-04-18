@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   ]);
 
   if (!dbUser?.isPlatformAdmin) {
-    redirect(routes.workspaces);
+    redirect(routes.overview);
   }
 
   const user = clerkUser

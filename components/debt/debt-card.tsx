@@ -51,7 +51,7 @@ type DebtCardProps = {
     isActive: boolean;
     payments: Array<{ id: string }>;
   };
-  workspaceSlug: string;
+  spaceSlug: string;
   canManage: boolean;
   quickPayAction?: (formData: FormData) => Promise<void>;
   monthStatus?: DebtMonthStatus;
@@ -61,7 +61,7 @@ function formatPercent(bps: number) {
   return (bps / 100).toFixed(2) + "%";
 }
 
-export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, monthStatus }: DebtCardProps) {
+export function DebtCard({ debt, spaceSlug, canManage, quickPayAction, monthStatus }: DebtCardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const Icon = kindIcon[debt.kind] ?? CreditCard;
@@ -90,7 +90,7 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
   function handleQuickPay() {
     if (!quickPayAction) return;
     const formData = new FormData();
-    formData.set("workspaceSlug", workspaceSlug);
+    formData.set("spaceSlug", spaceSlug);
     formData.set("debtAccountId", debt.id);
     formData.set("amount", String(debt.monthlyAmountMinor! / 100));
     formData.set("currencyCode", debt.currencyCode);
@@ -233,7 +233,7 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
             </button>
           ) : (
             <Link
-              href={`${routes.workspaceDebts(workspaceSlug)}?modal=record-payment&debtId=${debt.id}`}
+              href={`${routes.debts}?modal=record-payment&debtId=${debt.id}`}
               className="inline-flex items-center gap-1.5 rounded-xl bg-heading px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-heading/90"
             >
               <Plus size={14} />
@@ -242,7 +242,7 @@ export function DebtCard({ debt, workspaceSlug, canManage, quickPayAction, month
           )
         )}
         <Link
-          href={routes.workspaceDebt(workspaceSlug, debt.id)}
+          href={routes.debt(debt.id)}
           className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-primary transition hover:underline"
         >
           Details

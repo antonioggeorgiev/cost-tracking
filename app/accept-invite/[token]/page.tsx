@@ -16,9 +16,9 @@ async function AcceptInviteForm({ token }: { token: string }) {
 
     try {
       const caller = await getServerCaller();
-      const workspace = await caller.members.acceptInvite({ token });
+      await caller.members.acceptInvite({ token });
 
-      redirect(routes.workspace(workspace.slug));
+      redirect(routes.overview);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unable to accept invite.";
       redirect(`${routes.acceptInvite(token)}?error=${encodeURIComponent(message)}`);

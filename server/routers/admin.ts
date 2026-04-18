@@ -24,7 +24,7 @@ export const adminRouter = createTRPCRouter({
     .input(z.object({ userId: z.string().cuid(), isPlatformAdmin: z.boolean() }))
     .mutation(({ input }) => adminService.setUserAdmin(input.userId, input.isPlatformAdmin)),
 
-  listWorkspaces: platformAdminProcedure
+  listSpaces: platformAdminProcedure
     .input(
       z.object({
         search: z.string().optional(),
@@ -32,11 +32,11 @@ export const adminRouter = createTRPCRouter({
         perPage: z.coerce.number().int().min(1).max(100).optional(),
       }),
     )
-    .query(({ input }) => adminService.listWorkspaces(input)),
+    .query(({ input }) => adminService.listSpaces(input)),
 
-  getWorkspaceDetail: platformAdminProcedure
-    .input(z.object({ workspaceId: z.string().cuid() }))
-    .query(({ input }) => adminService.getWorkspaceDetail(input.workspaceId)),
+  getSpaceDetail: platformAdminProcedure
+    .input(z.object({ spaceId: z.string().cuid() }))
+    .query(({ input }) => adminService.getSpaceDetail(input.spaceId)),
 
   listPlatformCategories: platformAdminProcedure.query(() =>
     categoryService.listPlatformCategoriesTree(),

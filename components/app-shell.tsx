@@ -1,16 +1,20 @@
 import type { ReactNode } from "react";
 import { TopBar } from "@/components/layout/top-bar";
 import { DesktopSidebar } from "@/components/layout/desktop-sidebar";
+import { BottomNav } from "@/components/layout/bottom-nav";
+
+type SpaceInfo = {
+  id: string;
+  name: string;
+  slug: string;
+  baseCurrencyCode: string;
+  role: string;
+};
 
 type AppShellProps = {
   children: ReactNode;
-  workspaces?: Array<{
-    id: string;
-    name: string;
-    slug: string;
-    baseCurrencyCode: string;
-    role: string;
-  }>;
+  spaces?: SpaceInfo[];
+  selectedSpace?: SpaceInfo | null;
   user?: {
     name: string;
     email: string;
@@ -19,10 +23,10 @@ type AppShellProps = {
   };
 };
 
-export function AppShell({ children, workspaces = [], user }: AppShellProps) {
+export function AppShell({ children, spaces = [], selectedSpace, user }: AppShellProps) {
   return (
     <div className="min-h-screen bg-bg">
-      <DesktopSidebar workspaces={workspaces} user={user} />
+      <DesktopSidebar spaces={spaces} selectedSpace={selectedSpace ?? null} user={user} />
 
       <div className="lg:pl-[260px]">
         <TopBar />
@@ -33,6 +37,8 @@ export function AppShell({ children, workspaces = [], user }: AppShellProps) {
           </div>
         </main>
       </div>
+
+      <BottomNav selectedSpace={selectedSpace ?? null} />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { toMinorUnits } from "@/lib/money";
 import { fxService } from "@/server/services/fx";
 
 export const expenseService = {
-  async listWorkspaceExpenses(workspaceId: string, options?: {
+  async listSpaceExpenses(spaceId: string, options?: {
     search?: string;
     categoryId?: string;
     status?: string;
@@ -17,7 +17,7 @@ export const expenseService = {
     const perPage = options?.perPage ?? 20;
     const skip = (page - 1) * perPage;
 
-    const where: Record<string, unknown> = { workspaceId };
+    const where: Record<string, unknown> = { spaceId };
 
     if (options?.search) {
       where.title = { contains: options.search, mode: "insensitive" };
@@ -72,7 +72,84 @@ export const expenseService = {
     };
   },
 
-  async getById(workspaceId: string, expenseId: string) {
+  async listAllUserExpenses(userId: string, options?: {
+    search?: string;
+    categoryId?: string;
+    status?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    page?: number;
+    perPage?: number;
+  }) {
+    const memberships = await db.spaceMembership.findMany({
+      where: { userId },
+      select: { spaceId: true },
+    });
+    const spaceIds = memberships.map(m => m.spaceId);
+
+    const page = options?.page ?? 1;
+    const perPage = options?.perPage ?? 20;
+    const skip = (page - 1) * perPage;
+
+    const where: Record<string, unknown> = { spaceId: { in: spaceIds } };
+
+    if (options?.search) {
+      where.title = { contains: options.search, mode: "insensitive" };
+    }
+    if (options?.categoryId) {
+      where.categoryId = options.categoryId;
+    }
+    if (options?.status && options.status !== "all") {
+      where.status = options.status;
+    }
+    if (options?.dateFrom || options?.dateTo) {
+      const dateFilter: Record<string, Date> = {};
+      if (options.dateFrom) dateFilter.gte = new Date(options.dateFrom);
+      if (options.dateTo) {
+        const to = new Date(options.dateTo);
+        to.setHours(23, 59, 59, 999);
+        dateFilter.lte = to;
+      }
+      where.expenseDate = dateFilter;
+    }
+
+    const [expenses, total, aggregates] = await Promise.all([
+      db.expense.findMany({
+        where,
+        include: {
+          category: { include: { parentCategory: true } },
+          createdByUser: { select: { name: true, email: true } },
+          space: { select: { name: true, slug: true } },
+        },
+        orderBy: [{ createdAt: "desc" }],
+        skip,
+        take: perPage,
+      }),
+      db.expense.count({ where }),
+      db.expense.aggregate({ where, _sum: { workspaceAmountMinor: true } }),
+    ]);
+
+    const totalAmount = aggregates._sum.workspaceAmountMinor ?? 0;
+
+    return {
+      items: expenses.map((expense) => ({
+        ...expense,
+        spaceName: expense.space.name,
+        spaceSlug: expense.space.slug,
+        categoryPath: expense.category
+          ? (expense.category.parentCategory ? `${expense.category.parentCategory.name} / ${expense.category.name}` : expense.category.name)
+          : "Uncategorized",
+        createdByLabel: expense.createdByUser.name || expense.createdByUser.email,
+      })),
+      total,
+      totalAmount,
+      page,
+      perPage,
+      totalPages: Math.ceil(total / perPage),
+    };
+  },
+
+  async getById(spaceId: string, expenseId: string) {
     const expense = await db.expense.findUnique({
       where: { id: expenseId },
       include: {
@@ -82,7 +159,7 @@ export const expenseService = {
       },
     });
 
-    if (!expense || expense.workspaceId !== workspaceId) return null;
+    if (!expense || expense.spaceId !== spaceId) return null;
 
     return {
       ...expense,
@@ -95,7 +172,7 @@ export const expenseService = {
     };
   },
 
-  async update(workspaceId: string, expenseId: string, input: {
+  async update(spaceId: string, expenseId: string, input: {
     title?: string;
     categoryId?: string | null;
     amount?: number;
@@ -106,10 +183,10 @@ export const expenseService = {
     notes?: string | null;
   }) {
     const existing = await db.expense.findUnique({ where: { id: expenseId } });
-    if (!existing || existing.workspaceId !== workspaceId) throw new Error("Expense not found.");
+    if (!existing || existing.spaceId !== spaceId) throw new Error("Expense not found.");
 
-    const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: spaceId }, select: { baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
     const data: Record<string, unknown> = {};
 
@@ -119,8 +196,8 @@ export const expenseService = {
     if (input.status !== undefined) data.status = input.status;
     if (input.categoryId !== undefined) {
       if (input.categoryId) {
-        const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-        if (!category || (category.workspaceId !== null && category.workspaceId !== workspaceId)) throw new Error("Category does not belong to this workspace.");
+        const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, spaceId: true, isArchived: true } });
+        if (!category || (category.spaceId !== null && category.spaceId !== spaceId)) throw new Error("Category does not belong to this space.");
         if (category.isArchived) throw new Error("Archived categories cannot be used.");
       }
       data.categoryId = input.categoryId || null;
@@ -136,14 +213,14 @@ export const expenseService = {
 
       const snapshot = await fxService.getExchangeRateSnapshot({
         fromCurrencyCode: currencyCode,
-        toCurrencyCode: workspace.baseCurrencyCode,
+        toCurrencyCode: space.baseCurrencyCode,
         expenseDate,
       });
 
       data.originalAmountMinor = toMinorUnits(amount);
       data.originalCurrencyCode = currencyCode;
       data.workspaceAmountMinor = toMinorUnits(amount * snapshot.rate);
-      data.workspaceCurrencyCode = workspace.baseCurrencyCode;
+      data.workspaceCurrencyCode = space.baseCurrencyCode;
       data.exchangeRate = snapshot.rate.toFixed(8);
       data.exchangeRateDate = snapshot.rateDate;
     }
@@ -152,8 +229,9 @@ export const expenseService = {
   },
 
   async create(input: {
-    workspaceId: string;
+    spaceId: string;
     createdByUserId: string;
+    paidByUserId?: string;
     title: string;
     categoryId?: string | null;
     amount: number;
@@ -162,32 +240,34 @@ export const expenseService = {
     status: (typeof ExpenseStatus)[keyof typeof ExpenseStatus];
     description?: string | null;
     notes?: string | null;
+    splits?: Array<{ userId: string; shareAmountMinor: number }>;
   }) {
-    const workspace = await db.workspace.findUnique({ where: { id: input.workspaceId }, select: { id: true, baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: input.spaceId }, select: { id: true, baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
     if (input.categoryId) {
-      const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-      if (!category || (category.workspaceId !== null && category.workspaceId !== input.workspaceId)) throw new Error("Category does not belong to this workspace.");
+      const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, spaceId: true, isArchived: true } });
+      if (!category || (category.spaceId !== null && category.spaceId !== input.spaceId)) throw new Error("Category does not belong to this space.");
       if (category.isArchived) throw new Error("Archived categories cannot be used for new expenses.");
     }
 
     const snapshot = await fxService.getExchangeRateSnapshot({
       fromCurrencyCode: input.currencyCode,
-      toCurrencyCode: workspace.baseCurrencyCode,
+      toCurrencyCode: space.baseCurrencyCode,
       expenseDate: input.expenseDate,
     });
 
-    return expenseService.createRecord({
-      workspaceId: input.workspaceId,
+    const expense = await expenseService.createRecord({
+      spaceId: input.spaceId,
       categoryId: input.categoryId ?? null,
       createdByUserId: input.createdByUserId,
+      paidByUserId: input.paidByUserId ?? input.createdByUserId,
       title: input.title.trim(),
       description: input.description?.trim() || null,
       originalAmountMinor: toMinorUnits(input.amount),
       originalCurrencyCode: input.currencyCode,
       workspaceAmountMinor: toMinorUnits(input.amount * snapshot.rate),
-      workspaceCurrencyCode: workspace.baseCurrencyCode,
+      workspaceCurrencyCode: space.baseCurrencyCode,
       exchangeRate: snapshot.rate,
       exchangeRateDate: snapshot.rateDate,
       expenseDate: input.expenseDate,
@@ -195,12 +275,25 @@ export const expenseService = {
       status: input.status,
       notes: input.notes?.trim() || null,
     });
+
+    if (input.splits && input.splits.length > 0) {
+      await db.expenseSplit.createMany({
+        data: input.splits.map(s => ({
+          expenseId: expense.id,
+          userId: s.userId,
+          shareAmountMinor: s.shareAmountMinor,
+        })),
+      });
+    }
+
+    return expense;
   },
 
   async createRecord(input: {
-    workspaceId: string;
+    spaceId: string;
     categoryId?: string | null;
     createdByUserId: string;
+    paidByUserId?: string;
     title: string;
     description?: string | null;
     originalAmountMinor: number;
@@ -218,9 +311,10 @@ export const expenseService = {
   }) {
     return db.expense.create({
       data: {
-        workspaceId: input.workspaceId,
+        spaceId: input.spaceId,
         categoryId: input.categoryId || null,
         createdByUserId: input.createdByUserId,
+        paidByUserId: input.paidByUserId ?? input.createdByUserId,
         title: input.title,
         description: input.description ?? null,
         originalAmountMinor: input.originalAmountMinor,
@@ -237,5 +331,52 @@ export const expenseService = {
         debtAccountId: input.debtAccountId ?? null,
       },
     });
+  },
+
+  async getSettlementBalances(spaceId: string) {
+    const expenses = await db.expense.findMany({
+      where: { spaceId, status: ExpenseStatus.posted, splits: { some: {} } },
+      select: {
+        id: true,
+        paidByUserId: true,
+        workspaceAmountMinor: true,
+        splits: { select: { userId: true, shareAmountMinor: true } },
+      },
+    });
+
+    // Compute net balances: positive = others owe them, negative = they owe others
+    const balanceMap = new Map<string, number>();
+
+    for (const expense of expenses) {
+      if (!expense.paidByUserId) continue;
+
+      const payerId = expense.paidByUserId;
+      balanceMap.set(payerId, (balanceMap.get(payerId) ?? 0) + expense.workspaceAmountMinor);
+
+      for (const split of expense.splits) {
+        balanceMap.set(split.userId, (balanceMap.get(split.userId) ?? 0) - split.shareAmountMinor);
+      }
+    }
+
+    const userIds = [...balanceMap.keys()];
+    const users = await db.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, name: true, email: true },
+    });
+    const userMap = new Map(users.map(u => [u.id, u.name || u.email]));
+
+    const space = await db.space.findUnique({
+      where: { id: spaceId },
+      select: { baseCurrencyCode: true },
+    });
+
+    return {
+      balances: userIds.map(id => ({
+        userId: id,
+        userName: userMap.get(id) ?? "Unknown",
+        netMinor: balanceMap.get(id) ?? 0,
+      })),
+      currencyCode: space?.baseCurrencyCode ?? "USD",
+    };
   },
 };

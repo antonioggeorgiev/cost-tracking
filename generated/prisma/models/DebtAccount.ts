@@ -60,7 +60,7 @@ export type DebtAccountSumAggregateOutputType = {
 
 export type DebtAccountMinAggregateOutputType = {
   id: string | null
-  workspaceId: string | null
+  spaceId: string | null
   kind: $Enums.DebtAccountKind | null
   direction: $Enums.DebtDirection | null
   name: string | null
@@ -92,7 +92,7 @@ export type DebtAccountMinAggregateOutputType = {
 
 export type DebtAccountMaxAggregateOutputType = {
   id: string | null
-  workspaceId: string | null
+  spaceId: string | null
   kind: $Enums.DebtAccountKind | null
   direction: $Enums.DebtDirection | null
   name: string | null
@@ -124,7 +124,7 @@ export type DebtAccountMaxAggregateOutputType = {
 
 export type DebtAccountCountAggregateOutputType = {
   id: number
-  workspaceId: number
+  spaceId: number
   kind: number
   direction: number
   name: number
@@ -191,7 +191,7 @@ export type DebtAccountSumAggregateInputType = {
 
 export type DebtAccountMinAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   kind?: true
   direction?: true
   name?: true
@@ -223,7 +223,7 @@ export type DebtAccountMinAggregateInputType = {
 
 export type DebtAccountMaxAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   kind?: true
   direction?: true
   name?: true
@@ -255,7 +255,7 @@ export type DebtAccountMaxAggregateInputType = {
 
 export type DebtAccountCountAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   kind?: true
   direction?: true
   name?: true
@@ -375,7 +375,7 @@ export type DebtAccountGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type DebtAccountGroupByOutputType = {
   id: string
-  workspaceId: string
+  spaceId: string
   kind: $Enums.DebtAccountKind
   direction: $Enums.DebtDirection
   name: string
@@ -431,7 +431,7 @@ export type DebtAccountWhereInput = {
   OR?: Prisma.DebtAccountWhereInput[]
   NOT?: Prisma.DebtAccountWhereInput | Prisma.DebtAccountWhereInput[]
   id?: Prisma.StringFilter<"DebtAccount"> | string
-  workspaceId?: Prisma.StringFilter<"DebtAccount"> | string
+  spaceId?: Prisma.StringFilter<"DebtAccount"> | string
   kind?: Prisma.EnumDebtAccountKindFilter<"DebtAccount"> | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFilter<"DebtAccount"> | $Enums.DebtDirection
   name?: Prisma.StringFilter<"DebtAccount"> | string
@@ -460,14 +460,14 @@ export type DebtAccountWhereInput = {
   notes?: Prisma.StringNullableFilter<"DebtAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
-  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceScalarRelationFilter, Prisma.SpaceWhereInput>
   expenses?: Prisma.ExpenseListRelationFilter
   payments?: Prisma.DebtPaymentListRelationFilter
 }
 
 export type DebtAccountOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -496,7 +496,7 @@ export type DebtAccountOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  workspace?: Prisma.WorkspaceOrderByWithRelationInput
+  space?: Prisma.SpaceOrderByWithRelationInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   payments?: Prisma.DebtPaymentOrderByRelationAggregateInput
 }
@@ -506,7 +506,7 @@ export type DebtAccountWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.DebtAccountWhereInput | Prisma.DebtAccountWhereInput[]
   OR?: Prisma.DebtAccountWhereInput[]
   NOT?: Prisma.DebtAccountWhereInput | Prisma.DebtAccountWhereInput[]
-  workspaceId?: Prisma.StringFilter<"DebtAccount"> | string
+  spaceId?: Prisma.StringFilter<"DebtAccount"> | string
   kind?: Prisma.EnumDebtAccountKindFilter<"DebtAccount"> | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFilter<"DebtAccount"> | $Enums.DebtDirection
   name?: Prisma.StringFilter<"DebtAccount"> | string
@@ -535,14 +535,14 @@ export type DebtAccountWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"DebtAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
-  workspace?: Prisma.XOR<Prisma.WorkspaceScalarRelationFilter, Prisma.WorkspaceWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceScalarRelationFilter, Prisma.SpaceWhereInput>
   expenses?: Prisma.ExpenseListRelationFilter
   payments?: Prisma.DebtPaymentListRelationFilter
 }, "id">
 
 export type DebtAccountOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -583,7 +583,7 @@ export type DebtAccountScalarWhereWithAggregatesInput = {
   OR?: Prisma.DebtAccountScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DebtAccountScalarWhereWithAggregatesInput | Prisma.DebtAccountScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DebtAccount"> | string
-  workspaceId?: Prisma.StringWithAggregatesFilter<"DebtAccount"> | string
+  spaceId?: Prisma.StringWithAggregatesFilter<"DebtAccount"> | string
   kind?: Prisma.EnumDebtAccountKindWithAggregatesFilter<"DebtAccount"> | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionWithAggregatesFilter<"DebtAccount"> | $Enums.DebtDirection
   name?: Prisma.StringWithAggregatesFilter<"DebtAccount"> | string
@@ -644,14 +644,14 @@ export type DebtAccountCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutDebtAccountsInput
+  space: Prisma.SpaceCreateNestedOneWithoutDebtAccountsInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutDebtAccountInput
   payments?: Prisma.DebtPaymentCreateNestedManyWithoutDebtAccountInput
 }
 
 export type DebtAccountUncheckedCreateInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
   name: string
@@ -714,14 +714,14 @@ export type DebtAccountUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutDebtAccountsNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutDebtAccountsNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutDebtAccountNestedInput
   payments?: Prisma.DebtPaymentUpdateManyWithoutDebtAccountNestedInput
 }
 
 export type DebtAccountUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -756,7 +756,7 @@ export type DebtAccountUncheckedUpdateInput = {
 
 export type DebtAccountCreateManyInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
   name: string
@@ -821,7 +821,7 @@ export type DebtAccountUpdateManyMutationInput = {
 
 export type DebtAccountUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -862,7 +862,7 @@ export type IntNullableListFilter<$PrismaModel = never> = {
 
 export type DebtAccountCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -911,7 +911,7 @@ export type DebtAccountAvgOrderByAggregateInput = {
 
 export type DebtAccountMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -943,7 +943,7 @@ export type DebtAccountMaxOrderByAggregateInput = {
 
 export type DebtAccountMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -1068,45 +1068,45 @@ export type DebtAccountUpdateOneWithoutExpensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DebtAccountUpdateToOneWithWhereWithoutExpensesInput, Prisma.DebtAccountUpdateWithoutExpensesInput>, Prisma.DebtAccountUncheckedUpdateWithoutExpensesInput>
 }
 
-export type DebtAccountCreateNestedManyWithoutWorkspaceInput = {
-  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput> | Prisma.DebtAccountCreateWithoutWorkspaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput | Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput[]
-  createMany?: Prisma.DebtAccountCreateManyWorkspaceInputEnvelope
+export type DebtAccountCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutSpaceInput, Prisma.DebtAccountUncheckedCreateWithoutSpaceInput> | Prisma.DebtAccountCreateWithoutSpaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutSpaceInput | Prisma.DebtAccountCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.DebtAccountCreateManySpaceInputEnvelope
   connect?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
 }
 
-export type DebtAccountUncheckedCreateNestedManyWithoutWorkspaceInput = {
-  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput> | Prisma.DebtAccountCreateWithoutWorkspaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput | Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput[]
-  createMany?: Prisma.DebtAccountCreateManyWorkspaceInputEnvelope
+export type DebtAccountUncheckedCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutSpaceInput, Prisma.DebtAccountUncheckedCreateWithoutSpaceInput> | Prisma.DebtAccountCreateWithoutSpaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutSpaceInput | Prisma.DebtAccountCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.DebtAccountCreateManySpaceInputEnvelope
   connect?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
 }
 
-export type DebtAccountUpdateManyWithoutWorkspaceNestedInput = {
-  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput> | Prisma.DebtAccountCreateWithoutWorkspaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput | Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput[]
-  upsert?: Prisma.DebtAccountUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.DebtAccountUpsertWithWhereUniqueWithoutWorkspaceInput[]
-  createMany?: Prisma.DebtAccountCreateManyWorkspaceInputEnvelope
+export type DebtAccountUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutSpaceInput, Prisma.DebtAccountUncheckedCreateWithoutSpaceInput> | Prisma.DebtAccountCreateWithoutSpaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutSpaceInput | Prisma.DebtAccountCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.DebtAccountUpsertWithWhereUniqueWithoutSpaceInput | Prisma.DebtAccountUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.DebtAccountCreateManySpaceInputEnvelope
   set?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
   disconnect?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
   delete?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
   connect?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
-  update?: Prisma.DebtAccountUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.DebtAccountUpdateWithWhereUniqueWithoutWorkspaceInput[]
-  updateMany?: Prisma.DebtAccountUpdateManyWithWhereWithoutWorkspaceInput | Prisma.DebtAccountUpdateManyWithWhereWithoutWorkspaceInput[]
+  update?: Prisma.DebtAccountUpdateWithWhereUniqueWithoutSpaceInput | Prisma.DebtAccountUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.DebtAccountUpdateManyWithWhereWithoutSpaceInput | Prisma.DebtAccountUpdateManyWithWhereWithoutSpaceInput[]
   deleteMany?: Prisma.DebtAccountScalarWhereInput | Prisma.DebtAccountScalarWhereInput[]
 }
 
-export type DebtAccountUncheckedUpdateManyWithoutWorkspaceNestedInput = {
-  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput> | Prisma.DebtAccountCreateWithoutWorkspaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput | Prisma.DebtAccountCreateOrConnectWithoutWorkspaceInput[]
-  upsert?: Prisma.DebtAccountUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.DebtAccountUpsertWithWhereUniqueWithoutWorkspaceInput[]
-  createMany?: Prisma.DebtAccountCreateManyWorkspaceInputEnvelope
+export type DebtAccountUncheckedUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.DebtAccountCreateWithoutSpaceInput, Prisma.DebtAccountUncheckedCreateWithoutSpaceInput> | Prisma.DebtAccountCreateWithoutSpaceInput[] | Prisma.DebtAccountUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.DebtAccountCreateOrConnectWithoutSpaceInput | Prisma.DebtAccountCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.DebtAccountUpsertWithWhereUniqueWithoutSpaceInput | Prisma.DebtAccountUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.DebtAccountCreateManySpaceInputEnvelope
   set?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
   disconnect?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
   delete?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
   connect?: Prisma.DebtAccountWhereUniqueInput | Prisma.DebtAccountWhereUniqueInput[]
-  update?: Prisma.DebtAccountUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.DebtAccountUpdateWithWhereUniqueWithoutWorkspaceInput[]
-  updateMany?: Prisma.DebtAccountUpdateManyWithWhereWithoutWorkspaceInput | Prisma.DebtAccountUpdateManyWithWhereWithoutWorkspaceInput[]
+  update?: Prisma.DebtAccountUpdateWithWhereUniqueWithoutSpaceInput | Prisma.DebtAccountUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.DebtAccountUpdateManyWithWhereWithoutSpaceInput | Prisma.DebtAccountUpdateManyWithWhereWithoutSpaceInput[]
   deleteMany?: Prisma.DebtAccountScalarWhereInput | Prisma.DebtAccountScalarWhereInput[]
 }
 
@@ -1140,13 +1140,13 @@ export type DebtAccountCreateWithoutPaymentsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutDebtAccountsInput
+  space: Prisma.SpaceCreateNestedOneWithoutDebtAccountsInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutDebtAccountInput
 }
 
 export type DebtAccountUncheckedCreateWithoutPaymentsInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
   name: string
@@ -1224,13 +1224,13 @@ export type DebtAccountUpdateWithoutPaymentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutDebtAccountsNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutDebtAccountsNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutDebtAccountNestedInput
 }
 
 export type DebtAccountUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1292,13 +1292,13 @@ export type DebtAccountCreateWithoutExpensesInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace: Prisma.WorkspaceCreateNestedOneWithoutDebtAccountsInput
+  space: Prisma.SpaceCreateNestedOneWithoutDebtAccountsInput
   payments?: Prisma.DebtPaymentCreateNestedManyWithoutDebtAccountInput
 }
 
 export type DebtAccountUncheckedCreateWithoutExpensesInput = {
   id?: string
-  workspaceId: string
+  spaceId: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
   name: string
@@ -1376,13 +1376,13 @@ export type DebtAccountUpdateWithoutExpensesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutDebtAccountsNestedInput
+  space?: Prisma.SpaceUpdateOneRequiredWithoutDebtAccountsNestedInput
   payments?: Prisma.DebtPaymentUpdateManyWithoutDebtAccountNestedInput
 }
 
 export type DebtAccountUncheckedUpdateWithoutExpensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1414,7 +1414,7 @@ export type DebtAccountUncheckedUpdateWithoutExpensesInput = {
   payments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutDebtAccountNestedInput
 }
 
-export type DebtAccountCreateWithoutWorkspaceInput = {
+export type DebtAccountCreateWithoutSpaceInput = {
   id?: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
@@ -1448,7 +1448,7 @@ export type DebtAccountCreateWithoutWorkspaceInput = {
   payments?: Prisma.DebtPaymentCreateNestedManyWithoutDebtAccountInput
 }
 
-export type DebtAccountUncheckedCreateWithoutWorkspaceInput = {
+export type DebtAccountUncheckedCreateWithoutSpaceInput = {
   id?: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
@@ -1482,30 +1482,30 @@ export type DebtAccountUncheckedCreateWithoutWorkspaceInput = {
   payments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutDebtAccountInput
 }
 
-export type DebtAccountCreateOrConnectWithoutWorkspaceInput = {
+export type DebtAccountCreateOrConnectWithoutSpaceInput = {
   where: Prisma.DebtAccountWhereUniqueInput
-  create: Prisma.XOR<Prisma.DebtAccountCreateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.DebtAccountCreateWithoutSpaceInput, Prisma.DebtAccountUncheckedCreateWithoutSpaceInput>
 }
 
-export type DebtAccountCreateManyWorkspaceInputEnvelope = {
-  data: Prisma.DebtAccountCreateManyWorkspaceInput | Prisma.DebtAccountCreateManyWorkspaceInput[]
+export type DebtAccountCreateManySpaceInputEnvelope = {
+  data: Prisma.DebtAccountCreateManySpaceInput | Prisma.DebtAccountCreateManySpaceInput[]
   skipDuplicates?: boolean
 }
 
-export type DebtAccountUpsertWithWhereUniqueWithoutWorkspaceInput = {
+export type DebtAccountUpsertWithWhereUniqueWithoutSpaceInput = {
   where: Prisma.DebtAccountWhereUniqueInput
-  update: Prisma.XOR<Prisma.DebtAccountUpdateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedUpdateWithoutWorkspaceInput>
-  create: Prisma.XOR<Prisma.DebtAccountCreateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedCreateWithoutWorkspaceInput>
+  update: Prisma.XOR<Prisma.DebtAccountUpdateWithoutSpaceInput, Prisma.DebtAccountUncheckedUpdateWithoutSpaceInput>
+  create: Prisma.XOR<Prisma.DebtAccountCreateWithoutSpaceInput, Prisma.DebtAccountUncheckedCreateWithoutSpaceInput>
 }
 
-export type DebtAccountUpdateWithWhereUniqueWithoutWorkspaceInput = {
+export type DebtAccountUpdateWithWhereUniqueWithoutSpaceInput = {
   where: Prisma.DebtAccountWhereUniqueInput
-  data: Prisma.XOR<Prisma.DebtAccountUpdateWithoutWorkspaceInput, Prisma.DebtAccountUncheckedUpdateWithoutWorkspaceInput>
+  data: Prisma.XOR<Prisma.DebtAccountUpdateWithoutSpaceInput, Prisma.DebtAccountUncheckedUpdateWithoutSpaceInput>
 }
 
-export type DebtAccountUpdateManyWithWhereWithoutWorkspaceInput = {
+export type DebtAccountUpdateManyWithWhereWithoutSpaceInput = {
   where: Prisma.DebtAccountScalarWhereInput
-  data: Prisma.XOR<Prisma.DebtAccountUpdateManyMutationInput, Prisma.DebtAccountUncheckedUpdateManyWithoutWorkspaceInput>
+  data: Prisma.XOR<Prisma.DebtAccountUpdateManyMutationInput, Prisma.DebtAccountUncheckedUpdateManyWithoutSpaceInput>
 }
 
 export type DebtAccountScalarWhereInput = {
@@ -1513,7 +1513,7 @@ export type DebtAccountScalarWhereInput = {
   OR?: Prisma.DebtAccountScalarWhereInput[]
   NOT?: Prisma.DebtAccountScalarWhereInput | Prisma.DebtAccountScalarWhereInput[]
   id?: Prisma.StringFilter<"DebtAccount"> | string
-  workspaceId?: Prisma.StringFilter<"DebtAccount"> | string
+  spaceId?: Prisma.StringFilter<"DebtAccount"> | string
   kind?: Prisma.EnumDebtAccountKindFilter<"DebtAccount"> | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFilter<"DebtAccount"> | $Enums.DebtDirection
   name?: Prisma.StringFilter<"DebtAccount"> | string
@@ -1544,7 +1544,7 @@ export type DebtAccountScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DebtAccount"> | Date | string
 }
 
-export type DebtAccountCreateManyWorkspaceInput = {
+export type DebtAccountCreateManySpaceInput = {
   id?: string
   kind?: $Enums.DebtAccountKind
   direction?: $Enums.DebtDirection
@@ -1576,7 +1576,7 @@ export type DebtAccountCreateManyWorkspaceInput = {
   updatedAt?: Date | string
 }
 
-export type DebtAccountUpdateWithoutWorkspaceInput = {
+export type DebtAccountUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
@@ -1610,7 +1610,7 @@ export type DebtAccountUpdateWithoutWorkspaceInput = {
   payments?: Prisma.DebtPaymentUpdateManyWithoutDebtAccountNestedInput
 }
 
-export type DebtAccountUncheckedUpdateWithoutWorkspaceInput = {
+export type DebtAccountUncheckedUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
@@ -1644,7 +1644,7 @@ export type DebtAccountUncheckedUpdateWithoutWorkspaceInput = {
   payments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutDebtAccountNestedInput
 }
 
-export type DebtAccountUncheckedUpdateManyWithoutWorkspaceInput = {
+export type DebtAccountUncheckedUpdateManyWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumDebtAccountKindFieldUpdateOperationsInput | $Enums.DebtAccountKind
   direction?: Prisma.EnumDebtDirectionFieldUpdateOperationsInput | $Enums.DebtDirection
@@ -1718,7 +1718,7 @@ export type DebtAccountCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.
 
 export type DebtAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   kind?: boolean
   direction?: boolean
   name?: boolean
@@ -1747,7 +1747,7 @@ export type DebtAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   expenses?: boolean | Prisma.DebtAccount$expensesArgs<ExtArgs>
   payments?: boolean | Prisma.DebtAccount$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.DebtAccountCountOutputTypeDefaultArgs<ExtArgs>
@@ -1755,7 +1755,7 @@ export type DebtAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type DebtAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   kind?: boolean
   direction?: boolean
   name?: boolean
@@ -1784,12 +1784,12 @@ export type DebtAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["debtAccount"]>
 
 export type DebtAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   kind?: boolean
   direction?: boolean
   name?: boolean
@@ -1818,12 +1818,12 @@ export type DebtAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["debtAccount"]>
 
 export type DebtAccountSelectScalar = {
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   kind?: boolean
   direction?: boolean
   name?: boolean
@@ -1854,30 +1854,30 @@ export type DebtAccountSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DebtAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "kind" | "direction" | "name" | "provider" | "counterparty" | "originalAmountMinor" | "currencyCode" | "currentBalanceMinor" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "workspaceBalanceMinor" | "exchangeRate" | "exchangeRateDate" | "interestRateBps" | "termMonths" | "monthlyAmountMinor" | "residualValueMinor" | "workspaceMonthlyAmountMinor" | "workspaceResidualValueMinor" | "frequency" | "interval" | "anchorDays" | "nextPaymentDate" | "openedAt" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["debtAccount"]>
+export type DebtAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "spaceId" | "kind" | "direction" | "name" | "provider" | "counterparty" | "originalAmountMinor" | "currencyCode" | "currentBalanceMinor" | "workspaceAmountMinor" | "workspaceCurrencyCode" | "workspaceBalanceMinor" | "exchangeRate" | "exchangeRateDate" | "interestRateBps" | "termMonths" | "monthlyAmountMinor" | "residualValueMinor" | "workspaceMonthlyAmountMinor" | "workspaceResidualValueMinor" | "frequency" | "interval" | "anchorDays" | "nextPaymentDate" | "openedAt" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["debtAccount"]>
 export type DebtAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
   expenses?: boolean | Prisma.DebtAccount$expensesArgs<ExtArgs>
   payments?: boolean | Prisma.DebtAccount$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.DebtAccountCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DebtAccountIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
 }
 export type DebtAccountIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.SpaceDefaultArgs<ExtArgs>
 }
 
 export type $DebtAccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DebtAccount"
   objects: {
-    workspace: Prisma.$WorkspacePayload<ExtArgs>
+    space: Prisma.$SpacePayload<ExtArgs>
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     payments: Prisma.$DebtPaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    workspaceId: string
+    spaceId: string
     kind: $Enums.DebtAccountKind
     direction: $Enums.DebtDirection
     name: string
@@ -2300,7 +2300,7 @@ readonly fields: DebtAccountFieldRefs;
  */
 export interface Prisma__DebtAccountClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  workspace<T extends Prisma.WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkspaceDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  space<T extends Prisma.SpaceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SpaceDefaultArgs<ExtArgs>>): Prisma.Prisma__SpaceClient<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   expenses<T extends Prisma.DebtAccount$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DebtAccount$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.DebtAccount$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DebtAccount$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DebtPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2333,7 +2333,7 @@ export interface Prisma__DebtAccountClient<T, Null = never, ExtArgs extends runt
  */
 export interface DebtAccountFieldRefs {
   readonly id: Prisma.FieldRef<"DebtAccount", 'String'>
-  readonly workspaceId: Prisma.FieldRef<"DebtAccount", 'String'>
+  readonly spaceId: Prisma.FieldRef<"DebtAccount", 'String'>
   readonly kind: Prisma.FieldRef<"DebtAccount", 'DebtAccountKind'>
   readonly direction: Prisma.FieldRef<"DebtAccount", 'DebtDirection'>
   readonly name: Prisma.FieldRef<"DebtAccount", 'String'>

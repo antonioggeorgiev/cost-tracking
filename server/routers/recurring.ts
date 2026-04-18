@@ -2,21 +2,23 @@ import { z } from "zod";
 import { ExpenseStatus, RecurringFrequency, RecurringTemplateKind } from "@/generated/prisma/enums";
 import { supportedCurrencies } from "@/lib/currency";
 import { recurringService } from "@/server/services/recurring-service";
-import { createTRPCRouter, workspaceEditorProcedure, workspaceMemberProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedProcedure, spaceEditorProcedure, spaceMemberProcedure } from "@/server/trpc";
 
 export const recurringRouter = createTRPCRouter({
-  list: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
-    .query(({ ctx }) => recurringService.listTemplates(ctx.membership.workspaceId)),
+  listAllSpaces: protectedProcedure.query(({ ctx }) => recurringService.listAllUserTemplates(ctx.user.id)),
 
-  getById: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1), templateId: z.string().min(1) }))
-    .query(({ ctx, input }) => recurringService.getById(ctx.membership.workspaceId, input.templateId)),
+  list: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .query(({ ctx }) => recurringService.listTemplates(ctx.membership.spaceId)),
 
-  update: workspaceEditorProcedure
+  getById: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1), templateId: z.string().min(1) }))
+    .query(({ ctx, input }) => recurringService.getById(ctx.membership.spaceId, input.templateId)),
+
+  update: spaceEditorProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         templateId: z.string().min(1),
         title: z.string().trim().min(2).max(120).optional(),
         categoryId: z.string().cuid().optional(),
@@ -35,22 +37,22 @@ export const recurringRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      const { workspaceSlug: _, templateId, ...rest } = input;
-      return recurringService.updateTemplate(ctx.membership.workspaceId, templateId, rest);
+      const { spaceSlug: _, templateId, ...rest } = input;
+      return recurringService.updateTemplate(ctx.membership.spaceId, templateId, rest);
     }),
 
-  generateDue: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
-    .mutation(({ ctx }) => recurringService.generateDueExpenses(ctx.membership.workspaceId)),
+  generateDue: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .mutation(({ ctx }) => recurringService.generateDueExpenses(ctx.membership.spaceId)),
 
-  dueVariable: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
-    .query(({ ctx }) => recurringService.listDueVariableTemplates(ctx.membership.workspaceId)),
+  dueVariable: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .query(({ ctx }) => recurringService.listDueVariableTemplates(ctx.membership.spaceId)),
 
-  create: workspaceEditorProcedure
+  create: spaceEditorProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         kind: z.nativeEnum(RecurringTemplateKind),
         title: z.string().trim().min(2).max(120),
         categoryId: z.string().cuid(),
@@ -69,7 +71,7 @@ export const recurringRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => {
       return recurringService.createTemplate({
-        workspaceId: ctx.membership.workspaceId,
+        spaceId: ctx.membership.spaceId,
         createdByUserId: ctx.user.id,
         kind: input.kind,
         title: input.title,
@@ -88,20 +90,20 @@ export const recurringRouter = createTRPCRouter({
       });
     }),
 
-  markFixedAsPaid: workspaceEditorProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1), templateId: z.string().cuid() }))
+  markFixedAsPaid: spaceEditorProcedure
+    .input(z.object({ spaceSlug: z.string().min(1), templateId: z.string().cuid() }))
     .mutation(({ ctx, input }) => {
       return recurringService.markFixedAsPaid({
-        workspaceId: ctx.membership.workspaceId,
+        spaceId: ctx.membership.spaceId,
         createdByUserId: ctx.user.id,
         templateId: input.templateId,
       });
     }),
 
-  recordVariableExpense: workspaceEditorProcedure
+  recordVariableExpense: spaceEditorProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         templateId: z.string().cuid(),
         amount: z.coerce.number().positive(),
         notes: z.string().max(1000).optional().nullable(),
@@ -109,7 +111,7 @@ export const recurringRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => {
       return recurringService.recordVariableExpense({
-        workspaceId: ctx.membership.workspaceId,
+        spaceId: ctx.membership.spaceId,
         createdByUserId: ctx.user.id,
         templateId: input.templateId,
         amount: input.amount,

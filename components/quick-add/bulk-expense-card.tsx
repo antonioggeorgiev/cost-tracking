@@ -45,7 +45,7 @@ type BulkExpenseCardProps = {
   baseCurrencyCode: string;
   categories: Category[];
   currencies: readonly string[];
-  workspaceSlug: string;
+  spaceSlug: string;
   createCategory?: (formData: FormData) => Promise<{ id: string }>;
   onRemove: () => void;
   formRef?: (handle: BulkCardHandle) => void;
@@ -69,7 +69,7 @@ export function BulkExpenseCard({
   baseCurrencyCode,
   categories,
   currencies,
-  workspaceSlug,
+  spaceSlug,
   createCategory,
   onRemove,
   formRef,
@@ -199,7 +199,7 @@ export function BulkExpenseCard({
                   onParentChange={parentField.handleChange}
                   categoryId={categoryField.state.value}
                   onCategoryChange={categoryField.handleChange}
-                  workspaceSlug={workspaceSlug}
+                  spaceSlug={spaceSlug}
                   createCategory={createCategory}
                   parentError={parentField.state.meta.errors.length > 0 ? parentField.state.meta.errors[0]?.message : undefined}
                   categoryError={categoryField.state.meta.errors.length > 0 ? categoryField.state.meta.errors[0]?.message : undefined}

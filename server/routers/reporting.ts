@@ -1,29 +1,33 @@
 import { z } from "zod";
 import { reportingService } from "@/server/services/reporting-service";
-import { createTRPCRouter, workspaceMemberProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedProcedure, spaceMemberProcedure } from "@/server/trpc";
 
 export const reportingRouter = createTRPCRouter({
-  dashboard: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
+  allSpacesOverview: protectedProcedure.query(({ ctx }) => {
+    return reportingService.getAllSpacesOverview(ctx.user.id);
+  }),
+
+  dashboard: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
     .query(({ ctx }) => {
-      return reportingService.getWorkspaceDashboard({
-        workspaceId: ctx.membership.workspaceId,
-        baseCurrencyCode: ctx.membership.workspace.baseCurrencyCode,
+      return reportingService.getSpaceDashboard({
+        spaceId: ctx.membership.spaceId,
+        baseCurrencyCode: ctx.membership.space.baseCurrencyCode,
       });
     }),
 
-  overview: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
+  overview: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
     .query(({ ctx }) => {
-      return reportingService.getWorkspaceOverview({
-        workspaceId: ctx.membership.workspaceId,
-        baseCurrencyCode: ctx.membership.workspace.baseCurrencyCode,
+      return reportingService.getSpaceOverview({
+        spaceId: ctx.membership.spaceId,
+        baseCurrencyCode: ctx.membership.space.baseCurrencyCode,
       });
     }),
 
-  expenseMonthSummary: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
+  expenseMonthSummary: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
     .query(({ ctx }) => {
-      return reportingService.getExpenseMonthSummary(ctx.membership.workspaceId);
+      return reportingService.getExpenseMonthSummary(ctx.membership.spaceId);
     }),
 });

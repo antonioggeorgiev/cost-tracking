@@ -1,8 +1,9 @@
 model Expense {
   id                    String                    @id @default(cuid())
-  workspaceId           String
+  spaceId               String                    @map("workspaceId")
   categoryId            String?
   createdByUserId       String
+  paidByUserId          String?
   title                 String
   description           String?
   originalAmountMinor   Int
@@ -19,23 +20,42 @@ model Expense {
   notes                 String?
   createdAt             DateTime                  @default(now())
   updatedAt             DateTime                  @updatedAt
-  workspace             Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  space                 Space                     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   category              Category?                 @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   createdByUser         User                      @relation("ExpenseCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  paidByUser            User?                     @relation("ExpensePaidBy", fields: [paidByUserId], references: [id], onDelete: Restrict)
   recurringTemplate     RecurringExpenseTemplate? @relation(fields: [recurringTemplateId], references: [id], onDelete: SetNull)
   debtAccount           DebtAccount?              @relation(fields: [debtAccountId], references: [id], onDelete: SetNull)
   debtPayment           DebtPayment?
   attachments           ExpenseAttachment[]
+  splits                ExpenseSplit[]
 
-  @@index([workspaceId, expenseDate])
-  @@index([workspaceId, status, expenseDate])
-  @@index([workspaceId, categoryId, expenseDate])
+  @@index([spaceId, expenseDate])
+  @@index([spaceId, status, expenseDate])
+  @@index([spaceId, categoryId, expenseDate])
   @@unique([recurringTemplateId, expenseDate])
+}
+
+model ExpenseSplit {
+  id               String    @id @default(cuid())
+  expenseId        String
+  userId           String
+  shareAmountMinor Int
+  settled          Boolean   @default(false)
+  settledAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation("ExpenseSplitUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, userId])
+  @@index([userId, settled])
+  @@index([expenseId])
 }
 
 model RecurringExpenseTemplate {
   id                    String               @id @default(cuid())
-  workspaceId           String
+  spaceId               String               @map("workspaceId")
   categoryId            String
   createdByUserId       String
   kind                  RecurringTemplateKind @default(fixed_amount)
@@ -60,10 +80,10 @@ model RecurringExpenseTemplate {
   notes                 String?
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
-  workspace             Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  space                 Space                @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   category              Category             @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   createdByUser         User                 @relation("RecurringTemplateCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
   expenses              Expense[]
 
-  @@index([workspaceId, nextOccurrenceDate, isActive])
+  @@index([spaceId, nextOccurrenceDate, isActive])
 }

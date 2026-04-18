@@ -26,7 +26,7 @@ type Expense = {
 
 type RecentExpensesTableProps = {
   expenses: Expense[];
-  workspaceSlug: string;
+  spaceSlug: string;
 };
 
 const columnHelper = createColumnHelper<Expense>();
@@ -83,7 +83,7 @@ const columns = [
   }),
 ];
 
-export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesTableProps) {
+export function RecentExpensesTable({ expenses, spaceSlug }: RecentExpensesTableProps) {
   const table = useReactTable({
     data: expenses,
     columns,
@@ -95,7 +95,7 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
       <div className="flex items-center justify-between px-6 py-4">
         <h2 className="font-heading text-base font-semibold text-heading">Recent Expenses</h2>
         <Link
-          href={routes.workspaceExpenses(workspaceSlug)}
+          href={routes.expenses}
           className="text-sm font-medium text-primary hover:underline"
         >
           View all
@@ -123,7 +123,7 @@ export function RecentExpensesTable({ expenses, workspaceSlug }: RecentExpensesT
           {table.getRowModel().rows.map((row) => (
             <Link
               key={row.id}
-              href={routes.workspaceExpense(workspaceSlug, row.original.id)}
+              href={routes.expense(row.original.id)}
               className="block px-6 py-3.5 transition hover:bg-surface-secondary sm:grid sm:grid-cols-[1fr_100px_100px_120px_80px] sm:items-center sm:gap-4"
             >
               {row.getVisibleCells().map((cell) => (

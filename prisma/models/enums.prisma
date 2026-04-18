@@ -1,7 +1,9 @@
-enum WorkspaceRole {
+enum SpaceRole {
   owner
   editor
   viewer
+
+  @@map("WorkspaceRole")
 }
 
 enum ExpenseStatus {

@@ -56,11 +56,12 @@ export const ModelName = {
   DebtAccount: 'DebtAccount',
   DebtPayment: 'DebtPayment',
   Expense: 'Expense',
+  ExpenseSplit: 'ExpenseSplit',
   RecurringExpenseTemplate: 'RecurringExpenseTemplate',
   User: 'User',
-  Workspace: 'Workspace',
-  WorkspaceMembership: 'WorkspaceMembership',
-  WorkspaceInvite: 'WorkspaceInvite'
+  Space: 'Space',
+  SpaceMembership: 'SpaceMembership',
+  SpaceInvite: 'SpaceInvite'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -97,7 +98,7 @@ export type ExpenseAttachmentScalarFieldEnum = (typeof ExpenseAttachmentScalarFi
 
 export const CategoryScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   name: 'name',
   slug: 'slug',
   parentCategoryId: 'parentCategoryId',
@@ -113,7 +114,7 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 
 export const DebtAccountScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   kind: 'kind',
   direction: 'direction',
   name: 'name',
@@ -149,7 +150,7 @@ export type DebtAccountScalarFieldEnum = (typeof DebtAccountScalarFieldEnum)[key
 
 export const DebtPaymentScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   debtAccountId: 'debtAccountId',
   expenseId: 'expenseId',
   paidByUserId: 'paidByUserId',
@@ -171,9 +172,10 @@ export type DebtPaymentScalarFieldEnum = (typeof DebtPaymentScalarFieldEnum)[key
 
 export const ExpenseScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   categoryId: 'categoryId',
   createdByUserId: 'createdByUserId',
+  paidByUserId: 'paidByUserId',
   title: 'title',
   description: 'description',
   originalAmountMinor: 'originalAmountMinor',
@@ -195,9 +197,22 @@ export const ExpenseScalarFieldEnum = {
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
 
 
+export const ExpenseSplitScalarFieldEnum = {
+  id: 'id',
+  expenseId: 'expenseId',
+  userId: 'userId',
+  shareAmountMinor: 'shareAmountMinor',
+  settled: 'settled',
+  settledAt: 'settledAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ExpenseSplitScalarFieldEnum = (typeof ExpenseSplitScalarFieldEnum)[keyof typeof ExpenseSplitScalarFieldEnum]
+
+
 export const RecurringExpenseTemplateScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   categoryId: 'categoryId',
   createdByUserId: 'createdByUserId',
   kind: 'kind',
@@ -241,7 +256,7 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const WorkspaceScalarFieldEnum = {
+export const SpaceScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
@@ -251,23 +266,23 @@ export const WorkspaceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
+export type SpaceScalarFieldEnum = (typeof SpaceScalarFieldEnum)[keyof typeof SpaceScalarFieldEnum]
 
 
-export const WorkspaceMembershipScalarFieldEnum = {
+export const SpaceMembershipScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   userId: 'userId',
   role: 'role',
   createdAt: 'createdAt'
 } as const
 
-export type WorkspaceMembershipScalarFieldEnum = (typeof WorkspaceMembershipScalarFieldEnum)[keyof typeof WorkspaceMembershipScalarFieldEnum]
+export type SpaceMembershipScalarFieldEnum = (typeof SpaceMembershipScalarFieldEnum)[keyof typeof SpaceMembershipScalarFieldEnum]
 
 
-export const WorkspaceInviteScalarFieldEnum = {
+export const SpaceInviteScalarFieldEnum = {
   id: 'id',
-  workspaceId: 'workspaceId',
+  spaceId: 'spaceId',
   email: 'email',
   role: 'role',
   token: 'token',
@@ -280,7 +295,7 @@ export const WorkspaceInviteScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type WorkspaceInviteScalarFieldEnum = (typeof WorkspaceInviteScalarFieldEnum)[keyof typeof WorkspaceInviteScalarFieldEnum]
+export type SpaceInviteScalarFieldEnum = (typeof SpaceInviteScalarFieldEnum)[keyof typeof SpaceInviteScalarFieldEnum]
 
 
 export const SortOrder = {

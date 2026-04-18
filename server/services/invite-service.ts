@@ -10,21 +10,21 @@ function normalizeEmail(email: string) {
 }
 
 export const inviteService = {
-  async createWorkspaceInvite(input: { workspaceId: string; invitedByUserId: string; email: string; role: "editor" | "viewer" }) {
+  async createSpaceInvite(input: { spaceId: string; invitedByUserId: string; email: string; role: "editor" | "viewer" }) {
     const email = normalizeEmail(input.email);
 
-    const existingMember = await db.workspaceMembership.findFirst({
-      where: { workspaceId: input.workspaceId, user: { email } },
+    const existingMember = await db.spaceMembership.findFirst({
+      where: { spaceId: input.spaceId, user: { email } },
       select: { id: true },
     });
 
     if (existingMember) {
-      throw new Error("That user is already a member of this workspace.");
+      throw new Error("That user is already a member of this space.");
     }
 
-    const existingInvite = await db.workspaceInvite.findFirst({
+    const existingInvite = await db.spaceInvite.findFirst({
       where: {
-        workspaceId: input.workspaceId,
+        spaceId: input.spaceId,
         email,
         status: InviteStatus.pending,
         expiresAt: { gt: new Date() },
@@ -36,9 +36,9 @@ export const inviteService = {
       throw new Error("There is already an active invite for that email.");
     }
 
-    return db.workspaceInvite.create({
+    return db.spaceInvite.create({
       data: {
-        workspaceId: input.workspaceId,
+        spaceId: input.spaceId,
         email,
         role: input.role,
         token: crypto.randomUUID(),
@@ -49,7 +49,7 @@ export const inviteService = {
     });
   },
 
-  async sendWorkspaceInviteEmail(input: { workspaceName: string; recipientEmail: string; token: string }) {
+  async sendSpaceInviteEmail(input: { spaceName: string; recipientEmail: string; token: string }) {
     if (!isResendConfigured || !process.env.APP_BASE_URL) {
       return;
     }
@@ -60,11 +60,11 @@ export const inviteService = {
     await resend.emails.send({
       from: "Cost Tracking <onboarding@resend.dev>",
       to: input.recipientEmail,
-      subject: `Join ${input.workspaceName} on Cost Tracking`,
+      subject: `Join ${input.spaceName} on Cost Tracking`,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #111827;">
-          <h1 style="font-size: 20px;">You're invited to join ${input.workspaceName}</h1>
-          <p>Open the link below to accept the workspace invite.</p>
+          <h1 style="font-size: 20px;">You're invited to join ${input.spaceName}</h1>
+          <p>Open the link below to accept the space invite.</p>
           <p><a href="${acceptUrl}">${acceptUrl}</a></p>
         </div>
       `,
@@ -72,19 +72,19 @@ export const inviteService = {
   },
 
   async getInviteByToken(token: string) {
-    return db.workspaceInvite.findUnique({
+    return db.spaceInvite.findUnique({
       where: { token },
-      include: { workspace: true },
+      include: { space: true },
     });
   },
 
-  async revokeWorkspaceInvite(input: { workspaceId: string; inviteId: string }) {
-    const invite = await db.workspaceInvite.findUnique({
+  async revokeSpaceInvite(input: { spaceId: string; inviteId: string }) {
+    const invite = await db.spaceInvite.findUnique({
       where: { id: input.inviteId },
-      select: { id: true, workspaceId: true, status: true },
+      select: { id: true, spaceId: true, status: true },
     });
 
-    if (!invite || invite.workspaceId !== input.workspaceId) {
+    if (!invite || invite.spaceId !== input.spaceId) {
       throw new Error("Invite not found.");
     }
 
@@ -92,13 +92,13 @@ export const inviteService = {
       throw new Error("Only pending invites can be revoked.");
     }
 
-    return db.workspaceInvite.update({
+    return db.spaceInvite.update({
       where: { id: input.inviteId },
       data: { status: InviteStatus.revoked },
     });
   },
 
-  async acceptWorkspaceInvite(input: { token: string; userId: string; userEmail: string }) {
+  async acceptSpaceInvite(input: { token: string; userId: string; userEmail: string }) {
     const invite = await inviteService.getInviteByToken(input.token);
 
     if (!invite) {
@@ -110,7 +110,7 @@ export const inviteService = {
     }
 
     if (invite.expiresAt <= new Date()) {
-      await db.workspaceInvite.update({ where: { id: invite.id }, data: { status: InviteStatus.expired } });
+      await db.spaceInvite.update({ where: { id: invite.id }, data: { status: InviteStatus.expired } });
       throw new Error("This invite has expired.");
     }
 
@@ -119,26 +119,26 @@ export const inviteService = {
     }
 
     return db.$transaction(async (tx) => {
-      const existingMembership = await tx.workspaceMembership.findFirst({
-        where: { workspaceId: invite.workspaceId, userId: input.userId },
+      const existingMembership = await tx.spaceMembership.findFirst({
+        where: { spaceId: invite.spaceId, userId: input.userId },
       });
 
       if (!existingMembership) {
-        await tx.workspaceMembership.create({
+        await tx.spaceMembership.create({
           data: {
-            workspaceId: invite.workspaceId,
+            spaceId: invite.spaceId,
             userId: input.userId,
             role: invite.role,
           },
         });
       }
 
-      await tx.workspaceInvite.update({
+      await tx.spaceInvite.update({
         where: { id: invite.id },
         data: { status: InviteStatus.accepted, acceptedByUserId: input.userId, acceptedAt: new Date() },
       });
 
-      return invite.workspace;
+      return invite.space;
     });
   },
 };

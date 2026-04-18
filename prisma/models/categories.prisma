@@ -1,6 +1,6 @@
 model Category {
   id                 String                     @id @default(cuid())
-  workspaceId        String?
+  spaceId            String?                    @map("workspaceId")
   name               String
   slug               String
   parentCategoryId   String?
@@ -9,13 +9,13 @@ model Category {
   color              String?
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
-  workspace          Workspace?                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  space              Space?                     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   parentCategory     Category?                  @relation("CategoryTree", fields: [parentCategoryId], references: [id], onDelete: SetNull)
   childCategories    Category[]                 @relation("CategoryTree")
   expenses           Expense[]
   recurringTemplates RecurringExpenseTemplate[]
 
-  @@unique([workspaceId, parentCategoryId, slug])
-  @@index([workspaceId, parentCategoryId, isArchived])
+  @@unique([spaceId, parentCategoryId, slug])
+  @@index([spaceId, parentCategoryId, isArchived])
   @@index([parentCategoryId, isArchived])
 }

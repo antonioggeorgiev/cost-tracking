@@ -1,50 +1,54 @@
-model Workspace {
-  id                 String                     @id @default(cuid())
+model Space {
+  id                 String              @id @default(cuid())
   name               String
-  slug               String                     @unique
+  slug               String              @unique
   baseCurrencyCode   String
   createdByUserId    String
-  createdAt          DateTime                   @default(now())
-  updatedAt          DateTime                   @updatedAt
-  createdByUser      User                       @relation("WorkspaceCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  memberships        WorkspaceMembership[]
-  invites            WorkspaceInvite[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  createdByUser      User                @relation("SpaceCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  memberships        SpaceMembership[]
+  invites            SpaceInvite[]
   categories         Category[]
   expenses           Expense[]
   recurringTemplates RecurringExpenseTemplate[]
   debtAccounts       DebtAccount[]
   debtPayments       DebtPayment[]
+
+  @@map("Workspace")
 }
 
-model WorkspaceMembership {
-  id          String        @id @default(cuid())
-  workspaceId String
-  userId      String
-  role        WorkspaceRole
-  createdAt   DateTime      @default(now())
-  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+model SpaceMembership {
+  id        String    @id @default(cuid())
+  spaceId   String    @map("workspaceId")
+  userId    String
+  role      SpaceRole
+  createdAt DateTime  @default(now())
+  space     Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([workspaceId, userId])
+  @@unique([spaceId, userId])
   @@index([userId])
+  @@map("WorkspaceMembership")
 }
 
-model WorkspaceInvite {
-  id               String        @id @default(cuid())
-  workspaceId      String
+model SpaceInvite {
+  id               String       @id @default(cuid())
+  spaceId          String       @map("workspaceId")
   email            String
-  role             WorkspaceRole
-  token            String        @unique
-  status           InviteStatus  @default(pending)
+  role             SpaceRole
+  token            String       @unique
+  status           InviteStatus @default(pending)
   expiresAt        DateTime
   invitedByUserId  String
   acceptedByUserId String?
   acceptedAt       DateTime?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  invitedByUser    User          @relation("InviteSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
-  acceptedByUser   User?         @relation("InviteAcceptor", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  space            Space        @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  invitedByUser    User         @relation("InviteSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+  acceptedByUser   User?        @relation("InviteAcceptor", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
 
-  @@index([workspaceId, email, status])
+  @@index([spaceId, email, status])
+  @@map("WorkspaceInvite")
 }

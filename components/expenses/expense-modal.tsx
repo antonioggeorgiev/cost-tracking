@@ -12,7 +12,7 @@ type Category = {
 };
 
 type ExpenseModalProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   categories: Category[];
   currencies: readonly string[];
@@ -20,7 +20,7 @@ type ExpenseModalProps = {
   createCategory?: (formData: FormData) => Promise<{ id: string }>;
 };
 
-export function ExpenseModal({ workspaceSlug, baseCurrencyCode, categories, currencies, createExpense, createCategory }: ExpenseModalProps) {
+export function ExpenseModal({ spaceSlug, baseCurrencyCode, categories, currencies, createExpense, createCategory }: ExpenseModalProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.get("modal") === "add-expense";
@@ -66,7 +66,7 @@ export function ExpenseModal({ workspaceSlug, baseCurrencyCode, categories, curr
         </div>
 
         <QuickAddExpenseForm
-          workspaceSlug={workspaceSlug}
+          spaceSlug={spaceSlug}
           baseCurrencyCode={baseCurrencyCode}
           categories={categories}
           currencies={currencies}

@@ -6,13 +6,13 @@ import { X } from "lucide-react";
 import { QuickAddDebtForm } from "@/components/quick-add/quick-add-debt-form";
 
 type DebtAccountModalProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   currencies: readonly string[];
   createDebtAccount: (formData: FormData) => Promise<void>;
 };
 
-export function DebtAccountModal({ workspaceSlug, baseCurrencyCode, currencies, createDebtAccount }: DebtAccountModalProps) {
+export function DebtAccountModal({ spaceSlug, baseCurrencyCode, currencies, createDebtAccount }: DebtAccountModalProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.get("modal") === "add-debt";
@@ -58,7 +58,7 @@ export function DebtAccountModal({ workspaceSlug, baseCurrencyCode, currencies, 
         </div>
 
         <QuickAddDebtForm
-          workspaceSlug={workspaceSlug}
+          spaceSlug={spaceSlug}
           baseCurrencyCode={baseCurrencyCode}
           currencies={currencies}
           createDebtAccount={createDebtAccount}

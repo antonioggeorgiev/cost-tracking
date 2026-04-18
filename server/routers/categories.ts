@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { categoryService } from "@/server/services/category-service";
-import { createTRPCRouter, workspaceMemberProcedure } from "@/server/trpc";
+import { createTRPCRouter, spaceMemberProcedure } from "@/server/trpc";
 
 export const categoriesRouter = createTRPCRouter({
-  list: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
-    .query(({ ctx }) => categoryService.listWorkspaceCategoriesTree(ctx.membership.workspaceId)),
+  list: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .query(({ ctx }) => categoryService.listSpaceCategoriesTree(ctx.membership.spaceId)),
 });

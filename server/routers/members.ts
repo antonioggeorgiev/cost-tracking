@@ -1,39 +1,54 @@
 import { z } from "zod";
+import { db } from "@/lib/db";
 import { inviteService } from "@/server/services/invite-service";
 import { memberService } from "@/server/services/member-service";
-import { createTRPCRouter, protectedProcedure, workspaceMemberProcedure, workspaceOwnerProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedProcedure, spaceMemberProcedure, spaceOwnerProcedure } from "@/server/trpc";
 
 export const membersRouter = createTRPCRouter({
-  list: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
+  list: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
     .query(async ({ ctx }) => {
-      const data = await memberService.listWorkspaceMembersAndInvites(ctx.membership.workspaceId);
+      const data = await memberService.listSpaceMembersAndInvites(ctx.membership.spaceId);
 
       return {
-        workspace: ctx.membership.workspace,
+        space: ctx.membership.space,
         role: ctx.membership.role,
         ...data,
       };
     }),
 
-  createInvite: workspaceOwnerProcedure
+  listSimple: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .query(async ({ ctx }) => {
+      const memberships = await db.spaceMembership.findMany({
+        where: { spaceId: ctx.membership.spaceId },
+        include: { user: { select: { id: true, name: true, email: true } } },
+        orderBy: { createdAt: "asc" },
+      });
+      return memberships.map(m => ({
+        userId: m.user.id,
+        name: m.user.name || m.user.email,
+      }));
+    }),
+
+  createInvite: spaceOwnerProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         email: z.email(),
         role: z.enum(["editor", "viewer"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const invite = await inviteService.createWorkspaceInvite({
-        workspaceId: ctx.membership.workspaceId,
+      const invite = await inviteService.createSpaceInvite({
+        spaceId: ctx.membership.spaceId,
         invitedByUserId: ctx.user.id,
         email: input.email,
         role: input.role,
       });
 
-      await inviteService.sendWorkspaceInviteEmail({
-        workspaceName: ctx.membership.workspace.name,
+      await inviteService.sendSpaceInviteEmail({
+        spaceName: ctx.membership.space.name,
         recipientEmail: invite.email,
         token: invite.token,
       });
@@ -41,46 +56,46 @@ export const membersRouter = createTRPCRouter({
       return invite;
     }),
 
-  updateRole: workspaceOwnerProcedure
+  updateRole: spaceOwnerProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         membershipId: z.string().cuid(),
         role: z.enum(["editor", "viewer"]),
       }),
     )
     .mutation(({ ctx, input }) => {
-      return memberService.updateWorkspaceMemberRole({
-        workspaceId: ctx.membership.workspaceId,
+      return memberService.updateSpaceMemberRole({
+        spaceId: ctx.membership.spaceId,
         membershipId: input.membershipId,
         role: input.role,
       });
     }),
 
-  removeMember: workspaceOwnerProcedure
+  removeMember: spaceOwnerProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         membershipId: z.string().cuid(),
       }),
     )
     .mutation(({ ctx, input }) => {
-      return memberService.removeWorkspaceMember({
-        workspaceId: ctx.membership.workspaceId,
+      return memberService.removeSpaceMember({
+        spaceId: ctx.membership.spaceId,
         membershipId: input.membershipId,
       });
     }),
 
-  revokeInvite: workspaceOwnerProcedure
+  revokeInvite: spaceOwnerProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         inviteId: z.string().cuid(),
       }),
     )
     .mutation(({ ctx, input }) => {
-      return inviteService.revokeWorkspaceInvite({
-        workspaceId: ctx.membership.workspaceId,
+      return inviteService.revokeSpaceInvite({
+        spaceId: ctx.membership.spaceId,
         inviteId: input.inviteId,
       });
     }),
@@ -98,7 +113,7 @@ export const membersRouter = createTRPCRouter({
         throw new Error("Your account needs a primary email before accepting an invite.");
       }
 
-      return inviteService.acceptWorkspaceInvite({
+      return inviteService.acceptSpaceInvite({
         token: input.token,
         userId: ctx.user.id,
         userEmail: email,

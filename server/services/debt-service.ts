@@ -57,29 +57,29 @@ type MonthPaymentStatus = {
 
 async function getDebtPaymentCategoryId(
   tx: Omit<typeof db, "$connect" | "$disconnect" | "$on" | "$transaction" | "$extends">,
-  workspaceId: string,
+  spaceId: string,
 ) {
   // First check for a platform-wide "Debt Payments" category
   const platform = await tx.category.findFirst({
-    where: { workspaceId: null, parentCategoryId: null, slug: "debt-and-loan-payments" },
+    where: { spaceId: null, parentCategoryId: null, slug: "debt-and-loan-payments" },
     select: { id: true },
   });
   if (platform) return platform.id;
 
-  // Fallback: check workspace-specific
+  // Fallback: check space-specific
   const existing = await tx.category.findFirst({
-    where: { workspaceId, parentCategoryId: null, slug: "debt-payments" },
+    where: { spaceId, parentCategoryId: null, slug: "debt-payments" },
     select: { id: true },
   });
   if (existing) return existing.id;
 
-  // Last resort: create workspace-specific
-  const category = await tx.category.create({ data: { workspaceId, name: "Debt Payments", slug: "debt-payments" } });
+  // Last resort: create space-specific
+  const category = await tx.category.create({ data: { spaceId, name: "Debt Payments", slug: "debt-payments" } });
   return category.id;
 }
 
 export const debtService = {
-  async getById(workspaceId: string, debtAccountId: string) {
+  async getById(spaceId: string, debtAccountId: string) {
     const account = await db.debtAccount.findUnique({
       where: { id: debtAccountId },
       include: {
@@ -93,11 +93,11 @@ export const debtService = {
       },
     });
 
-    if (!account || account.workspaceId !== workspaceId) return null;
+    if (!account || account.spaceId !== spaceId) return null;
     return account;
   },
 
-  async updateAccount(workspaceId: string, debtAccountId: string, input: {
+  async updateAccount(spaceId: string, debtAccountId: string, input: {
     kind?: (typeof DebtAccountKind)[keyof typeof DebtAccountKind];
     direction?: (typeof DebtDirection)[keyof typeof DebtDirection];
     name?: string;
@@ -122,7 +122,7 @@ export const debtService = {
       where: { id: debtAccountId },
       include: { payments: { select: { originalAmountMinor: true } } },
     });
-    if (!existing || existing.workspaceId !== workspaceId) throw new Error("Debt account not found.");
+    if (!existing || existing.spaceId !== spaceId) throw new Error("Debt account not found.");
 
     // Reject currency change if payments exist
     if (input.currencyCode !== undefined && input.currencyCode !== existing.currencyCode && existing.payments.length > 0) {
@@ -166,14 +166,14 @@ export const debtService = {
       || input.alreadyPaid !== undefined || input.monthlyAmount !== undefined || input.residualValue !== undefined;
 
     if (needsFxUpdate) {
-      const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { baseCurrencyCode: true } });
-      if (!workspace) throw new Error("Workspace not found.");
+      const space = await db.space.findUnique({ where: { id: spaceId }, select: { baseCurrencyCode: true } });
+      if (!space) throw new Error("Space not found.");
 
       const effectiveCurrency = (input.currencyCode ?? existing.currencyCode);
       const effectiveOpenedAt = (input.openedAt ?? existing.openedAt);
       const snapshot = await fxService.getExchangeRateSnapshot({
         fromCurrencyCode: effectiveCurrency,
-        toCurrencyCode: workspace.baseCurrencyCode,
+        toCurrencyCode: space.baseCurrencyCode,
         expenseDate: effectiveOpenedAt,
       });
 
@@ -182,7 +182,7 @@ export const debtService = {
 
       data.workspaceAmountMinor = Math.round(effectiveOriginalMinor * snapshot.rate);
       data.workspaceBalanceMinor = Math.round(effectiveBalanceMinor * snapshot.rate);
-      data.workspaceCurrencyCode = workspace.baseCurrencyCode;
+      data.workspaceCurrencyCode = space.baseCurrencyCode;
       data.exchangeRate = snapshot.rate.toFixed(8);
       data.exchangeRateDate = snapshot.rateDate;
 
@@ -205,9 +205,9 @@ export const debtService = {
     return db.debtAccount.update({ where: { id: debtAccountId }, data });
   },
 
-  listAccounts(workspaceId: string) {
+  listAccounts(spaceId: string) {
     return db.debtAccount.findMany({
-      where: { workspaceId },
+      where: { spaceId },
       include: {
         payments: {
           include: { paidByUser: { select: { name: true, email: true } } },
@@ -218,8 +218,34 @@ export const debtService = {
     });
   },
 
+  async listAllUserAccounts(userId: string) {
+    const memberships = await db.spaceMembership.findMany({
+      where: { userId },
+      select: { spaceId: true },
+    });
+    const spaceIds = memberships.map(m => m.spaceId);
+
+    const accounts = await db.debtAccount.findMany({
+      where: { spaceId: { in: spaceIds } },
+      include: {
+        payments: {
+          include: { paidByUser: { select: { name: true, email: true } } },
+          orderBy: { paymentDate: "desc" as const },
+        },
+        space: { select: { name: true, slug: true } },
+      },
+      orderBy: [{ isActive: "desc" }, { openedAt: "desc" }],
+    });
+
+    return accounts.map((a) => ({
+      ...a,
+      spaceName: a.space.name,
+      spaceSlug: a.space.slug,
+    }));
+  },
+
   async createAccount(input: {
-    workspaceId: string;
+    spaceId: string;
     kind: DebtAccountKind;
     direction: DebtDirection;
     name: string;
@@ -245,18 +271,18 @@ export const debtService = {
     const alreadyPaidMinor = input.alreadyPaid ? toMinorUnits(input.alreadyPaid) : 0;
     const balanceMinor = Math.max(0, originalMinor - alreadyPaidMinor);
 
-    const workspace = await db.workspace.findUnique({ where: { id: input.workspaceId }, select: { baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: input.spaceId }, select: { baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
     const snapshot = await fxService.getExchangeRateSnapshot({
       fromCurrencyCode: input.currencyCode,
-      toCurrencyCode: workspace.baseCurrencyCode,
+      toCurrencyCode: space.baseCurrencyCode,
       expenseDate: input.openedAt,
     });
 
     const account = await db.debtAccount.create({
       data: {
-        workspaceId: input.workspaceId,
+        spaceId: input.spaceId,
         name: input.name.trim(),
         provider: input.provider?.trim() || null,
         counterparty: input.counterparty?.trim() || null,
@@ -264,7 +290,7 @@ export const debtService = {
         currencyCode: input.currencyCode,
         currentBalanceMinor: balanceMinor,
         workspaceAmountMinor: toMinorUnits(input.originalAmount * snapshot.rate),
-        workspaceCurrencyCode: workspace.baseCurrencyCode,
+        workspaceCurrencyCode: space.baseCurrencyCode,
         workspaceBalanceMinor: toMinorUnits(Math.max(0, input.originalAmount - (input.alreadyPaid ?? 0)) * snapshot.rate),
         exchangeRate: snapshot.rate.toFixed(8),
         exchangeRateDate: snapshot.rateDate,
@@ -294,7 +320,7 @@ export const debtService = {
   },
 
   async createPayment(input: {
-    workspaceId: string;
+    spaceId: string;
     paidByUserId: string;
     debtAccountId: string;
     amount: number;
@@ -304,14 +330,14 @@ export const debtService = {
     notes?: string | null;
     createLinkedExpense: boolean;
   }) {
-    const workspace = await db.workspace.findUnique({ where: { id: input.workspaceId }, select: { id: true, baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: input.spaceId }, select: { id: true, baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
     const debtAccount = await db.debtAccount.findUnique({
       where: { id: input.debtAccountId },
-      select: { id: true, workspaceId: true, name: true, currentBalanceMinor: true, workspaceBalanceMinor: true, currencyCode: true, isActive: true, direction: true, frequency: true, interval: true, anchorDays: true, openedAt: true, nextPaymentDate: true },
+      select: { id: true, spaceId: true, name: true, currentBalanceMinor: true, workspaceBalanceMinor: true, currencyCode: true, isActive: true, direction: true, frequency: true, interval: true, anchorDays: true, openedAt: true, nextPaymentDate: true },
     });
-    if (!debtAccount || debtAccount.workspaceId !== input.workspaceId) throw new Error("Debt account does not belong to this workspace.");
+    if (!debtAccount || debtAccount.spaceId !== input.spaceId) throw new Error("Debt account does not belong to this space.");
     if (!debtAccount.isActive) throw new Error("Inactive debt accounts cannot receive payments.");
     if (debtAccount.currencyCode !== input.currencyCode) throw new Error("Debt payment currency must match the debt account currency.");
 
@@ -338,7 +364,7 @@ export const debtService = {
 
     const snapshot = await fxService.getExchangeRateSnapshot({
       fromCurrencyCode: input.currencyCode,
-      toCurrencyCode: workspace.baseCurrencyCode,
+      toCurrencyCode: space.baseCurrencyCode,
       expenseDate: input.paymentDate,
     });
 
@@ -348,7 +374,7 @@ export const debtService = {
 
     // Ensure "Debt Payments" category exists before the transaction so it's visible to expenseService
     const categoryId = input.createLinkedExpense && debtAccount.direction !== DebtDirection.they_owe_me
-      ? await getDebtPaymentCategoryId(db, input.workspaceId)
+      ? await getDebtPaymentCategoryId(db, input.spaceId)
       : null;
 
     return db.$transaction(async (tx) => {
@@ -356,7 +382,7 @@ export const debtService = {
 
       if (categoryId) {
         const expense = await expenseService.createRecord({
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           categoryId,
           createdByUserId: input.paidByUserId,
           title: `${debtAccount.name} payment`,
@@ -364,7 +390,7 @@ export const debtService = {
           originalAmountMinor,
           originalCurrencyCode: input.currencyCode,
           workspaceAmountMinor,
-          workspaceCurrencyCode: workspace.baseCurrencyCode,
+          workspaceCurrencyCode: space.baseCurrencyCode,
           exchangeRate: snapshot.rate,
           exchangeRateDate: snapshot.rateDate,
           expenseDate: input.paymentDate,
@@ -383,14 +409,14 @@ export const debtService = {
 
       const payment = await tx.debtPayment.create({
         data: {
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           debtAccountId: debtAccount.id,
           expenseId: linkedExpenseId,
           paidByUserId: input.paidByUserId,
           originalAmountMinor,
           originalCurrencyCode: input.currencyCode,
           workspaceAmountMinor,
-          workspaceCurrencyCode: workspace.baseCurrencyCode,
+          workspaceCurrencyCode: space.baseCurrencyCode,
           exchangeRate: snapshot.rate.toFixed(8),
           exchangeRateDate: snapshot.rateDate,
           paymentDate: input.paymentDate,
@@ -448,12 +474,12 @@ export const debtService = {
   /**
    * Get payment status for a single debt in a given month.
    */
-  async getMonthPaymentStatus(workspaceId: string, debtAccountId: string, year: number, month: number): Promise<MonthPaymentStatus> {
+  async getMonthPaymentStatus(spaceId: string, debtAccountId: string, year: number, month: number): Promise<MonthPaymentStatus> {
     const account = await db.debtAccount.findUnique({
       where: { id: debtAccountId },
-      select: { workspaceId: true, openedAt: true, frequency: true, interval: true, anchorDays: true, monthlyAmountMinor: true },
+      select: { spaceId: true, openedAt: true, frequency: true, interval: true, anchorDays: true, monthlyAmountMinor: true },
     });
-    if (!account || account.workspaceId !== workspaceId) {
+    if (!account || account.spaceId !== spaceId) {
       return { dueCount: 0, paidCount: 0, unpaidCount: 0, nextUnpaidDate: null, unpaidDueDates: [] };
     }
 
@@ -496,13 +522,13 @@ export const debtService = {
   },
 
   /**
-   * Get payment status for all active debts in a workspace for a given month.
+   * Get payment status for all active debts in a space for a given month.
    * For debts with a schedule: matches payments against scheduled due dates.
    * For debts without a schedule but with monthlyAmountMinor: checks if any payment was made this month.
    */
-  async getAllDebtsMonthStatus(workspaceId: string, year: number, month: number): Promise<Record<string, MonthPaymentStatus>> {
+  async getAllDebtsMonthStatus(spaceId: string, year: number, month: number): Promise<Record<string, MonthPaymentStatus>> {
     const accounts = await db.debtAccount.findMany({
-      where: { workspaceId, isActive: true },
+      where: { spaceId, isActive: true },
       select: { id: true, openedAt: true, frequency: true, interval: true, anchorDays: true, monthlyAmountMinor: true },
     });
 
@@ -512,7 +538,7 @@ export const debtService = {
     // Fetch all payments for the month — by both dueDate and paymentDate
     const allPayments = await db.debtPayment.findMany({
       where: {
-        workspaceId,
+        spaceId,
         OR: [
           { dueDate: { gte: rangeStart, lte: rangeEnd } },
           { paymentDate: { gte: rangeStart, lte: rangeEnd } },

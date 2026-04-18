@@ -2,10 +2,10 @@ import { db } from "@/lib/db";
 import { slugify } from "@/lib/slug";
 
 export const categoryService = {
-  /** List platform-wide categories (workspaceId IS NULL) as a parent→children tree. */
+  /** List platform-wide categories (spaceId IS NULL) as a parent->children tree. */
   async listPlatformCategoriesTree() {
     const categories = await db.category.findMany({
-      where: { workspaceId: null },
+      where: { spaceId: null },
       orderBy: [{ parentCategoryId: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
     });
 
@@ -18,16 +18,16 @@ export const categoryService = {
   },
 
   /**
-   * List categories available to a workspace.
-   * Returns platform categories (workspaceId IS NULL) plus any legacy workspace categories
+   * List categories available to a space.
+   * Returns platform categories (spaceId IS NULL) plus any legacy space categories
    * that still have expenses referencing them.
    */
-  async listWorkspaceCategoriesTree(workspaceId: string) {
+  async listSpaceCategoriesTree(spaceId: string) {
     const categories = await db.category.findMany({
       where: {
         OR: [
-          { workspaceId: null },
-          { workspaceId },
+          { spaceId: null },
+          { spaceId },
         ],
       },
       orderBy: [{ parentCategoryId: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
@@ -41,7 +41,7 @@ export const categoryService = {
     }));
   },
 
-  /** Create a platform-wide category (workspaceId = null). */
+  /** Create a platform-wide category (spaceId = null). */
   async createPlatformCategory(input: { name: string; parentCategoryId?: string | null; color?: string | null }) {
     const name = input.name.trim();
     if (!name) throw new Error("Category name is required.");
@@ -55,7 +55,7 @@ export const categoryService = {
         include: { parentCategory: { select: { id: true } } },
       });
 
-      if (!parentCategory || parentCategory.workspaceId !== null) {
+      if (!parentCategory || parentCategory.spaceId !== null) {
         throw new Error("Parent category not found or is not a platform category.");
       }
 
@@ -67,7 +67,7 @@ export const categoryService = {
     for (let suffix = 0; suffix < 50; suffix += 1) {
       const slug = suffix === 0 ? slugBase : `${slugBase}-${suffix + 1}`;
       const existing = await db.category.findFirst({
-        where: { workspaceId: null, parentCategoryId, slug },
+        where: { spaceId: null, parentCategoryId, slug },
         select: { id: true },
       });
 
@@ -89,7 +89,7 @@ export const categoryService = {
     color?: string | null;
   }) {
     const category = await db.category.findUnique({ where: { id: categoryId } });
-    if (!category || category.workspaceId !== null) {
+    if (!category || category.spaceId !== null) {
       throw new Error("Platform category not found.");
     }
 
@@ -105,8 +105,8 @@ export const categoryService = {
     return db.category.update({ where: { id: categoryId }, data });
   },
 
-  /** Legacy: create a workspace-scoped category. */
-  async create(input: { workspaceId: string; name: string; parentCategoryId?: string | null }) {
+  /** Legacy: create a space-scoped category. */
+  async create(input: { spaceId: string; name: string; parentCategoryId?: string | null }) {
     const name = input.name.trim();
     if (!name) throw new Error("Category name is required.");
 
@@ -119,8 +119,8 @@ export const categoryService = {
         include: { parentCategory: { select: { id: true } } },
       });
 
-      if (!parentCategory || (parentCategory.workspaceId !== null && parentCategory.workspaceId !== input.workspaceId)) {
-        throw new Error("Parent category does not belong to this workspace.");
+      if (!parentCategory || (parentCategory.spaceId !== null && parentCategory.spaceId !== input.spaceId)) {
+        throw new Error("Parent category does not belong to this space.");
       }
 
       if (parentCategory.parentCategoryId) {
@@ -131,13 +131,13 @@ export const categoryService = {
     for (let suffix = 0; suffix < 50; suffix += 1) {
       const slug = suffix === 0 ? slugBase : `${slugBase}-${suffix + 1}`;
       const existing = await db.category.findFirst({
-        where: { workspaceId: input.workspaceId, parentCategoryId, slug },
+        where: { spaceId: input.spaceId, parentCategoryId, slug },
         select: { id: true },
       });
 
       if (!existing) {
         return db.category.create({
-          data: { workspaceId: input.workspaceId, name, slug, parentCategoryId },
+          data: { spaceId: input.spaceId, name, slug, parentCategoryId },
         });
       }
     }

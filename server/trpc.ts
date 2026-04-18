@@ -2,7 +2,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod";
 import { currentUser } from "@clerk/nextjs/server";
-import { WorkspaceRole } from "@/generated/prisma/enums";
+import { SpaceRole } from "@/generated/prisma/enums";
 import { memberService } from "@/server/services/member-service";
 import { userService } from "@/server/services/user-service";
 
@@ -39,24 +39,24 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   });
 });
 
-const workspaceSlugInput = z.object({
-  workspaceSlug: z.string().min(1),
+const spaceSlugInput = z.object({
+  spaceSlug: z.string().min(1),
 });
 
-export const workspaceMemberProcedure = protectedProcedure.use(async ({ ctx, getRawInput, next }) => {
-  const parsed = workspaceSlugInput.safeParse(await getRawInput());
+export const spaceMemberProcedure = protectedProcedure.use(async ({ ctx, getRawInput, next }) => {
+  const parsed = spaceSlugInput.safeParse(await getRawInput());
 
   if (!parsed.success) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "workspaceSlug is required." });
+    throw new TRPCError({ code: "BAD_REQUEST", message: "spaceSlug is required." });
   }
 
-  const membership = await memberService.getWorkspaceMembershipBySlug({
-    workspaceSlug: parsed.data.workspaceSlug,
+  const membership = await memberService.getSpaceMembershipBySlug({
+    spaceSlug: parsed.data.spaceSlug,
     userId: ctx.user.id,
   });
 
   if (!membership) {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Workspace membership not found." });
+    throw new TRPCError({ code: "NOT_FOUND", message: "Space membership not found." });
   }
 
   return next({
@@ -67,9 +67,9 @@ export const workspaceMemberProcedure = protectedProcedure.use(async ({ ctx, get
   });
 });
 
-export const workspaceEditorProcedure = workspaceMemberProcedure.use(({ ctx, next }) => {
-  if (ctx.membership.role !== WorkspaceRole.owner && ctx.membership.role !== WorkspaceRole.editor) {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Only owners and editors can modify workspace records." });
+export const spaceEditorProcedure = spaceMemberProcedure.use(({ ctx, next }) => {
+  if (ctx.membership.role !== SpaceRole.owner && ctx.membership.role !== SpaceRole.editor) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Only owners and editors can modify space records." });
   }
 
   return next({
@@ -88,9 +88,9 @@ export const platformAdminProcedure = protectedProcedure.use(({ ctx, next }) => 
   return next({ ctx });
 });
 
-export const workspaceOwnerProcedure = workspaceMemberProcedure.use(({ ctx, next }) => {
-  if (ctx.membership.role !== WorkspaceRole.owner) {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Only workspace owners can perform this action." });
+export const spaceOwnerProcedure = spaceMemberProcedure.use(({ ctx, next }) => {
+  if (ctx.membership.role !== SpaceRole.owner) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Only space owners can perform this action." });
   }
 
   return next({

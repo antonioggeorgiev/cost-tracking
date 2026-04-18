@@ -17,7 +17,7 @@ import {
 
 type CreateCategoryDialogProps = {
   type: "category" | "subcategory";
-  workspaceSlug: string;
+  spaceSlug: string;
   parentCategoryId?: string;
   createCategory: (formData: FormData) => Promise<{ id: string }>;
   onCreated?: (id: string) => void;
@@ -27,7 +27,7 @@ type CreateCategoryDialogProps = {
 
 export function CreateCategoryDialog({
   type,
-  workspaceSlug,
+  spaceSlug,
   parentCategoryId,
   createCategory,
   onCreated,
@@ -54,7 +54,7 @@ export function CreateCategoryDialog({
     }
 
     const formData = new FormData();
-    formData.set("workspaceSlug", workspaceSlug);
+    formData.set("spaceSlug", spaceSlug);
     formData.set("name", name.trim());
     if (type === "subcategory" && parentCategoryId) {
       formData.set("parentCategoryId", parentCategoryId);

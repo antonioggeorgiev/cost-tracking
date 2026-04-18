@@ -30,12 +30,12 @@ type RecurringCardProps = {
       parentCategory: { name: string } | null;
     };
   };
-  workspaceSlug: string;
+  spaceSlug: string;
   canManage: boolean;
   markPaidAction?: (formData: FormData) => Promise<{ success: true } | { error: string }>;
 };
 
-export function RecurringCard({ template, workspaceSlug, canManage, markPaidAction }: RecurringCardProps) {
+export function RecurringCard({ template, spaceSlug, canManage, markPaidAction }: RecurringCardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -61,7 +61,7 @@ export function RecurringCard({ template, workspaceSlug, canManage, markPaidActi
     e.stopPropagation();
     if (!markPaidAction) return;
     const formData = new FormData();
-    formData.set("workspaceSlug", workspaceSlug);
+    formData.set("spaceSlug", spaceSlug);
     formData.set("templateId", template.id);
     startTransition(async () => {
       await markPaidAction(formData);
@@ -71,7 +71,7 @@ export function RecurringCard({ template, workspaceSlug, canManage, markPaidActi
 
   return (
     <Link
-      href={routes.workspaceRecurringTemplate(workspaceSlug, template.id)}
+      href={routes.recurringTemplate(template.id)}
       className={`block rounded-2xl border border-border bg-surface p-5 shadow-sm transition hover:shadow-md hover:border-primary/30 ${
         !template.isActive ? "opacity-60" : ""
       }`}

@@ -19,7 +19,7 @@ import { type FrequencyOption, deriveScheduleFields } from "@/lib/schedule-utils
 import { cn } from "@/lib/utils";
 
 type QuickAddDebtFormProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   currencies: readonly string[];
   createDebtAccount: (formData: FormData) => Promise<void>;
@@ -39,7 +39,7 @@ const directionItems = [
 ] satisfies Array<{ value: DebtDirection; label: string }>;
 
 export function QuickAddDebtForm({
-  workspaceSlug,
+  spaceSlug,
   baseCurrencyCode,
   currencies,
   createDebtAccount,
@@ -103,7 +103,7 @@ export function QuickAddDebtForm({
         setFormError(null);
 
         const formData = new FormData();
-        formData.set("workspaceSlug", workspaceSlug);
+        formData.set("spaceSlug", spaceSlug);
         formData.set("kind", kind);
         formData.set("direction", direction);
         formData.set("name", name);

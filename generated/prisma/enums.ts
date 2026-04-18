@@ -9,13 +9,13 @@
 * 🟢 You can import this file directly.
 */
 
-export const WorkspaceRole = {
+export const SpaceRole = {
   owner: 'owner',
   editor: 'editor',
   viewer: 'viewer'
 } as const
 
-export type WorkspaceRole = (typeof WorkspaceRole)[keyof typeof WorkspaceRole]
+export type SpaceRole = (typeof SpaceRole)[keyof typeof SpaceRole]
 
 
 export const ExpenseStatus = {

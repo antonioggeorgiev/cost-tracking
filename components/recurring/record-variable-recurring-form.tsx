@@ -8,13 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 type RecordVariableRecurringFormProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   templateId: string;
   currencyCode: string;
   action: (formData: FormData) => Promise<{ success: true } | { error: string }>;
 };
 
-export function RecordVariableRecurringForm({ workspaceSlug, templateId, currencyCode, action }: RecordVariableRecurringFormProps) {
+export function RecordVariableRecurringForm({ spaceSlug, templateId, currencyCode, action }: RecordVariableRecurringFormProps) {
   const router = useRouter();
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
@@ -28,7 +28,7 @@ export function RecordVariableRecurringForm({ workspaceSlug, templateId, currenc
         setFormError(null);
 
         const formData = new FormData();
-        formData.set("workspaceSlug", workspaceSlug);
+        formData.set("spaceSlug", spaceSlug);
         formData.set("templateId", templateId);
         formData.set("amount", amount);
         formData.set("notes", notes);

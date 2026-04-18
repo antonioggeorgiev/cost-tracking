@@ -12,7 +12,7 @@ type Category = {
 };
 
 type RecurringModalProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   categories: Category[];
   currencies: readonly string[];
@@ -20,7 +20,7 @@ type RecurringModalProps = {
   createCategory?: (formData: FormData) => Promise<{ id: string }>;
 };
 
-export function RecurringModal({ workspaceSlug, baseCurrencyCode, categories, currencies, createRecurring, createCategory }: RecurringModalProps) {
+export function RecurringModal({ spaceSlug, baseCurrencyCode, categories, currencies, createRecurring, createCategory }: RecurringModalProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isOpen = searchParams.get("modal") === "add-recurring";
@@ -66,7 +66,7 @@ export function RecurringModal({ workspaceSlug, baseCurrencyCode, categories, cu
         </div>
 
         <RecurringTemplateForm
-          workspaceSlug={workspaceSlug}
+          spaceSlug={spaceSlug}
           baseCurrencyCode={baseCurrencyCode}
           categories={categories}
           currencies={currencies}

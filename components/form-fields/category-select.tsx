@@ -17,7 +17,7 @@ type CategorySelectProps = {
   onParentChange: (value: string) => void;
   categoryId: string;
   onCategoryChange: (value: string) => void;
-  workspaceSlug: string;
+  spaceSlug: string;
   createCategory?: (formData: FormData) => Promise<{ id: string }>;
   parentError?: string;
   categoryError?: string;
@@ -29,7 +29,7 @@ export function CategorySelect({
   onParentChange,
   categoryId,
   onCategoryChange,
-  workspaceSlug,
+  spaceSlug,
   createCategory,
   parentError,
   categoryError,
@@ -91,7 +91,7 @@ export function CategorySelect({
         <>
           <CreateCategoryDialog
             type="category"
-            workspaceSlug={workspaceSlug}
+            spaceSlug={spaceSlug}
             createCategory={createCategory}
             open={categoryDialogOpen}
             onOpenChange={setCategoryDialogOpen}
@@ -102,7 +102,7 @@ export function CategorySelect({
           />
           <CreateCategoryDialog
             type="subcategory"
-            workspaceSlug={workspaceSlug}
+            spaceSlug={spaceSlug}
             parentCategoryId={parentCategoryId}
             createCategory={createCategory}
             open={subcategoryDialogOpen}

@@ -7,7 +7,7 @@ import { SearchableSelect, type SearchableSelectItem } from "@/components/ui/sea
 
 type ExpenseFiltersProps = {
   categories: SearchableSelectItem[];
-  workspaceSlug: string;
+  spaceSlug: string;
 };
 
 const statusOptions: SearchableSelectItem[] = [

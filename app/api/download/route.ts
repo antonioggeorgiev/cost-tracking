@@ -24,7 +24,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     include: {
       expense: {
         select: {
-          workspace: {
+          space: {
             select: {
               memberships: {
                 where: { userId: user.id },
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     },
   });
 
-  if (!attachment || attachment.expense.workspace.memberships.length === 0) {
+  if (!attachment || attachment.expense.space.memberships.length === 0) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

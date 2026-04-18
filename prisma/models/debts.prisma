@@ -1,6 +1,6 @@
 model DebtAccount {
   id                  String          @id @default(cuid())
-  workspaceId         String
+  spaceId             String          @map("workspaceId")
   kind                DebtAccountKind @default(bank_loan)
   direction           DebtDirection   @default(i_owe)
   name                String
@@ -29,16 +29,16 @@ model DebtAccount {
   notes               String?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
-  workspace           Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  space               Space           @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   expenses            Expense[]
   payments            DebtPayment[]
 
-  @@index([workspaceId, isActive])
+  @@index([spaceId, isActive])
 }
 
 model DebtPayment {
   id                    String      @id @default(cuid())
-  workspaceId           String
+  spaceId               String      @map("workspaceId")
   debtAccountId         String
   expenseId             String?     @unique
   paidByUserId          String
@@ -53,12 +53,12 @@ model DebtPayment {
   notes                 String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
-  workspace             Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  space                 Space       @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   debtAccount           DebtAccount @relation(fields: [debtAccountId], references: [id], onDelete: Cascade)
   expense               Expense?    @relation(fields: [expenseId], references: [id], onDelete: SetNull)
   paidByUser            User        @relation("DebtPaymentCreator", fields: [paidByUserId], references: [id], onDelete: Restrict)
 
   @@unique([debtAccountId, dueDate])
-  @@index([workspaceId, paymentDate])
+  @@index([spaceId, paymentDate])
   @@index([debtAccountId, dueDate])
 }

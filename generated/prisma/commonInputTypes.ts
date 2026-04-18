@@ -375,21 +375,21 @@ export type EnumRecurringFrequencyWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumRecurringFrequencyFilter<$PrismaModel>
 }
 
-export type EnumWorkspaceRoleFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorkspaceRole | Prisma.EnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  in?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorkspaceRoleFilter<$PrismaModel> | $Enums.WorkspaceRole
+export type EnumSpaceRoleFilter<$PrismaModel = never> = {
+  equals?: $Enums.SpaceRole | Prisma.EnumSpaceRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSpaceRoleFilter<$PrismaModel> | $Enums.SpaceRole
 }
 
-export type EnumWorkspaceRoleWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorkspaceRole | Prisma.EnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  in?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceRole
+export type EnumSpaceRoleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SpaceRole | Prisma.EnumSpaceRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSpaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.SpaceRole
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumWorkspaceRoleFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumWorkspaceRoleFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSpaceRoleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSpaceRoleFilter<$PrismaModel>
 }
 
 export type EnumInviteStatusFilter<$PrismaModel = never> = {
@@ -783,21 +783,21 @@ export type NestedEnumRecurringFrequencyWithAggregatesFilter<$PrismaModel = neve
   _max?: Prisma.NestedEnumRecurringFrequencyFilter<$PrismaModel>
 }
 
-export type NestedEnumWorkspaceRoleFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorkspaceRole | Prisma.EnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  in?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorkspaceRoleFilter<$PrismaModel> | $Enums.WorkspaceRole
+export type NestedEnumSpaceRoleFilter<$PrismaModel = never> = {
+  equals?: $Enums.SpaceRole | Prisma.EnumSpaceRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSpaceRoleFilter<$PrismaModel> | $Enums.SpaceRole
 }
 
-export type NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorkspaceRole | Prisma.EnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  in?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorkspaceRole[] | Prisma.ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceRole
+export type NestedEnumSpaceRoleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SpaceRole | Prisma.EnumSpaceRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SpaceRole[] | Prisma.ListEnumSpaceRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSpaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.SpaceRole
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumWorkspaceRoleFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumWorkspaceRoleFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSpaceRoleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSpaceRoleFilter<$PrismaModel>
 }
 
 export type NestedEnumInviteStatusFilter<$PrismaModel = never> = {

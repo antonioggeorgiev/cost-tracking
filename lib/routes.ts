@@ -1,24 +1,20 @@
-/** Regex to extract workspace slug from a pathname like /workspaces/[slug]/... */
-export const WORKSPACE_SLUG_PATTERN = /^\/workspaces\/([^/]+)/;
-
 export const routes = {
   home: "/",
   signIn: "/sign-in",
 
-  workspaces: "/workspaces",
-  workspace: (slug: string) => `/workspaces/${slug}`,
-  workspaceOverview: (slug: string) => `/workspaces/${slug}/overview`,
-  workspaceDashboard: (slug: string) => `/workspaces/${slug}/dashboard`,
-  workspaceExpenses: (slug: string) => `/workspaces/${slug}/expenses`,
-  workspaceExpense: (slug: string, expenseId: string) => `/workspaces/${slug}/expenses/${expenseId}`,
-  workspaceCategories: (slug: string) => `/workspaces/${slug}/categories`,
-  workspaceRecurring: (slug: string) => `/workspaces/${slug}/recurring`,
-  workspaceRecurringTemplate: (slug: string, templateId: string) => `/workspaces/${slug}/recurring/${templateId}`,
-  workspaceDebts: (slug: string) => `/workspaces/${slug}/debts`,
-  workspaceDebt: (slug: string, debtAccountId: string) => `/workspaces/${slug}/debts/${debtAccountId}`,
-  workspaceMembers: (slug: string) => `/workspaces/${slug}/members`,
-  workspaceSettings: (slug: string) => `/workspaces/${slug}/settings`,
-  workspaceProfile: (slug: string) => `/workspaces/${slug}/profile`,
+  overview: "/overview",
+  quickAdd: "/quick-add",
+  expenses: "/expenses",
+  expense: (expenseId: string) => `/expenses/${expenseId}`,
+  recurring: "/recurring",
+  recurringTemplate: (templateId: string) => `/recurring/${templateId}`,
+  debts: "/debts",
+  debt: (debtAccountId: string) => `/debts/${debtAccountId}`,
+  categories: "/categories",
+  members: "/members",
+  settings: "/settings",
+  profile: "/profile",
+  spaces: "/spaces",
 
   acceptInvite: (token: string) => `/accept-invite/${token}`,
 
@@ -26,7 +22,7 @@ export const routes = {
   admin: "/admin",
   adminUsers: "/admin/users",
   adminUser: (userId: string) => `/admin/users/${userId}`,
-  adminWorkspaces: "/admin/workspaces",
-  adminWorkspace: (workspaceId: string) => `/admin/workspaces/${workspaceId}`,
+  adminSpaces: "/admin/spaces",
+  adminSpace: (spaceId: string) => `/admin/spaces/${spaceId}`,
   adminCategories: "/admin/categories",
 } as const;

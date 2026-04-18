@@ -66,7 +66,7 @@ function getNextTemplateState(date: Date, frequency: (typeof RecurringFrequency)
 }
 
 export const recurringService = {
-  async getById(workspaceId: string, templateId: string) {
+  async getById(spaceId: string, templateId: string) {
     const template = await db.recurringExpenseTemplate.findUnique({
       where: { id: templateId },
       include: {
@@ -89,7 +89,7 @@ export const recurringService = {
       },
     });
 
-    if (!template || template.workspaceId !== workspaceId) return null;
+    if (!template || template.spaceId !== spaceId) return null;
 
     return {
       ...template,
@@ -102,7 +102,7 @@ export const recurringService = {
     };
   },
 
-  async updateTemplate(workspaceId: string, templateId: string, input: {
+  async updateTemplate(spaceId: string, templateId: string, input: {
     title?: string;
     categoryId?: string;
     amount?: number | null;
@@ -119,10 +119,10 @@ export const recurringService = {
     isActive?: boolean;
   }) {
     const existing = await db.recurringExpenseTemplate.findUnique({ where: { id: templateId } });
-    if (!existing || existing.workspaceId !== workspaceId) throw new Error("Recurring template not found.");
+    if (!existing || existing.spaceId !== spaceId) throw new Error("Recurring template not found.");
 
-    const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: spaceId }, select: { baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
     const data: Record<string, unknown> = {};
 
@@ -135,8 +135,8 @@ export const recurringService = {
     if (input.endDate !== undefined) data.endDate = input.endDate;
 
     if (input.categoryId !== undefined) {
-      const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-      if (!category || (category.workspaceId !== null && category.workspaceId !== workspaceId)) throw new Error("Category does not belong to this workspace.");
+      const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, spaceId: true, isArchived: true } });
+      if (!category || (category.spaceId !== null && category.spaceId !== spaceId)) throw new Error("Category does not belong to this space.");
       if (category.isArchived) throw new Error("Archived categories cannot be used.");
       data.categoryId = input.categoryId;
     }
@@ -150,14 +150,14 @@ export const recurringService = {
 
       const snapshot = await fxService.getExchangeRateSnapshot({
         fromCurrencyCode: currencyCode,
-        toCurrencyCode: workspace.baseCurrencyCode,
+        toCurrencyCode: space.baseCurrencyCode,
         expenseDate: refDate,
       });
 
       data.originalAmountMinor = toMinorUnits(amount ?? 0);
       data.originalCurrencyCode = currencyCode;
       data.workspaceAmountMinor = toMinorUnits((amount ?? 0) * snapshot.rate);
-      data.workspaceCurrencyCode = workspace.baseCurrencyCode;
+      data.workspaceCurrencyCode = space.baseCurrencyCode;
       data.exchangeRate = snapshot.rate.toFixed(8);
       data.exchangeRateDate = snapshot.rateDate;
     } else if (input.currencyCode !== undefined) {
@@ -190,18 +190,41 @@ export const recurringService = {
     return db.recurringExpenseTemplate.update({ where: { id: templateId }, data });
   },
 
-  listTemplates(workspaceId: string) {
+  listTemplates(spaceId: string) {
     return db.recurringExpenseTemplate.findMany({
-      where: { workspaceId },
+      where: { spaceId },
       include: { category: { include: { parentCategory: true } } },
       orderBy: [{ isActive: "desc" }, { nextOccurrenceDate: "asc" }],
     });
   },
 
-  listDueVariableTemplates(workspaceId: string) {
+  async listAllUserTemplates(userId: string) {
+    const memberships = await db.spaceMembership.findMany({
+      where: { userId },
+      select: { spaceId: true },
+    });
+    const spaceIds = memberships.map(m => m.spaceId);
+
+    const templates = await db.recurringExpenseTemplate.findMany({
+      where: { spaceId: { in: spaceIds } },
+      include: {
+        category: { include: { parentCategory: true } },
+        space: { select: { name: true, slug: true } },
+      },
+      orderBy: [{ isActive: "desc" }, { nextOccurrenceDate: "asc" }],
+    });
+
+    return templates.map((t) => ({
+      ...t,
+      spaceName: t.space.name,
+      spaceSlug: t.space.slug,
+    }));
+  },
+
+  listDueVariableTemplates(spaceId: string) {
     return db.recurringExpenseTemplate.findMany({
       where: {
-        workspaceId,
+        spaceId,
         kind: RecurringTemplateKind.variable_amount,
         isActive: true,
         nextOccurrenceDate: { lte: new Date() },
@@ -212,7 +235,7 @@ export const recurringService = {
   },
 
   async createTemplate(input: {
-    workspaceId: string;
+    spaceId: string;
     createdByUserId: string;
     kind: (typeof RecurringTemplateKind)[keyof typeof RecurringTemplateKind];
     title: string;
@@ -229,11 +252,11 @@ export const recurringService = {
     description?: string | null;
     notes?: string | null;
   }) {
-    const workspace = await db.workspace.findUnique({ where: { id: input.workspaceId }, select: { id: true, baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: input.spaceId }, select: { id: true, baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
-    const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, workspaceId: true, isArchived: true } });
-    if (!category || (category.workspaceId !== null && category.workspaceId !== input.workspaceId)) throw new Error("Category does not belong to this workspace.");
+    const category = await db.category.findUnique({ where: { id: input.categoryId }, select: { id: true, spaceId: true, isArchived: true } });
+    if (!category || (category.spaceId !== null && category.spaceId !== input.spaceId)) throw new Error("Category does not belong to this space.");
     if (category.isArchived) throw new Error("Archived categories cannot be used for recurring templates.");
 
     if (input.endDate && input.endDate < input.startDate) {
@@ -254,7 +277,7 @@ export const recurringService = {
     if (input.kind === RecurringTemplateKind.fixed_amount) {
       const snapshot = await fxService.getExchangeRateSnapshot({
         fromCurrencyCode: input.currencyCode,
-        toCurrencyCode: workspace.baseCurrencyCode,
+        toCurrencyCode: space.baseCurrencyCode,
         expenseDate: input.startDate,
       });
 
@@ -266,7 +289,7 @@ export const recurringService = {
 
     return db.recurringExpenseTemplate.create({
       data: {
-        workspaceId: input.workspaceId,
+        spaceId: input.spaceId,
         categoryId: input.categoryId,
         createdByUserId: input.createdByUserId,
         kind: input.kind,
@@ -275,7 +298,7 @@ export const recurringService = {
         originalAmountMinor,
         originalCurrencyCode: input.currencyCode,
         workspaceAmountMinor,
-        workspaceCurrencyCode: workspace.baseCurrencyCode,
+        workspaceCurrencyCode: space.baseCurrencyCode,
         exchangeRate,
         exchangeRateDate,
         frequency: input.frequency,
@@ -291,10 +314,10 @@ export const recurringService = {
     });
   },
 
-  async generateDueExpenses(workspaceId: string) {
+  async generateDueExpenses(spaceId: string) {
     const templates = await db.recurringExpenseTemplate.findMany({
       where: {
-        workspaceId,
+        spaceId,
         kind: RecurringTemplateKind.fixed_amount,
         isActive: true,
         nextOccurrenceDate: { lte: new Date() },
@@ -323,7 +346,7 @@ export const recurringService = {
 
           if (!existingExpense) {
             await expenseService.createRecord({
-              workspaceId: template.workspaceId,
+              spaceId: template.spaceId,
               categoryId: template.categoryId,
               createdByUserId: template.createdByUserId,
               title: template.title,
@@ -360,12 +383,12 @@ export const recurringService = {
   },
 
   async markFixedAsPaid(input: {
-    workspaceId: string;
+    spaceId: string;
     createdByUserId: string;
     templateId: string;
   }) {
     const template = await db.recurringExpenseTemplate.findUnique({ where: { id: input.templateId } });
-    if (!template || template.workspaceId !== input.workspaceId) throw new Error("Recurring template not found.");
+    if (!template || template.spaceId !== input.spaceId) throw new Error("Recurring template not found.");
     if (template.kind !== RecurringTemplateKind.fixed_amount) throw new Error("Only fixed recurring templates can be marked as paid.");
     if (!template.isActive) throw new Error("Recurring template is inactive.");
 
@@ -378,7 +401,7 @@ export const recurringService = {
     // Create the expense if it doesn't exist yet
     if (!existingExpense) {
       await expenseService.createRecord({
-        workspaceId: template.workspaceId,
+        spaceId: template.spaceId,
         categoryId: template.categoryId,
         createdByUserId: input.createdByUserId,
         title: template.title,
@@ -410,14 +433,14 @@ export const recurringService = {
   },
 
   async recordVariableExpense(input: {
-    workspaceId: string;
+    spaceId: string;
     createdByUserId: string;
     templateId: string;
     amount: number;
     notes?: string | null;
   }) {
     const template = await db.recurringExpenseTemplate.findUnique({ where: { id: input.templateId } });
-    if (!template || template.workspaceId !== input.workspaceId) throw new Error("Recurring template not found.");
+    if (!template || template.spaceId !== input.spaceId) throw new Error("Recurring template not found.");
     if (template.kind !== RecurringTemplateKind.variable_amount) throw new Error("Only variable recurring templates can be recorded manually.");
     if (!template.isActive) throw new Error("Recurring template is inactive.");
     if (isPastEndDate(template.nextOccurrenceDate, template.endDate)) throw new Error("Recurring template has already ended.");
@@ -434,17 +457,17 @@ export const recurringService = {
       throw new Error("This recurring occurrence has already been recorded.");
     }
 
-    const workspace = await db.workspace.findUnique({ where: { id: input.workspaceId }, select: { baseCurrencyCode: true } });
-    if (!workspace) throw new Error("Workspace not found.");
+    const space = await db.space.findUnique({ where: { id: input.spaceId }, select: { baseCurrencyCode: true } });
+    if (!space) throw new Error("Space not found.");
 
     const snapshot = await fxService.getExchangeRateSnapshot({
       fromCurrencyCode: template.originalCurrencyCode,
-      toCurrencyCode: workspace.baseCurrencyCode,
+      toCurrencyCode: space.baseCurrencyCode,
       expenseDate: template.nextOccurrenceDate,
     });
 
     const expense = await expenseService.createRecord({
-      workspaceId: template.workspaceId,
+      spaceId: template.spaceId,
       categoryId: template.categoryId,
       createdByUserId: input.createdByUserId,
       title: template.title,
@@ -452,7 +475,7 @@ export const recurringService = {
       originalAmountMinor: toMinorUnits(input.amount),
       originalCurrencyCode: template.originalCurrencyCode,
       workspaceAmountMinor: toMinorUnits(input.amount * snapshot.rate),
-      workspaceCurrencyCode: workspace.baseCurrencyCode,
+      workspaceCurrencyCode: space.baseCurrencyCode,
       exchangeRate: snapshot.rate,
       exchangeRateDate: snapshot.rateDate,
       expenseDate: template.nextOccurrenceDate,

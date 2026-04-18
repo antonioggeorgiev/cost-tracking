@@ -2,21 +2,23 @@ import { z } from "zod";
 import { DebtAccountKind, DebtDirection, RecurringFrequency } from "@/generated/prisma/enums";
 import { supportedCurrencies } from "@/lib/currency";
 import { debtService } from "@/server/services/debt-service";
-import { createTRPCRouter, workspaceEditorProcedure, workspaceMemberProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedProcedure, spaceEditorProcedure, spaceMemberProcedure } from "@/server/trpc";
 
 export const debtsRouter = createTRPCRouter({
-  list: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1) }))
-    .query(({ ctx }) => debtService.listAccounts(ctx.membership.workspaceId)),
+  listAllSpaces: protectedProcedure.query(({ ctx }) => debtService.listAllUserAccounts(ctx.user.id)),
 
-  getById: workspaceMemberProcedure
-    .input(z.object({ workspaceSlug: z.string().min(1), debtAccountId: z.string().min(1) }))
-    .query(({ ctx, input }) => debtService.getById(ctx.membership.workspaceId, input.debtAccountId)),
+  list: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1) }))
+    .query(({ ctx }) => debtService.listAccounts(ctx.membership.spaceId)),
 
-  update: workspaceEditorProcedure
+  getById: spaceMemberProcedure
+    .input(z.object({ spaceSlug: z.string().min(1), debtAccountId: z.string().min(1) }))
+    .query(({ ctx, input }) => debtService.getById(ctx.membership.spaceId, input.debtAccountId)),
+
+  update: spaceEditorProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         debtAccountId: z.string().min(1),
         kind: z.nativeEnum(DebtAccountKind).optional(),
         direction: z.nativeEnum(DebtDirection).optional(),
@@ -40,14 +42,14 @@ export const debtsRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      const { workspaceSlug: _, debtAccountId, ...rest } = input;
-      return debtService.updateAccount(ctx.membership.workspaceId, debtAccountId, rest);
+      const { spaceSlug: _, debtAccountId, ...rest } = input;
+      return debtService.updateAccount(ctx.membership.spaceId, debtAccountId, rest);
     }),
 
-  createAccount: workspaceEditorProcedure
+  createAccount: spaceEditorProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         kind: z.nativeEnum(DebtAccountKind),
         direction: z.nativeEnum(DebtDirection),
         name: z.string().trim().min(2).max(120),
@@ -70,7 +72,7 @@ export const debtsRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => {
       return debtService.createAccount({
-        workspaceId: ctx.membership.workspaceId,
+        spaceId: ctx.membership.spaceId,
         kind: input.kind,
         direction: input.direction,
         name: input.name,
@@ -92,10 +94,10 @@ export const debtsRouter = createTRPCRouter({
       });
     }),
 
-  createPayment: workspaceEditorProcedure
+  createPayment: spaceEditorProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         debtAccountId: z.string().cuid(),
         amount: z.coerce.number().positive(),
         currencyCode: z.enum(supportedCurrencies),
@@ -107,7 +109,7 @@ export const debtsRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => {
       return debtService.createPayment({
-        workspaceId: ctx.membership.workspaceId,
+        spaceId: ctx.membership.spaceId,
         paidByUserId: ctx.user.id,
         debtAccountId: input.debtAccountId,
         amount: input.amount,
@@ -119,13 +121,13 @@ export const debtsRouter = createTRPCRouter({
       });
     }),
 
-  monthStatus: workspaceMemberProcedure
+  monthStatus: spaceMemberProcedure
     .input(
       z.object({
-        workspaceSlug: z.string().min(1),
+        spaceSlug: z.string().min(1),
         year: z.number().int(),
         month: z.number().int().min(0).max(11),
       }),
     )
-    .query(({ ctx, input }) => debtService.getAllDebtsMonthStatus(ctx.membership.workspaceId, input.year, input.month)),
+    .query(({ ctx, input }) => debtService.getAllDebtsMonthStatus(ctx.membership.spaceId, input.year, input.month)),
 });

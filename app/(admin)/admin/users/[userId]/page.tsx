@@ -43,7 +43,7 @@ export default async function AdminUserDetailPage({ params }: UserDetailPageProp
                 <span>·</span>
                 <span>{user.expenseCount} expenses</span>
                 <span>·</span>
-                <span>{user.workspaces.length} workspaces</span>
+                <span>{user.spaces.length} spaces</span>
               </div>
             </div>
           </div>
@@ -75,29 +75,29 @@ export default async function AdminUserDetailPage({ params }: UserDetailPageProp
         </div>
       </section>
 
-      {/* Workspaces */}
+      {/* Spaces */}
       <section className="rounded-2xl border border-border bg-surface shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-heading text-base font-semibold text-heading">Workspaces</h2>
-          <span className="text-sm text-body">{user.workspaces.length} workspaces</span>
+          <h2 className="font-heading text-base font-semibold text-heading">Spaces</h2>
+          <span className="text-sm text-body">{user.spaces.length} spaces</span>
         </div>
 
-        {user.workspaces.length > 0 ? (
+        {user.spaces.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-surface-secondary text-left">
-                  <th className="px-6 py-3 font-medium text-body">Workspace</th>
+                  <th className="px-6 py-3 font-medium text-body">Space</th>
                   <th className="px-6 py-3 font-medium text-body">Currency</th>
                   <th className="px-6 py-3 font-medium text-body">Role</th>
                   <th className="px-6 py-3 font-medium text-body">Joined</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {user.workspaces.map((ws) => (
+                {user.spaces.map((ws) => (
                   <tr key={ws.id} className="transition hover:bg-surface-secondary">
                     <td className="px-6 py-3">
-                      <Link href={routes.adminWorkspace(ws.id)} className="font-medium text-heading hover:underline">
+                      <Link href={routes.adminSpace(ws.id)} className="font-medium text-heading hover:underline">
                         {ws.name}
                       </Link>
                     </td>
@@ -121,7 +121,7 @@ export default async function AdminUserDetailPage({ params }: UserDetailPageProp
           </div>
         ) : (
           <div className="px-6 py-12 text-center text-sm text-body">
-            This user is not a member of any workspace.
+            This user is not a member of any space.
           </div>
         )}
       </section>

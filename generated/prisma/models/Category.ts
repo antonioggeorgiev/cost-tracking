@@ -36,7 +36,7 @@ export type CategorySumAggregateOutputType = {
 
 export type CategoryMinAggregateOutputType = {
   id: string | null
-  workspaceId: string | null
+  spaceId: string | null
   name: string | null
   slug: string | null
   parentCategoryId: string | null
@@ -49,7 +49,7 @@ export type CategoryMinAggregateOutputType = {
 
 export type CategoryMaxAggregateOutputType = {
   id: string | null
-  workspaceId: string | null
+  spaceId: string | null
   name: string | null
   slug: string | null
   parentCategoryId: string | null
@@ -62,7 +62,7 @@ export type CategoryMaxAggregateOutputType = {
 
 export type CategoryCountAggregateOutputType = {
   id: number
-  workspaceId: number
+  spaceId: number
   name: number
   slug: number
   parentCategoryId: number
@@ -85,7 +85,7 @@ export type CategorySumAggregateInputType = {
 
 export type CategoryMinAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   name?: true
   slug?: true
   parentCategoryId?: true
@@ -98,7 +98,7 @@ export type CategoryMinAggregateInputType = {
 
 export type CategoryMaxAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   name?: true
   slug?: true
   parentCategoryId?: true
@@ -111,7 +111,7 @@ export type CategoryMaxAggregateInputType = {
 
 export type CategoryCountAggregateInputType = {
   id?: true
-  workspaceId?: true
+  spaceId?: true
   name?: true
   slug?: true
   parentCategoryId?: true
@@ -211,7 +211,7 @@ export type CategoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type CategoryGroupByOutputType = {
   id: string
-  workspaceId: string | null
+  spaceId: string | null
   name: string
   slug: string
   parentCategoryId: string | null
@@ -247,7 +247,7 @@ export type CategoryWhereInput = {
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   id?: Prisma.StringFilter<"Category"> | string
-  workspaceId?: Prisma.StringNullableFilter<"Category"> | string | null
+  spaceId?: Prisma.StringNullableFilter<"Category"> | string | null
   name?: Prisma.StringFilter<"Category"> | string
   slug?: Prisma.StringFilter<"Category"> | string
   parentCategoryId?: Prisma.StringNullableFilter<"Category"> | string | null
@@ -256,7 +256,7 @@ export type CategoryWhereInput = {
   color?: Prisma.StringNullableFilter<"Category"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
-  workspace?: Prisma.XOR<Prisma.WorkspaceNullableScalarRelationFilter, Prisma.WorkspaceWhereInput> | null
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
   parentCategory?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   childCategories?: Prisma.CategoryListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
@@ -265,7 +265,7 @@ export type CategoryWhereInput = {
 
 export type CategoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   parentCategoryId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -274,7 +274,7 @@ export type CategoryOrderByWithRelationInput = {
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  workspace?: Prisma.WorkspaceOrderByWithRelationInput
+  space?: Prisma.SpaceOrderByWithRelationInput
   parentCategory?: Prisma.CategoryOrderByWithRelationInput
   childCategories?: Prisma.CategoryOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
@@ -283,11 +283,11 @@ export type CategoryOrderByWithRelationInput = {
 
 export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  workspaceId_parentCategoryId_slug?: Prisma.CategoryWorkspaceIdParentCategoryIdSlugCompoundUniqueInput
+  spaceId_parentCategoryId_slug?: Prisma.CategorySpaceIdParentCategoryIdSlugCompoundUniqueInput
   AND?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
-  workspaceId?: Prisma.StringNullableFilter<"Category"> | string | null
+  spaceId?: Prisma.StringNullableFilter<"Category"> | string | null
   name?: Prisma.StringFilter<"Category"> | string
   slug?: Prisma.StringFilter<"Category"> | string
   parentCategoryId?: Prisma.StringNullableFilter<"Category"> | string | null
@@ -296,16 +296,16 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   color?: Prisma.StringNullableFilter<"Category"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
-  workspace?: Prisma.XOR<Prisma.WorkspaceNullableScalarRelationFilter, Prisma.WorkspaceWhereInput> | null
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
   parentCategory?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   childCategories?: Prisma.CategoryListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   recurringTemplates?: Prisma.RecurringExpenseTemplateListRelationFilter
-}, "id" | "workspaceId_parentCategoryId_slug">
+}, "id" | "spaceId_parentCategoryId_slug">
 
 export type CategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   parentCategoryId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -326,7 +326,7 @@ export type CategoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.CategoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CategoryScalarWhereWithAggregatesInput | Prisma.CategoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Category"> | string
-  workspaceId?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null
+  spaceId?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Category"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Category"> | string
   parentCategoryId?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null
@@ -346,7 +346,7 @@ export type CategoryCreateInput = {
   color?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace?: Prisma.WorkspaceCreateNestedOneWithoutCategoriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutCategoriesInput
   parentCategory?: Prisma.CategoryCreateNestedOneWithoutChildCategoriesInput
   childCategories?: Prisma.CategoryCreateNestedManyWithoutParentCategoryInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCategoryInput
@@ -355,7 +355,7 @@ export type CategoryCreateInput = {
 
 export type CategoryUncheckedCreateInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   parentCategoryId?: string | null
@@ -378,7 +378,7 @@ export type CategoryUpdateInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneWithoutCategoriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutCategoriesNestedInput
   parentCategory?: Prisma.CategoryUpdateOneWithoutChildCategoriesNestedInput
   childCategories?: Prisma.CategoryUpdateManyWithoutParentCategoryNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCategoryNestedInput
@@ -387,7 +387,7 @@ export type CategoryUpdateInput = {
 
 export type CategoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   parentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -403,7 +403,7 @@ export type CategoryUncheckedUpdateInput = {
 
 export type CategoryCreateManyInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   parentCategoryId?: string | null
@@ -427,7 +427,7 @@ export type CategoryUpdateManyMutationInput = {
 
 export type CategoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   parentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -453,15 +453,15 @@ export type CategoryOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type CategoryWorkspaceIdParentCategoryIdSlugCompoundUniqueInput = {
-  workspaceId: string
+export type CategorySpaceIdParentCategoryIdSlugCompoundUniqueInput = {
+  spaceId: string
   parentCategoryId: string
   slug: string
 }
 
 export type CategoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   parentCategoryId?: Prisma.SortOrder
@@ -478,7 +478,7 @@ export type CategoryAvgOrderByAggregateInput = {
 
 export type CategoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   parentCategoryId?: Prisma.SortOrder
@@ -491,7 +491,7 @@ export type CategoryMaxOrderByAggregateInput = {
 
 export type CategoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  workspaceId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   parentCategoryId?: Prisma.SortOrder
@@ -607,45 +607,45 @@ export type CategoryUpdateOneRequiredWithoutRecurringTemplatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutRecurringTemplatesInput, Prisma.CategoryUpdateWithoutRecurringTemplatesInput>, Prisma.CategoryUncheckedUpdateWithoutRecurringTemplatesInput>
 }
 
-export type CategoryCreateNestedManyWithoutWorkspaceInput = {
-  create?: Prisma.XOR<Prisma.CategoryCreateWithoutWorkspaceInput, Prisma.CategoryUncheckedCreateWithoutWorkspaceInput> | Prisma.CategoryCreateWithoutWorkspaceInput[] | Prisma.CategoryUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutWorkspaceInput | Prisma.CategoryCreateOrConnectWithoutWorkspaceInput[]
-  createMany?: Prisma.CategoryCreateManyWorkspaceInputEnvelope
+export type CategoryCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSpaceInput, Prisma.CategoryUncheckedCreateWithoutSpaceInput> | Prisma.CategoryCreateWithoutSpaceInput[] | Prisma.CategoryUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSpaceInput | Prisma.CategoryCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.CategoryCreateManySpaceInputEnvelope
   connect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
 }
 
-export type CategoryUncheckedCreateNestedManyWithoutWorkspaceInput = {
-  create?: Prisma.XOR<Prisma.CategoryCreateWithoutWorkspaceInput, Prisma.CategoryUncheckedCreateWithoutWorkspaceInput> | Prisma.CategoryCreateWithoutWorkspaceInput[] | Prisma.CategoryUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutWorkspaceInput | Prisma.CategoryCreateOrConnectWithoutWorkspaceInput[]
-  createMany?: Prisma.CategoryCreateManyWorkspaceInputEnvelope
+export type CategoryUncheckedCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSpaceInput, Prisma.CategoryUncheckedCreateWithoutSpaceInput> | Prisma.CategoryCreateWithoutSpaceInput[] | Prisma.CategoryUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSpaceInput | Prisma.CategoryCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.CategoryCreateManySpaceInputEnvelope
   connect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
 }
 
-export type CategoryUpdateManyWithoutWorkspaceNestedInput = {
-  create?: Prisma.XOR<Prisma.CategoryCreateWithoutWorkspaceInput, Prisma.CategoryUncheckedCreateWithoutWorkspaceInput> | Prisma.CategoryCreateWithoutWorkspaceInput[] | Prisma.CategoryUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutWorkspaceInput | Prisma.CategoryCreateOrConnectWithoutWorkspaceInput[]
-  upsert?: Prisma.CategoryUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.CategoryUpsertWithWhereUniqueWithoutWorkspaceInput[]
-  createMany?: Prisma.CategoryCreateManyWorkspaceInputEnvelope
+export type CategoryUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSpaceInput, Prisma.CategoryUncheckedCreateWithoutSpaceInput> | Prisma.CategoryCreateWithoutSpaceInput[] | Prisma.CategoryUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSpaceInput | Prisma.CategoryCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.CategoryUpsertWithWhereUniqueWithoutSpaceInput | Prisma.CategoryUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.CategoryCreateManySpaceInputEnvelope
   set?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
   disconnect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
   delete?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
   connect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
-  update?: Prisma.CategoryUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.CategoryUpdateWithWhereUniqueWithoutWorkspaceInput[]
-  updateMany?: Prisma.CategoryUpdateManyWithWhereWithoutWorkspaceInput | Prisma.CategoryUpdateManyWithWhereWithoutWorkspaceInput[]
+  update?: Prisma.CategoryUpdateWithWhereUniqueWithoutSpaceInput | Prisma.CategoryUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.CategoryUpdateManyWithWhereWithoutSpaceInput | Prisma.CategoryUpdateManyWithWhereWithoutSpaceInput[]
   deleteMany?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
 }
 
-export type CategoryUncheckedUpdateManyWithoutWorkspaceNestedInput = {
-  create?: Prisma.XOR<Prisma.CategoryCreateWithoutWorkspaceInput, Prisma.CategoryUncheckedCreateWithoutWorkspaceInput> | Prisma.CategoryCreateWithoutWorkspaceInput[] | Prisma.CategoryUncheckedCreateWithoutWorkspaceInput[]
-  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutWorkspaceInput | Prisma.CategoryCreateOrConnectWithoutWorkspaceInput[]
-  upsert?: Prisma.CategoryUpsertWithWhereUniqueWithoutWorkspaceInput | Prisma.CategoryUpsertWithWhereUniqueWithoutWorkspaceInput[]
-  createMany?: Prisma.CategoryCreateManyWorkspaceInputEnvelope
+export type CategoryUncheckedUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSpaceInput, Prisma.CategoryUncheckedCreateWithoutSpaceInput> | Prisma.CategoryCreateWithoutSpaceInput[] | Prisma.CategoryUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSpaceInput | Prisma.CategoryCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.CategoryUpsertWithWhereUniqueWithoutSpaceInput | Prisma.CategoryUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.CategoryCreateManySpaceInputEnvelope
   set?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
   disconnect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
   delete?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
   connect?: Prisma.CategoryWhereUniqueInput | Prisma.CategoryWhereUniqueInput[]
-  update?: Prisma.CategoryUpdateWithWhereUniqueWithoutWorkspaceInput | Prisma.CategoryUpdateWithWhereUniqueWithoutWorkspaceInput[]
-  updateMany?: Prisma.CategoryUpdateManyWithWhereWithoutWorkspaceInput | Prisma.CategoryUpdateManyWithWhereWithoutWorkspaceInput[]
+  update?: Prisma.CategoryUpdateWithWhereUniqueWithoutSpaceInput | Prisma.CategoryUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.CategoryUpdateManyWithWhereWithoutSpaceInput | Prisma.CategoryUpdateManyWithWhereWithoutSpaceInput[]
   deleteMany?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
 }
 
@@ -658,7 +658,7 @@ export type CategoryCreateWithoutChildCategoriesInput = {
   color?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace?: Prisma.WorkspaceCreateNestedOneWithoutCategoriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutCategoriesInput
   parentCategory?: Prisma.CategoryCreateNestedOneWithoutChildCategoriesInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCategoryInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCategoryInput
@@ -666,7 +666,7 @@ export type CategoryCreateWithoutChildCategoriesInput = {
 
 export type CategoryUncheckedCreateWithoutChildCategoriesInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   parentCategoryId?: string | null
@@ -693,7 +693,7 @@ export type CategoryCreateWithoutParentCategoryInput = {
   color?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace?: Prisma.WorkspaceCreateNestedOneWithoutCategoriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutCategoriesInput
   childCategories?: Prisma.CategoryCreateNestedManyWithoutParentCategoryInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCategoryInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCategoryInput
@@ -701,7 +701,7 @@ export type CategoryCreateWithoutParentCategoryInput = {
 
 export type CategoryUncheckedCreateWithoutParentCategoryInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   isArchived?: boolean
@@ -744,7 +744,7 @@ export type CategoryUpdateWithoutChildCategoriesInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneWithoutCategoriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutCategoriesNestedInput
   parentCategory?: Prisma.CategoryUpdateOneWithoutChildCategoriesNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCategoryNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCategoryNestedInput
@@ -752,7 +752,7 @@ export type CategoryUpdateWithoutChildCategoriesInput = {
 
 export type CategoryUncheckedUpdateWithoutChildCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   parentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -786,7 +786,7 @@ export type CategoryScalarWhereInput = {
   OR?: Prisma.CategoryScalarWhereInput[]
   NOT?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
   id?: Prisma.StringFilter<"Category"> | string
-  workspaceId?: Prisma.StringNullableFilter<"Category"> | string | null
+  spaceId?: Prisma.StringNullableFilter<"Category"> | string | null
   name?: Prisma.StringFilter<"Category"> | string
   slug?: Prisma.StringFilter<"Category"> | string
   parentCategoryId?: Prisma.StringNullableFilter<"Category"> | string | null
@@ -806,7 +806,7 @@ export type CategoryCreateWithoutExpensesInput = {
   color?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace?: Prisma.WorkspaceCreateNestedOneWithoutCategoriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutCategoriesInput
   parentCategory?: Prisma.CategoryCreateNestedOneWithoutChildCategoriesInput
   childCategories?: Prisma.CategoryCreateNestedManyWithoutParentCategoryInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCategoryInput
@@ -814,7 +814,7 @@ export type CategoryCreateWithoutExpensesInput = {
 
 export type CategoryUncheckedCreateWithoutExpensesInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   parentCategoryId?: string | null
@@ -852,7 +852,7 @@ export type CategoryUpdateWithoutExpensesInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneWithoutCategoriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutCategoriesNestedInput
   parentCategory?: Prisma.CategoryUpdateOneWithoutChildCategoriesNestedInput
   childCategories?: Prisma.CategoryUpdateManyWithoutParentCategoryNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCategoryNestedInput
@@ -860,7 +860,7 @@ export type CategoryUpdateWithoutExpensesInput = {
 
 export type CategoryUncheckedUpdateWithoutExpensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   parentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -882,7 +882,7 @@ export type CategoryCreateWithoutRecurringTemplatesInput = {
   color?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  workspace?: Prisma.WorkspaceCreateNestedOneWithoutCategoriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutCategoriesInput
   parentCategory?: Prisma.CategoryCreateNestedOneWithoutChildCategoriesInput
   childCategories?: Prisma.CategoryCreateNestedManyWithoutParentCategoryInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCategoryInput
@@ -890,7 +890,7 @@ export type CategoryCreateWithoutRecurringTemplatesInput = {
 
 export type CategoryUncheckedCreateWithoutRecurringTemplatesInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   parentCategoryId?: string | null
@@ -928,7 +928,7 @@ export type CategoryUpdateWithoutRecurringTemplatesInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneWithoutCategoriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutCategoriesNestedInput
   parentCategory?: Prisma.CategoryUpdateOneWithoutChildCategoriesNestedInput
   childCategories?: Prisma.CategoryUpdateManyWithoutParentCategoryNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCategoryNestedInput
@@ -936,7 +936,7 @@ export type CategoryUpdateWithoutRecurringTemplatesInput = {
 
 export type CategoryUncheckedUpdateWithoutRecurringTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   parentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -949,7 +949,7 @@ export type CategoryUncheckedUpdateWithoutRecurringTemplatesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
-export type CategoryCreateWithoutWorkspaceInput = {
+export type CategoryCreateWithoutSpaceInput = {
   id?: string
   name: string
   slug: string
@@ -964,7 +964,7 @@ export type CategoryCreateWithoutWorkspaceInput = {
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCategoryInput
 }
 
-export type CategoryUncheckedCreateWithoutWorkspaceInput = {
+export type CategoryUncheckedCreateWithoutSpaceInput = {
   id?: string
   name: string
   slug: string
@@ -979,35 +979,35 @@ export type CategoryUncheckedCreateWithoutWorkspaceInput = {
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCategoryInput
 }
 
-export type CategoryCreateOrConnectWithoutWorkspaceInput = {
+export type CategoryCreateOrConnectWithoutSpaceInput = {
   where: Prisma.CategoryWhereUniqueInput
-  create: Prisma.XOR<Prisma.CategoryCreateWithoutWorkspaceInput, Prisma.CategoryUncheckedCreateWithoutWorkspaceInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutSpaceInput, Prisma.CategoryUncheckedCreateWithoutSpaceInput>
 }
 
-export type CategoryCreateManyWorkspaceInputEnvelope = {
-  data: Prisma.CategoryCreateManyWorkspaceInput | Prisma.CategoryCreateManyWorkspaceInput[]
+export type CategoryCreateManySpaceInputEnvelope = {
+  data: Prisma.CategoryCreateManySpaceInput | Prisma.CategoryCreateManySpaceInput[]
   skipDuplicates?: boolean
 }
 
-export type CategoryUpsertWithWhereUniqueWithoutWorkspaceInput = {
+export type CategoryUpsertWithWhereUniqueWithoutSpaceInput = {
   where: Prisma.CategoryWhereUniqueInput
-  update: Prisma.XOR<Prisma.CategoryUpdateWithoutWorkspaceInput, Prisma.CategoryUncheckedUpdateWithoutWorkspaceInput>
-  create: Prisma.XOR<Prisma.CategoryCreateWithoutWorkspaceInput, Prisma.CategoryUncheckedCreateWithoutWorkspaceInput>
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutSpaceInput, Prisma.CategoryUncheckedUpdateWithoutSpaceInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutSpaceInput, Prisma.CategoryUncheckedCreateWithoutSpaceInput>
 }
 
-export type CategoryUpdateWithWhereUniqueWithoutWorkspaceInput = {
+export type CategoryUpdateWithWhereUniqueWithoutSpaceInput = {
   where: Prisma.CategoryWhereUniqueInput
-  data: Prisma.XOR<Prisma.CategoryUpdateWithoutWorkspaceInput, Prisma.CategoryUncheckedUpdateWithoutWorkspaceInput>
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutSpaceInput, Prisma.CategoryUncheckedUpdateWithoutSpaceInput>
 }
 
-export type CategoryUpdateManyWithWhereWithoutWorkspaceInput = {
+export type CategoryUpdateManyWithWhereWithoutSpaceInput = {
   where: Prisma.CategoryScalarWhereInput
-  data: Prisma.XOR<Prisma.CategoryUpdateManyMutationInput, Prisma.CategoryUncheckedUpdateManyWithoutWorkspaceInput>
+  data: Prisma.XOR<Prisma.CategoryUpdateManyMutationInput, Prisma.CategoryUncheckedUpdateManyWithoutSpaceInput>
 }
 
 export type CategoryCreateManyParentCategoryInput = {
   id?: string
-  workspaceId?: string | null
+  spaceId?: string | null
   name: string
   slug: string
   isArchived?: boolean
@@ -1026,7 +1026,7 @@ export type CategoryUpdateWithoutParentCategoryInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  workspace?: Prisma.WorkspaceUpdateOneWithoutCategoriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutCategoriesNestedInput
   childCategories?: Prisma.CategoryUpdateManyWithoutParentCategoryNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCategoryNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCategoryNestedInput
@@ -1034,7 +1034,7 @@ export type CategoryUpdateWithoutParentCategoryInput = {
 
 export type CategoryUncheckedUpdateWithoutParentCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1049,7 +1049,7 @@ export type CategoryUncheckedUpdateWithoutParentCategoryInput = {
 
 export type CategoryUncheckedUpdateManyWithoutParentCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  workspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1059,7 +1059,7 @@ export type CategoryUncheckedUpdateManyWithoutParentCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type CategoryCreateManyWorkspaceInput = {
+export type CategoryCreateManySpaceInput = {
   id?: string
   name: string
   slug: string
@@ -1071,7 +1071,7 @@ export type CategoryCreateManyWorkspaceInput = {
   updatedAt?: Date | string
 }
 
-export type CategoryUpdateWithoutWorkspaceInput = {
+export type CategoryUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1086,7 +1086,7 @@ export type CategoryUpdateWithoutWorkspaceInput = {
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCategoryNestedInput
 }
 
-export type CategoryUncheckedUpdateWithoutWorkspaceInput = {
+export type CategoryUncheckedUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1101,7 +1101,7 @@ export type CategoryUncheckedUpdateWithoutWorkspaceInput = {
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
-export type CategoryUncheckedUpdateManyWithoutWorkspaceInput = {
+export type CategoryUncheckedUpdateManyWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1164,7 +1164,7 @@ export type CategoryCountOutputTypeCountRecurringTemplatesArgs<ExtArgs extends r
 
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   name?: boolean
   slug?: boolean
   parentCategoryId?: boolean
@@ -1173,7 +1173,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.Category$workspaceArgs<ExtArgs>
+  space?: boolean | Prisma.Category$spaceArgs<ExtArgs>
   parentCategory?: boolean | Prisma.Category$parentCategoryArgs<ExtArgs>
   childCategories?: boolean | Prisma.Category$childCategoriesArgs<ExtArgs>
   expenses?: boolean | Prisma.Category$expensesArgs<ExtArgs>
@@ -1183,7 +1183,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 
 export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   name?: boolean
   slug?: boolean
   parentCategoryId?: boolean
@@ -1192,13 +1192,13 @@ export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.Category$workspaceArgs<ExtArgs>
+  space?: boolean | Prisma.Category$spaceArgs<ExtArgs>
   parentCategory?: boolean | Prisma.Category$parentCategoryArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   name?: boolean
   slug?: boolean
   parentCategoryId?: boolean
@@ -1207,13 +1207,13 @@ export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  workspace?: boolean | Prisma.Category$workspaceArgs<ExtArgs>
+  space?: boolean | Prisma.Category$spaceArgs<ExtArgs>
   parentCategory?: boolean | Prisma.Category$parentCategoryArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectScalar = {
   id?: boolean
-  workspaceId?: boolean
+  spaceId?: boolean
   name?: boolean
   slug?: boolean
   parentCategoryId?: boolean
@@ -1224,9 +1224,9 @@ export type CategorySelectScalar = {
   updatedAt?: boolean
 }
 
-export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workspaceId" | "name" | "slug" | "parentCategoryId" | "isArchived" | "sortOrder" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "spaceId" | "name" | "slug" | "parentCategoryId" | "isArchived" | "sortOrder" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.Category$workspaceArgs<ExtArgs>
+  space?: boolean | Prisma.Category$spaceArgs<ExtArgs>
   parentCategory?: boolean | Prisma.Category$parentCategoryArgs<ExtArgs>
   childCategories?: boolean | Prisma.Category$childCategoriesArgs<ExtArgs>
   expenses?: boolean | Prisma.Category$expensesArgs<ExtArgs>
@@ -1234,18 +1234,18 @@ export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.Category$workspaceArgs<ExtArgs>
+  space?: boolean | Prisma.Category$spaceArgs<ExtArgs>
   parentCategory?: boolean | Prisma.Category$parentCategoryArgs<ExtArgs>
 }
 export type CategoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  workspace?: boolean | Prisma.Category$workspaceArgs<ExtArgs>
+  space?: boolean | Prisma.Category$spaceArgs<ExtArgs>
   parentCategory?: boolean | Prisma.Category$parentCategoryArgs<ExtArgs>
 }
 
 export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Category"
   objects: {
-    workspace: Prisma.$WorkspacePayload<ExtArgs> | null
+    space: Prisma.$SpacePayload<ExtArgs> | null
     parentCategory: Prisma.$CategoryPayload<ExtArgs> | null
     childCategories: Prisma.$CategoryPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
@@ -1253,7 +1253,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    workspaceId: string | null
+    spaceId: string | null
     name: string
     slug: string
     parentCategoryId: string | null
@@ -1656,7 +1656,7 @@ readonly fields: CategoryFieldRefs;
  */
 export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  workspace<T extends Prisma.Category$workspaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$workspaceArgs<ExtArgs>>): Prisma.Prisma__WorkspaceClient<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  space<T extends Prisma.Category$spaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$spaceArgs<ExtArgs>>): Prisma.Prisma__SpaceClient<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   parentCategory<T extends Prisma.Category$parentCategoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$parentCategoryArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   childCategories<T extends Prisma.Category$childCategoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$childCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Category$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1691,7 +1691,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
  */
 export interface CategoryFieldRefs {
   readonly id: Prisma.FieldRef<"Category", 'String'>
-  readonly workspaceId: Prisma.FieldRef<"Category", 'String'>
+  readonly spaceId: Prisma.FieldRef<"Category", 'String'>
   readonly name: Prisma.FieldRef<"Category", 'String'>
   readonly slug: Prisma.FieldRef<"Category", 'String'>
   readonly parentCategoryId: Prisma.FieldRef<"Category", 'String'>
@@ -2101,22 +2101,22 @@ export type CategoryDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Category.workspace
+ * Category.space
  */
-export type Category$workspaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Category$spaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Workspace
+   * Select specific fields to fetch from the Space
    */
-  select?: Prisma.WorkspaceSelect<ExtArgs> | null
+  select?: Prisma.SpaceSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Workspace
+   * Omit specific fields from the Space
    */
-  omit?: Prisma.WorkspaceOmit<ExtArgs> | null
+  omit?: Prisma.SpaceOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WorkspaceInclude<ExtArgs> | null
-  where?: Prisma.WorkspaceWhereInput
+  include?: Prisma.SpaceInclude<ExtArgs> | null
+  where?: Prisma.SpaceWhereInput
 }
 
 /**

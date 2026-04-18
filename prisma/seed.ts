@@ -308,14 +308,14 @@ async function seed() {
     console.log(`  Admin: ${a.email} (${a.id})`);
   }
 
-  // 2. Seed platform-wide categories (workspaceId = null)
+  // 2. Seed platform-wide categories (spaceId = null)
   let parentCount = 0;
   let childCount = 0;
 
   for (const cat of defaultCategories) {
     // Find or create parent
     let parent = await db.category.findFirst({
-      where: { workspaceId: null, parentCategoryId: null, slug: cat.slug },
+      where: { spaceId: null, parentCategoryId: null, slug: cat.slug },
     });
 
     if (!parent) {
@@ -325,7 +325,7 @@ async function seed() {
           slug: cat.slug,
           color: cat.color,
           sortOrder: cat.sortOrder,
-          // workspaceId omitted = null (platform-wide)
+          // spaceId omitted = null (platform-wide)
         },
       });
       parentCount++;
@@ -334,7 +334,7 @@ async function seed() {
     // Create children
     for (const [idx, child] of cat.children.entries()) {
       const existing = await db.category.findFirst({
-        where: { workspaceId: null, parentCategoryId: parent.id, slug: child.slug },
+        where: { spaceId: null, parentCategoryId: parent.id, slug: child.slug },
       });
 
       if (!existing) {

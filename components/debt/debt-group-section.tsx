@@ -38,13 +38,13 @@ type DebtGroupSectionProps = {
   icon: ReactNode;
   debts: DebtData[];
   baseCurrencyCode: string;
-  workspaceSlug: string;
+  spaceSlug: string;
   canManage: boolean;
   quickPayAction?: (formData: FormData) => Promise<void>;
   monthStatusMap?: Record<string, SerializedMonthStatus>;
 };
 
-export function DebtGroupSection({ title, icon, debts, baseCurrencyCode, workspaceSlug, canManage, quickPayAction, monthStatusMap }: DebtGroupSectionProps) {
+export function DebtGroupSection({ title, icon, debts, baseCurrencyCode, spaceSlug, canManage, quickPayAction, monthStatusMap }: DebtGroupSectionProps) {
   if (debts.length === 0) return null;
 
   const active = debts.filter((d) => d.isActive);
@@ -102,7 +102,7 @@ export function DebtGroupSection({ title, icon, debts, baseCurrencyCode, workspa
           <DebtCard
             key={debt.id}
             debt={debt}
-            workspaceSlug={workspaceSlug}
+            spaceSlug={spaceSlug}
             canManage={canManage}
             quickPayAction={quickPayAction}
             monthStatus={monthStatusMap?.[debt.id]}

@@ -206,13 +206,15 @@ export type UserWhereInput = {
   isPlatformAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  createdWorkspaces?: Prisma.WorkspaceListRelationFilter
-  memberships?: Prisma.WorkspaceMembershipListRelationFilter
-  sentInvites?: Prisma.WorkspaceInviteListRelationFilter
-  acceptedInvites?: Prisma.WorkspaceInviteListRelationFilter
+  createdSpaces?: Prisma.SpaceListRelationFilter
+  memberships?: Prisma.SpaceMembershipListRelationFilter
+  sentInvites?: Prisma.SpaceInviteListRelationFilter
+  acceptedInvites?: Prisma.SpaceInviteListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
+  paidExpenses?: Prisma.ExpenseListRelationFilter
   recurringTemplates?: Prisma.RecurringExpenseTemplateListRelationFilter
   debtPayments?: Prisma.DebtPaymentListRelationFilter
+  expenseSplits?: Prisma.ExpenseSplitListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -224,13 +226,15 @@ export type UserOrderByWithRelationInput = {
   isPlatformAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  createdWorkspaces?: Prisma.WorkspaceOrderByRelationAggregateInput
-  memberships?: Prisma.WorkspaceMembershipOrderByRelationAggregateInput
-  sentInvites?: Prisma.WorkspaceInviteOrderByRelationAggregateInput
-  acceptedInvites?: Prisma.WorkspaceInviteOrderByRelationAggregateInput
+  createdSpaces?: Prisma.SpaceOrderByRelationAggregateInput
+  memberships?: Prisma.SpaceMembershipOrderByRelationAggregateInput
+  sentInvites?: Prisma.SpaceInviteOrderByRelationAggregateInput
+  acceptedInvites?: Prisma.SpaceInviteOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  paidExpenses?: Prisma.ExpenseOrderByRelationAggregateInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateOrderByRelationAggregateInput
   debtPayments?: Prisma.DebtPaymentOrderByRelationAggregateInput
+  expenseSplits?: Prisma.ExpenseSplitOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -245,13 +249,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isPlatformAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  createdWorkspaces?: Prisma.WorkspaceListRelationFilter
-  memberships?: Prisma.WorkspaceMembershipListRelationFilter
-  sentInvites?: Prisma.WorkspaceInviteListRelationFilter
-  acceptedInvites?: Prisma.WorkspaceInviteListRelationFilter
+  createdSpaces?: Prisma.SpaceListRelationFilter
+  memberships?: Prisma.SpaceMembershipListRelationFilter
+  sentInvites?: Prisma.SpaceInviteListRelationFilter
+  acceptedInvites?: Prisma.SpaceInviteListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
+  paidExpenses?: Prisma.ExpenseListRelationFilter
   recurringTemplates?: Prisma.RecurringExpenseTemplateListRelationFilter
   debtPayments?: Prisma.DebtPaymentListRelationFilter
+  expenseSplits?: Prisma.ExpenseSplitListRelationFilter
 }, "id" | "clerkUserId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -291,13 +297,15 @@ export type UserCreateInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -309,13 +317,15 @@ export type UserUncheckedCreateInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -327,13 +337,15 @@ export type UserUpdateInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -345,13 +357,15 @@ export type UserUncheckedUpdateInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -392,6 +406,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clerkUserId?: Prisma.SortOrder
@@ -425,11 +444,6 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type UserNullableScalarRelationFilter = {
-  is?: Prisma.UserWhereInput | null
-  isNot?: Prisma.UserWhereInput | null
-}
-
 export type UserCreateNestedOneWithoutDebtPaymentsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutDebtPaymentsInput, Prisma.UserUncheckedCreateWithoutDebtPaymentsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutDebtPaymentsInput
@@ -450,12 +464,42 @@ export type UserCreateNestedOneWithoutExpensesInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutPaidExpensesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaidExpensesInput, Prisma.UserUncheckedCreateWithoutPaidExpensesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaidExpensesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneRequiredWithoutExpensesNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutExpensesInput, Prisma.UserUncheckedCreateWithoutExpensesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpensesInput
   upsert?: Prisma.UserUpsertWithoutExpensesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExpensesInput, Prisma.UserUpdateWithoutExpensesInput>, Prisma.UserUncheckedUpdateWithoutExpensesInput>
+}
+
+export type UserUpdateOneWithoutPaidExpensesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaidExpensesInput, Prisma.UserUncheckedCreateWithoutPaidExpensesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaidExpensesInput
+  upsert?: Prisma.UserUpsertWithoutPaidExpensesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPaidExpensesInput, Prisma.UserUpdateWithoutPaidExpensesInput>, Prisma.UserUncheckedUpdateWithoutPaidExpensesInput>
+}
+
+export type UserCreateNestedOneWithoutExpenseSplitsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExpenseSplitsInput, Prisma.UserUncheckedCreateWithoutExpenseSplitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpenseSplitsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutExpenseSplitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExpenseSplitsInput, Prisma.UserUncheckedCreateWithoutExpenseSplitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpenseSplitsInput
+  upsert?: Prisma.UserUpsertWithoutExpenseSplitsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExpenseSplitsInput, Prisma.UserUpdateWithoutExpenseSplitsInput>, Prisma.UserUncheckedUpdateWithoutExpenseSplitsInput>
 }
 
 export type UserCreateNestedOneWithoutRecurringTemplatesInput = {
@@ -472,18 +516,18 @@ export type UserUpdateOneRequiredWithoutRecurringTemplatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRecurringTemplatesInput, Prisma.UserUpdateWithoutRecurringTemplatesInput>, Prisma.UserUncheckedUpdateWithoutRecurringTemplatesInput>
 }
 
-export type UserCreateNestedOneWithoutCreatedWorkspacesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedWorkspacesInput, Prisma.UserUncheckedCreateWithoutCreatedWorkspacesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedWorkspacesInput
+export type UserCreateNestedOneWithoutCreatedSpacesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedSpacesInput, Prisma.UserUncheckedCreateWithoutCreatedSpacesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedSpacesInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutCreatedWorkspacesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedWorkspacesInput, Prisma.UserUncheckedCreateWithoutCreatedWorkspacesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedWorkspacesInput
-  upsert?: Prisma.UserUpsertWithoutCreatedWorkspacesInput
+export type UserUpdateOneRequiredWithoutCreatedSpacesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedSpacesInput, Prisma.UserUncheckedCreateWithoutCreatedSpacesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedSpacesInput
+  upsert?: Prisma.UserUpsertWithoutCreatedSpacesInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedWorkspacesInput, Prisma.UserUpdateWithoutCreatedWorkspacesInput>, Prisma.UserUncheckedUpdateWithoutCreatedWorkspacesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedSpacesInput, Prisma.UserUpdateWithoutCreatedSpacesInput>, Prisma.UserUncheckedUpdateWithoutCreatedSpacesInput>
 }
 
 export type UserCreateNestedOneWithoutMembershipsInput = {
@@ -539,12 +583,14 @@ export type UserCreateWithoutDebtPaymentsInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDebtPaymentsInput = {
@@ -556,12 +602,14 @@ export type UserUncheckedCreateWithoutDebtPaymentsInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDebtPaymentsInput = {
@@ -589,12 +637,14 @@ export type UserUpdateWithoutDebtPaymentsInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDebtPaymentsInput = {
@@ -606,12 +656,14 @@ export type UserUncheckedUpdateWithoutDebtPaymentsInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExpensesInput = {
@@ -623,12 +675,14 @@ export type UserCreateWithoutExpensesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExpensesInput = {
@@ -640,17 +694,62 @@ export type UserUncheckedCreateWithoutExpensesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExpensesInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutExpensesInput, Prisma.UserUncheckedCreateWithoutExpensesInput>
+}
+
+export type UserCreateWithoutPaidExpensesInput = {
+  id?: string
+  clerkUserId: string
+  email: string
+  name?: string | null
+  imageUrl?: string | null
+  isPlatformAdmin?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
+  debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPaidExpensesInput = {
+  id?: string
+  clerkUserId: string
+  email: string
+  name?: string | null
+  imageUrl?: string | null
+  isPlatformAdmin?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
+  debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPaidExpensesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaidExpensesInput, Prisma.UserUncheckedCreateWithoutPaidExpensesInput>
 }
 
 export type UserUpsertWithoutExpensesInput = {
@@ -673,12 +772,14 @@ export type UserUpdateWithoutExpensesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -690,10 +791,153 @@ export type UserUncheckedUpdateWithoutExpensesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutPaidExpensesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPaidExpensesInput, Prisma.UserUncheckedUpdateWithoutPaidExpensesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaidExpensesInput, Prisma.UserUncheckedCreateWithoutPaidExpensesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPaidExpensesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPaidExpensesInput, Prisma.UserUncheckedUpdateWithoutPaidExpensesInput>
+}
+
+export type UserUpdateWithoutPaidExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
+  debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPaidExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutExpenseSplitsInput = {
+  id?: string
+  clerkUserId: string
+  email: string
+  name?: string | null
+  imageUrl?: string | null
+  isPlatformAdmin?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
+  debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+}
+
+export type UserUncheckedCreateWithoutExpenseSplitsInput = {
+  id?: string
+  clerkUserId: string
+  email: string
+  name?: string | null
+  imageUrl?: string | null
+  isPlatformAdmin?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
+  debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+}
+
+export type UserCreateOrConnectWithoutExpenseSplitsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutExpenseSplitsInput, Prisma.UserUncheckedCreateWithoutExpenseSplitsInput>
+}
+
+export type UserUpsertWithoutExpenseSplitsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutExpenseSplitsInput, Prisma.UserUncheckedUpdateWithoutExpenseSplitsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutExpenseSplitsInput, Prisma.UserUncheckedCreateWithoutExpenseSplitsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutExpenseSplitsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutExpenseSplitsInput, Prisma.UserUncheckedUpdateWithoutExpenseSplitsInput>
+}
+
+export type UserUpdateWithoutExpenseSplitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
+  recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
+  debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutExpenseSplitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
 }
@@ -707,12 +951,14 @@ export type UserCreateWithoutRecurringTemplatesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRecurringTemplatesInput = {
@@ -724,12 +970,14 @@ export type UserUncheckedCreateWithoutRecurringTemplatesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRecurringTemplatesInput = {
@@ -757,12 +1005,14 @@ export type UserUpdateWithoutRecurringTemplatesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecurringTemplatesInput = {
@@ -774,15 +1024,17 @@ export type UserUncheckedUpdateWithoutRecurringTemplatesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutCreatedWorkspacesInput = {
+export type UserCreateWithoutCreatedSpacesInput = {
   id?: string
   clerkUserId: string
   email: string
@@ -791,15 +1043,17 @@ export type UserCreateWithoutCreatedWorkspacesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutCreatedWorkspacesInput = {
+export type UserUncheckedCreateWithoutCreatedSpacesInput = {
   id?: string
   clerkUserId: string
   email: string
@@ -808,31 +1062,33 @@ export type UserUncheckedCreateWithoutCreatedWorkspacesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutCreatedWorkspacesInput = {
+export type UserCreateOrConnectWithoutCreatedSpacesInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedWorkspacesInput, Prisma.UserUncheckedCreateWithoutCreatedWorkspacesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedSpacesInput, Prisma.UserUncheckedCreateWithoutCreatedSpacesInput>
 }
 
-export type UserUpsertWithoutCreatedWorkspacesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedWorkspacesInput, Prisma.UserUncheckedUpdateWithoutCreatedWorkspacesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedWorkspacesInput, Prisma.UserUncheckedCreateWithoutCreatedWorkspacesInput>
+export type UserUpsertWithoutCreatedSpacesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedSpacesInput, Prisma.UserUncheckedUpdateWithoutCreatedSpacesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedSpacesInput, Prisma.UserUncheckedCreateWithoutCreatedSpacesInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutCreatedWorkspacesInput = {
+export type UserUpdateToOneWithWhereWithoutCreatedSpacesInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedWorkspacesInput, Prisma.UserUncheckedUpdateWithoutCreatedWorkspacesInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedSpacesInput, Prisma.UserUncheckedUpdateWithoutCreatedSpacesInput>
 }
 
-export type UserUpdateWithoutCreatedWorkspacesInput = {
+export type UserUpdateWithoutCreatedSpacesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkUserId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -841,15 +1097,17 @@ export type UserUpdateWithoutCreatedWorkspacesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutCreatedWorkspacesInput = {
+export type UserUncheckedUpdateWithoutCreatedSpacesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkUserId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -858,12 +1116,14 @@ export type UserUncheckedUpdateWithoutCreatedWorkspacesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -875,12 +1135,14 @@ export type UserCreateWithoutMembershipsInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -892,12 +1154,14 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -925,12 +1189,14 @@ export type UserUpdateWithoutMembershipsInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -942,12 +1208,14 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentInvitesInput = {
@@ -959,12 +1227,14 @@ export type UserCreateWithoutSentInvitesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  acceptedInvites?: Prisma.SpaceInviteCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentInvitesInput = {
@@ -976,12 +1246,14 @@ export type UserUncheckedCreateWithoutSentInvitesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutAcceptedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentInvitesInput = {
@@ -998,12 +1270,14 @@ export type UserCreateWithoutAcceptedInvitesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteCreateNestedManyWithoutInvitedByUserInput
+  createdSpaces?: Prisma.SpaceCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteCreateNestedManyWithoutInvitedByUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAcceptedInvitesInput = {
@@ -1015,12 +1289,14 @@ export type UserUncheckedCreateWithoutAcceptedInvitesInput = {
   isPlatformAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedCreateNestedManyWithoutCreatedByUserInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedCreateNestedManyWithoutUserInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
+  createdSpaces?: Prisma.SpaceUncheckedCreateNestedManyWithoutCreatedByUserInput
+  memberships?: Prisma.SpaceMembershipUncheckedCreateNestedManyWithoutUserInput
+  sentInvites?: Prisma.SpaceInviteUncheckedCreateNestedManyWithoutInvitedByUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByUserInput
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByUserInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedCreateNestedManyWithoutCreatedByUserInput
   debtPayments?: Prisma.DebtPaymentUncheckedCreateNestedManyWithoutPaidByUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAcceptedInvitesInput = {
@@ -1048,12 +1324,14 @@ export type UserUpdateWithoutSentInvitesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentInvitesInput = {
@@ -1065,12 +1343,14 @@ export type UserUncheckedUpdateWithoutSentInvitesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  acceptedInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  acceptedInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutAcceptedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutAcceptedInvitesInput = {
@@ -1093,12 +1373,14 @@ export type UserUpdateWithoutAcceptedInvitesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUpdateManyWithoutInvitedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUpdateManyWithoutInvitedByUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAcceptedInvitesInput = {
@@ -1110,12 +1392,14 @@ export type UserUncheckedUpdateWithoutAcceptedInvitesInput = {
   isPlatformAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdWorkspaces?: Prisma.WorkspaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  memberships?: Prisma.WorkspaceMembershipUncheckedUpdateManyWithoutUserNestedInput
-  sentInvites?: Prisma.WorkspaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
+  createdSpaces?: Prisma.SpaceUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  memberships?: Prisma.SpaceMembershipUncheckedUpdateManyWithoutUserNestedInput
+  sentInvites?: Prisma.SpaceInviteUncheckedUpdateManyWithoutInvitedByUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByUserNestedInput
   recurringTemplates?: Prisma.RecurringExpenseTemplateUncheckedUpdateManyWithoutCreatedByUserNestedInput
   debtPayments?: Prisma.DebtPaymentUncheckedUpdateManyWithoutPaidByUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1124,23 +1408,27 @@ export type UserUncheckedUpdateWithoutAcceptedInvitesInput = {
  */
 
 export type UserCountOutputType = {
-  createdWorkspaces: number
+  createdSpaces: number
   memberships: number
   sentInvites: number
   acceptedInvites: number
   expenses: number
+  paidExpenses: number
   recurringTemplates: number
   debtPayments: number
+  expenseSplits: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdWorkspaces?: boolean | UserCountOutputTypeCountCreatedWorkspacesArgs
+  createdSpaces?: boolean | UserCountOutputTypeCountCreatedSpacesArgs
   memberships?: boolean | UserCountOutputTypeCountMembershipsArgs
   sentInvites?: boolean | UserCountOutputTypeCountSentInvitesArgs
   acceptedInvites?: boolean | UserCountOutputTypeCountAcceptedInvitesArgs
   expenses?: boolean | UserCountOutputTypeCountExpensesArgs
+  paidExpenses?: boolean | UserCountOutputTypeCountPaidExpensesArgs
   recurringTemplates?: boolean | UserCountOutputTypeCountRecurringTemplatesArgs
   debtPayments?: boolean | UserCountOutputTypeCountDebtPaymentsArgs
+  expenseSplits?: boolean | UserCountOutputTypeCountExpenseSplitsArgs
 }
 
 /**
@@ -1156,35 +1444,42 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountCreatedWorkspacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WorkspaceWhereInput
+export type UserCountOutputTypeCountCreatedSpacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SpaceWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WorkspaceMembershipWhereInput
+  where?: Prisma.SpaceMembershipWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountSentInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WorkspaceInviteWhereInput
+  where?: Prisma.SpaceInviteWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountAcceptedInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WorkspaceInviteWhereInput
+  where?: Prisma.SpaceInviteWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPaidExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ExpenseWhereInput
 }
 
@@ -1202,6 +1497,13 @@ export type UserCountOutputTypeCountDebtPaymentsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.DebtPaymentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExpenseSplitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseSplitWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1212,13 +1514,15 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isPlatformAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdWorkspaces?: boolean | Prisma.User$createdWorkspacesArgs<ExtArgs>
+  createdSpaces?: boolean | Prisma.User$createdSpacesArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   sentInvites?: boolean | Prisma.User$sentInvitesArgs<ExtArgs>
   acceptedInvites?: boolean | Prisma.User$acceptedInvitesArgs<ExtArgs>
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
+  paidExpenses?: boolean | Prisma.User$paidExpensesArgs<ExtArgs>
   recurringTemplates?: boolean | Prisma.User$recurringTemplatesArgs<ExtArgs>
   debtPayments?: boolean | Prisma.User$debtPaymentsArgs<ExtArgs>
+  expenseSplits?: boolean | Prisma.User$expenseSplitsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1257,13 +1561,15 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkUserId" | "email" | "name" | "imageUrl" | "isPlatformAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdWorkspaces?: boolean | Prisma.User$createdWorkspacesArgs<ExtArgs>
+  createdSpaces?: boolean | Prisma.User$createdSpacesArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   sentInvites?: boolean | Prisma.User$sentInvitesArgs<ExtArgs>
   acceptedInvites?: boolean | Prisma.User$acceptedInvitesArgs<ExtArgs>
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
+  paidExpenses?: boolean | Prisma.User$paidExpensesArgs<ExtArgs>
   recurringTemplates?: boolean | Prisma.User$recurringTemplatesArgs<ExtArgs>
   debtPayments?: boolean | Prisma.User$debtPaymentsArgs<ExtArgs>
+  expenseSplits?: boolean | Prisma.User$expenseSplitsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1272,13 +1578,15 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    createdWorkspaces: Prisma.$WorkspacePayload<ExtArgs>[]
-    memberships: Prisma.$WorkspaceMembershipPayload<ExtArgs>[]
-    sentInvites: Prisma.$WorkspaceInvitePayload<ExtArgs>[]
-    acceptedInvites: Prisma.$WorkspaceInvitePayload<ExtArgs>[]
+    createdSpaces: Prisma.$SpacePayload<ExtArgs>[]
+    memberships: Prisma.$SpaceMembershipPayload<ExtArgs>[]
+    sentInvites: Prisma.$SpaceInvitePayload<ExtArgs>[]
+    acceptedInvites: Prisma.$SpaceInvitePayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    paidExpenses: Prisma.$ExpensePayload<ExtArgs>[]
     recurringTemplates: Prisma.$RecurringExpenseTemplatePayload<ExtArgs>[]
     debtPayments: Prisma.$DebtPaymentPayload<ExtArgs>[]
+    expenseSplits: Prisma.$ExpenseSplitPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1683,13 +1991,15 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdWorkspaces<T extends Prisma.User$createdWorkspacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdWorkspacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  memberships<T extends Prisma.User$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  sentInvites<T extends Prisma.User$sentInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  acceptedInvites<T extends Prisma.User$acceptedInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$acceptedInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdSpaces<T extends Prisma.User$createdSpacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdSpacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  memberships<T extends Prisma.User$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpaceMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentInvites<T extends Prisma.User$sentInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpaceInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  acceptedInvites<T extends Prisma.User$acceptedInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$acceptedInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpaceInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.User$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paidExpenses<T extends Prisma.User$paidExpensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paidExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recurringTemplates<T extends Prisma.User$recurringTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recurringTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecurringExpenseTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   debtPayments<T extends Prisma.User$debtPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$debtPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DebtPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expenseSplits<T extends Prisma.User$expenseSplitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expenseSplitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpenseSplitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2120,27 +2430,27 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.createdWorkspaces
+ * User.createdSpaces
  */
-export type User$createdWorkspacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$createdSpacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Workspace
+   * Select specific fields to fetch from the Space
    */
-  select?: Prisma.WorkspaceSelect<ExtArgs> | null
+  select?: Prisma.SpaceSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Workspace
+   * Omit specific fields from the Space
    */
-  omit?: Prisma.WorkspaceOmit<ExtArgs> | null
+  omit?: Prisma.SpaceOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WorkspaceInclude<ExtArgs> | null
-  where?: Prisma.WorkspaceWhereInput
-  orderBy?: Prisma.WorkspaceOrderByWithRelationInput | Prisma.WorkspaceOrderByWithRelationInput[]
-  cursor?: Prisma.WorkspaceWhereUniqueInput
+  include?: Prisma.SpaceInclude<ExtArgs> | null
+  where?: Prisma.SpaceWhereInput
+  orderBy?: Prisma.SpaceOrderByWithRelationInput | Prisma.SpaceOrderByWithRelationInput[]
+  cursor?: Prisma.SpaceWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.WorkspaceScalarFieldEnum | Prisma.WorkspaceScalarFieldEnum[]
+  distinct?: Prisma.SpaceScalarFieldEnum | Prisma.SpaceScalarFieldEnum[]
 }
 
 /**
@@ -2148,23 +2458,23 @@ export type User$createdWorkspacesArgs<ExtArgs extends runtime.Types.Extensions.
  */
 export type User$membershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the WorkspaceMembership
+   * Select specific fields to fetch from the SpaceMembership
    */
-  select?: Prisma.WorkspaceMembershipSelect<ExtArgs> | null
+  select?: Prisma.SpaceMembershipSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the WorkspaceMembership
+   * Omit specific fields from the SpaceMembership
    */
-  omit?: Prisma.WorkspaceMembershipOmit<ExtArgs> | null
+  omit?: Prisma.SpaceMembershipOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WorkspaceMembershipInclude<ExtArgs> | null
-  where?: Prisma.WorkspaceMembershipWhereInput
-  orderBy?: Prisma.WorkspaceMembershipOrderByWithRelationInput | Prisma.WorkspaceMembershipOrderByWithRelationInput[]
-  cursor?: Prisma.WorkspaceMembershipWhereUniqueInput
+  include?: Prisma.SpaceMembershipInclude<ExtArgs> | null
+  where?: Prisma.SpaceMembershipWhereInput
+  orderBy?: Prisma.SpaceMembershipOrderByWithRelationInput | Prisma.SpaceMembershipOrderByWithRelationInput[]
+  cursor?: Prisma.SpaceMembershipWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.WorkspaceMembershipScalarFieldEnum | Prisma.WorkspaceMembershipScalarFieldEnum[]
+  distinct?: Prisma.SpaceMembershipScalarFieldEnum | Prisma.SpaceMembershipScalarFieldEnum[]
 }
 
 /**
@@ -2172,23 +2482,23 @@ export type User$membershipsArgs<ExtArgs extends runtime.Types.Extensions.Intern
  */
 export type User$sentInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the WorkspaceInvite
+   * Select specific fields to fetch from the SpaceInvite
    */
-  select?: Prisma.WorkspaceInviteSelect<ExtArgs> | null
+  select?: Prisma.SpaceInviteSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the WorkspaceInvite
+   * Omit specific fields from the SpaceInvite
    */
-  omit?: Prisma.WorkspaceInviteOmit<ExtArgs> | null
+  omit?: Prisma.SpaceInviteOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WorkspaceInviteInclude<ExtArgs> | null
-  where?: Prisma.WorkspaceInviteWhereInput
-  orderBy?: Prisma.WorkspaceInviteOrderByWithRelationInput | Prisma.WorkspaceInviteOrderByWithRelationInput[]
-  cursor?: Prisma.WorkspaceInviteWhereUniqueInput
+  include?: Prisma.SpaceInviteInclude<ExtArgs> | null
+  where?: Prisma.SpaceInviteWhereInput
+  orderBy?: Prisma.SpaceInviteOrderByWithRelationInput | Prisma.SpaceInviteOrderByWithRelationInput[]
+  cursor?: Prisma.SpaceInviteWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.WorkspaceInviteScalarFieldEnum | Prisma.WorkspaceInviteScalarFieldEnum[]
+  distinct?: Prisma.SpaceInviteScalarFieldEnum | Prisma.SpaceInviteScalarFieldEnum[]
 }
 
 /**
@@ -2196,29 +2506,53 @@ export type User$sentInvitesArgs<ExtArgs extends runtime.Types.Extensions.Intern
  */
 export type User$acceptedInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the WorkspaceInvite
+   * Select specific fields to fetch from the SpaceInvite
    */
-  select?: Prisma.WorkspaceInviteSelect<ExtArgs> | null
+  select?: Prisma.SpaceInviteSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the WorkspaceInvite
+   * Omit specific fields from the SpaceInvite
    */
-  omit?: Prisma.WorkspaceInviteOmit<ExtArgs> | null
+  omit?: Prisma.SpaceInviteOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WorkspaceInviteInclude<ExtArgs> | null
-  where?: Prisma.WorkspaceInviteWhereInput
-  orderBy?: Prisma.WorkspaceInviteOrderByWithRelationInput | Prisma.WorkspaceInviteOrderByWithRelationInput[]
-  cursor?: Prisma.WorkspaceInviteWhereUniqueInput
+  include?: Prisma.SpaceInviteInclude<ExtArgs> | null
+  where?: Prisma.SpaceInviteWhereInput
+  orderBy?: Prisma.SpaceInviteOrderByWithRelationInput | Prisma.SpaceInviteOrderByWithRelationInput[]
+  cursor?: Prisma.SpaceInviteWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.WorkspaceInviteScalarFieldEnum | Prisma.WorkspaceInviteScalarFieldEnum[]
+  distinct?: Prisma.SpaceInviteScalarFieldEnum | Prisma.SpaceInviteScalarFieldEnum[]
 }
 
 /**
  * User.expenses
  */
 export type User$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * User.paidExpenses
+ */
+export type User$paidExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Expense
    */
@@ -2285,6 +2619,30 @@ export type User$debtPaymentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.DebtPaymentScalarFieldEnum | Prisma.DebtPaymentScalarFieldEnum[]
+}
+
+/**
+ * User.expenseSplits
+ */
+export type User$expenseSplitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExpenseSplit
+   */
+  select?: Prisma.ExpenseSplitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExpenseSplit
+   */
+  omit?: Prisma.ExpenseSplitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseSplitInclude<ExtArgs> | null
+  where?: Prisma.ExpenseSplitWhereInput
+  orderBy?: Prisma.ExpenseSplitOrderByWithRelationInput | Prisma.ExpenseSplitOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseSplitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseSplitScalarFieldEnum | Prisma.ExpenseSplitScalarFieldEnum[]
 }
 
 /**

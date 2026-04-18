@@ -28,7 +28,7 @@ type Category = {
 };
 
 type RecurringTemplateFormProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   categories: Category[];
   currencies: readonly string[];
@@ -44,7 +44,7 @@ const kindItems = [
 ] satisfies Array<{ value: RecurringTemplateKind; label: string; description: string }>;
 
 export function RecurringTemplateForm({
-  workspaceSlug,
+  spaceSlug,
   baseCurrencyCode,
   categories,
   currencies,
@@ -79,7 +79,7 @@ export function RecurringTemplateForm({
     try {
       const body = new FormData();
       body.set("file", scannedFile);
-      body.set("workspaceSlug", workspaceSlug);
+      body.set("spaceSlug", spaceSlug);
       const res = await fetch("/api/scan-recurring", { method: "POST", body });
       const result = await res.json();
 
@@ -149,7 +149,7 @@ export function RecurringTemplateForm({
         );
 
         const formData = new FormData();
-        formData.set("workspaceSlug", workspaceSlug);
+        formData.set("spaceSlug", spaceSlug);
         formData.set("kind", kind);
         formData.set("title", title);
         formData.set("categoryId", effectiveCategoryId);
@@ -259,7 +259,7 @@ export function RecurringTemplateForm({
               onParentChange={setParentCategoryId}
               categoryId={categoryId}
               onCategoryChange={setCategoryId}
-              workspaceSlug={workspaceSlug}
+              spaceSlug={spaceSlug}
               createCategory={createCategory}
             />
           </div>

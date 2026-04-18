@@ -19,12 +19,12 @@ type DueTemplate = {
 
 type RecurringDueSectionProps = {
   dueVariableTemplates: DueTemplate[];
-  workspaceSlug: string;
+  spaceSlug: string;
   canManage: boolean;
   recordAction: (formData: FormData) => Promise<{ success: true } | { error: string }>;
 };
 
-export function RecurringDueSection({ dueVariableTemplates, workspaceSlug, canManage, recordAction }: RecurringDueSectionProps) {
+export function RecurringDueSection({ dueVariableTemplates, spaceSlug, canManage, recordAction }: RecurringDueSectionProps) {
   if (dueVariableTemplates.length === 0) return null;
 
   return (
@@ -74,7 +74,7 @@ export function RecurringDueSection({ dueVariableTemplates, workspaceSlug, canMa
               {canManage && (
                 <div className="mt-3">
                   <RecordVariableRecurringForm
-                    workspaceSlug={workspaceSlug}
+                    spaceSlug={spaceSlug}
                     templateId={template.id}
                     currencyCode={template.originalCurrencyCode}
                     action={recordAction}

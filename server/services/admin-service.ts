@@ -2,14 +2,14 @@ import { db } from "@/lib/db";
 
 export const adminService = {
   async getStats() {
-    const [userCount, workspaceCount, expenseCount, categoryCount] = await Promise.all([
+    const [userCount, spaceCount, expenseCount, categoryCount] = await Promise.all([
       db.user.count(),
-      db.workspace.count(),
+      db.space.count(),
       db.expense.count(),
-      db.category.count({ where: { workspaceId: null } }),
+      db.category.count({ where: { spaceId: null } }),
     ]);
 
-    return { userCount, workspaceCount, expenseCount, categoryCount };
+    return { userCount, spaceCount, expenseCount, categoryCount };
   },
 
   async listUsers(options?: { search?: string; page?: number; perPage?: number }) {
@@ -47,7 +47,7 @@ export const adminService = {
         imageUrl: u.imageUrl,
         isPlatformAdmin: u.isPlatformAdmin,
         createdAt: u.createdAt,
-        workspaceCount: u._count.memberships,
+        spaceCount: u._count.memberships,
       })),
       total,
       page,
@@ -62,7 +62,7 @@ export const adminService = {
       include: {
         memberships: {
           include: {
-            workspace: { select: { id: true, name: true, slug: true, baseCurrencyCode: true } },
+            space: { select: { id: true, name: true, slug: true, baseCurrencyCode: true } },
           },
         },
         _count: { select: { expenses: true } },
@@ -81,11 +81,11 @@ export const adminService = {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       expenseCount: user._count.expenses,
-      workspaces: user.memberships.map((m) => ({
-        id: m.workspace.id,
-        name: m.workspace.name,
-        slug: m.workspace.slug,
-        baseCurrencyCode: m.workspace.baseCurrencyCode,
+      spaces: user.memberships.map((m) => ({
+        id: m.space.id,
+        name: m.space.name,
+        slug: m.space.slug,
+        baseCurrencyCode: m.space.baseCurrencyCode,
         role: m.role,
         joinedAt: m.createdAt,
       })),
@@ -99,7 +99,7 @@ export const adminService = {
     });
   },
 
-  async listWorkspaces(options?: { search?: string; page?: number; perPage?: number }) {
+  async listSpaces(options?: { search?: string; page?: number; perPage?: number }) {
     const page = options?.page ?? 1;
     const perPage = options?.perPage ?? 20;
     const skip = (page - 1) * perPage;
@@ -112,8 +112,8 @@ export const adminService = {
       ];
     }
 
-    const [workspaces, total] = await Promise.all([
-      db.workspace.findMany({
+    const [spaces, total] = await Promise.all([
+      db.space.findMany({
         where,
         include: {
           createdByUser: { select: { name: true, email: true } },
@@ -123,11 +123,11 @@ export const adminService = {
         skip,
         take: perPage,
       }),
-      db.workspace.count({ where }),
+      db.space.count({ where }),
     ]);
 
     return {
-      items: workspaces.map((w) => ({
+      items: spaces.map((w) => ({
         id: w.id,
         name: w.name,
         slug: w.slug,
@@ -144,9 +144,9 @@ export const adminService = {
     };
   },
 
-  async getWorkspaceDetail(workspaceId: string) {
-    const workspace = await db.workspace.findUnique({
-      where: { id: workspaceId },
+  async getSpaceDetail(spaceId: string) {
+    const space = await db.space.findUnique({
+      where: { id: spaceId },
       include: {
         createdByUser: { select: { name: true, email: true } },
         memberships: {
@@ -159,24 +159,24 @@ export const adminService = {
       },
     });
 
-    if (!workspace) return null;
+    if (!space) return null;
 
     const expenseAgg = await db.expense.aggregate({
-      where: { workspaceId },
+      where: { spaceId },
       _sum: { workspaceAmountMinor: true },
     });
 
     return {
-      id: workspace.id,
-      name: workspace.name,
-      slug: workspace.slug,
-      baseCurrencyCode: workspace.baseCurrencyCode,
-      createdAt: workspace.createdAt,
-      createdBy: workspace.createdByUser.name || workspace.createdByUser.email,
-      expenseCount: workspace._count.expenses,
-      recurringCount: workspace._count.recurringTemplates,
+      id: space.id,
+      name: space.name,
+      slug: space.slug,
+      baseCurrencyCode: space.baseCurrencyCode,
+      createdAt: space.createdAt,
+      createdBy: space.createdByUser.name || space.createdByUser.email,
+      expenseCount: space._count.expenses,
+      recurringCount: space._count.recurringTemplates,
       totalSpendMinor: expenseAgg._sum.workspaceAmountMinor ?? 0,
-      members: workspace.memberships.map((m) => ({
+      members: space.memberships.map((m) => ({
         userId: m.user.id,
         name: m.user.name,
         email: m.user.email,

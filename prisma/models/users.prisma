@@ -7,11 +7,13 @@ model User {
   isPlatformAdmin    Boolean                    @default(false)
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
-  createdWorkspaces  Workspace[]                @relation("WorkspaceCreator")
-  memberships        WorkspaceMembership[]
-  sentInvites        WorkspaceInvite[]          @relation("InviteSender")
-  acceptedInvites    WorkspaceInvite[]          @relation("InviteAcceptor")
+  createdSpaces      Space[]                    @relation("SpaceCreator")
+  memberships        SpaceMembership[]
+  sentInvites        SpaceInvite[]              @relation("InviteSender")
+  acceptedInvites    SpaceInvite[]              @relation("InviteAcceptor")
   expenses           Expense[]                  @relation("ExpenseCreator")
-  recurringTemplates RecurringExpenseTemplate[] @relation("RecurringTemplateCreator")
+  paidExpenses       Expense[]                  @relation("ExpensePaidBy")
+  recurringTemplates RecurringExpenseTemplate[]  @relation("RecurringTemplateCreator")
   debtPayments       DebtPayment[]              @relation("DebtPaymentCreator")
+  expenseSplits      ExpenseSplit[]             @relation("ExpenseSplitUser")
 }

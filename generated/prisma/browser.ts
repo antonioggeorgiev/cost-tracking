@@ -43,6 +43,11 @@ export type DebtPayment = Prisma.DebtPaymentModel
  */
 export type Expense = Prisma.ExpenseModel
 /**
+ * Model ExpenseSplit
+ * 
+ */
+export type ExpenseSplit = Prisma.ExpenseSplitModel
+/**
  * Model RecurringExpenseTemplate
  * 
  */
@@ -53,17 +58,17 @@ export type RecurringExpenseTemplate = Prisma.RecurringExpenseTemplateModel
  */
 export type User = Prisma.UserModel
 /**
- * Model Workspace
+ * Model Space
  * 
  */
-export type Workspace = Prisma.WorkspaceModel
+export type Space = Prisma.SpaceModel
 /**
- * Model WorkspaceMembership
+ * Model SpaceMembership
  * 
  */
-export type WorkspaceMembership = Prisma.WorkspaceMembershipModel
+export type SpaceMembership = Prisma.SpaceMembershipModel
 /**
- * Model WorkspaceInvite
+ * Model SpaceInvite
  * 
  */
-export type WorkspaceInvite = Prisma.WorkspaceInviteModel
+export type SpaceInvite = Prisma.SpaceInviteModel

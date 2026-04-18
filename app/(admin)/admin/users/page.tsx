@@ -45,7 +45,7 @@ export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
               <tr className="border-b border-border bg-surface-secondary text-left">
                 <th className="px-6 py-3 font-medium text-body">User</th>
                 <th className="px-6 py-3 font-medium text-body">Email</th>
-                <th className="px-6 py-3 font-medium text-body text-center">Workspaces</th>
+                <th className="px-6 py-3 font-medium text-body text-center">Spaces</th>
                 <th className="px-6 py-3 font-medium text-body">Role</th>
                 <th className="px-6 py-3 font-medium text-body">Joined</th>
               </tr>
@@ -62,7 +62,7 @@ export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
                     </Link>
                   </td>
                   <td className="px-6 py-3 text-body">{user.email}</td>
-                  <td className="px-6 py-3 text-center text-heading">{user.workspaceCount}</td>
+                  <td className="px-6 py-3 text-center text-heading">{user.spaceCount}</td>
                   <td className="px-6 py-3">
                     {user.isPlatformAdmin ? (
                       <span className="rounded-full bg-primary-lighter px-2.5 py-1 text-xs font-semibold text-primary">Admin</span>

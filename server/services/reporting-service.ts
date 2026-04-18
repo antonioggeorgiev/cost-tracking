@@ -34,7 +34,7 @@ function categoryName(category: { name: string; parentCategory?: { name: string 
 }
 
 export const reportingService = {
-  async getExpenseMonthSummary(workspaceId: string) {
+  async getExpenseMonthSummary(spaceId: string) {
     const now = new Date();
     const monthStart = startOfMonth(now);
     const nextMonthStart = endOfMonth(now);
@@ -42,7 +42,7 @@ export const reportingService = {
     const grouped = await db.expense.groupBy({
       by: ["status"],
       where: {
-        workspaceId,
+        spaceId,
         expenseDate: { gte: monthStart, lt: nextMonthStart },
         status: { not: ExpenseStatus.cancelled },
       },
@@ -71,7 +71,7 @@ export const reportingService = {
     };
   },
 
-  async getWorkspaceOverview(input: { workspaceId: string; baseCurrencyCode: string }) {
+  async getSpaceOverview(input: { spaceId: string; baseCurrencyCode: string }) {
     const now = new Date();
     const monthStart = startOfMonth(now);
     const nextMonthStart = endOfMonth(now);
@@ -94,30 +94,30 @@ export const reportingService = {
     ] = await Promise.all([
       // 1. All current month expenses (for status breakdown + categories + weekly)
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId, expenseDate: { gte: monthStart, lt: nextMonthStart } },
+        where: { spaceId: input.spaceId, expenseDate: { gte: monthStart, lt: nextMonthStart } },
         include: { category: { include: { parentCategory: true } }, createdByUser: { select: { name: true, email: true } } },
       }),
       // 2. Previous month posted expenses
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId, status: ExpenseStatus.posted, expenseDate: { gte: previousMonthStart, lt: monthStart } },
+        where: { spaceId: input.spaceId, status: ExpenseStatus.posted, expenseDate: { gte: previousMonthStart, lt: monthStart } },
         select: { workspaceAmountMinor: true },
       }),
       // 3. Recent activity
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId },
+        where: { spaceId: input.spaceId },
         include: { category: { include: { parentCategory: true } }, createdByUser: { select: { name: true, email: true } } },
         orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
         take: 8,
       }),
       // 4. Active recurring templates
       db.recurringExpenseTemplate.findMany({
-        where: { workspaceId: input.workspaceId, isActive: true },
+        where: { spaceId: input.spaceId, isActive: true },
         include: { category: { include: { parentCategory: true } } },
       }),
       // 5. Recurring-generated expenses this month
       db.expense.findMany({
         where: {
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           recurringTemplateId: { not: null },
           expenseDate: { gte: monthStart, lt: nextMonthStart },
         },
@@ -126,7 +126,7 @@ export const reportingService = {
       // 6. Due variable recurring
       db.recurringExpenseTemplate.findMany({
         where: {
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           kind: RecurringTemplateKind.variable_amount,
           isActive: true,
           nextOccurrenceDate: { lte: now },
@@ -136,22 +136,22 @@ export const reportingService = {
       }),
       // 7. All active debt accounts
       db.debtAccount.findMany({
-        where: { workspaceId: input.workspaceId, isActive: true },
+        where: { spaceId: input.spaceId, isActive: true },
       }),
       // 8. Debt payments this month
       db.debtPayment.findMany({
         where: {
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           paymentDate: { gte: monthStart, lt: nextMonthStart },
         },
         select: { debtAccountId: true, workspaceAmountMinor: true },
       }),
       // 9. Debt month status
-      debtService.getAllDebtsMonthStatus(input.workspaceId, now.getFullYear(), now.getMonth()),
+      debtService.getAllDebtsMonthStatus(input.spaceId, now.getFullYear(), now.getMonth()),
       // 10. Planned expenses next month (for forecast)
       db.expense.aggregate({
         where: {
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           status: ExpenseStatus.planned,
           expenseDate: { gte: nextMonthDate, lt: nextMonthNextStart },
         },
@@ -355,7 +355,51 @@ export const reportingService = {
     };
   },
 
-  async getWorkspaceDashboard(input: { workspaceId: string; baseCurrencyCode: string }) {
+  async getAllSpacesOverview(userId: string) {
+    const memberships = await db.spaceMembership.findMany({
+      where: { userId },
+      select: { spaceId: true, space: { select: { name: true, slug: true, baseCurrencyCode: true } } },
+    });
+
+    const now = new Date();
+    const monthStart = startOfMonth(now);
+    const nextMonthStart = endOfMonth(now);
+
+    const spacesSummaries = await Promise.all(
+      memberships.map(async (m) => {
+        const [sumResult, countResult] = await Promise.all([
+          db.expense.aggregate({
+            where: {
+              spaceId: m.spaceId,
+              status: ExpenseStatus.posted,
+              expenseDate: { gte: monthStart, lt: nextMonthStart },
+            },
+            _sum: { workspaceAmountMinor: true },
+          }),
+          db.expense.count({
+            where: {
+              spaceId: m.spaceId,
+              status: ExpenseStatus.posted,
+              expenseDate: { gte: monthStart, lt: nextMonthStart },
+            },
+          }),
+        ]);
+
+        return {
+          spaceId: m.spaceId,
+          name: m.space.name,
+          slug: m.space.slug,
+          baseCurrencyCode: m.space.baseCurrencyCode,
+          currentMonthTotal: sumResult._sum.workspaceAmountMinor ?? 0,
+          expenseCount: countResult,
+        };
+      }),
+    );
+
+    return { spaces: spacesSummaries };
+  },
+
+  async getSpaceDashboard(input: { spaceId: string; baseCurrencyCode: string }) {
     const now = new Date();
     const monthStart = startOfMonth(now);
     const nextMonthStart = endOfMonth(now);
@@ -363,33 +407,33 @@ export const reportingService = {
 
     const [currentMonthExpenses, previousMonthExpenses, allCurrentMonthExpenses, recentExpenses, upcomingRecurring, dueVariableRecurring, debtAccounts] = await Promise.all([
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId, status: ExpenseStatus.posted, expenseDate: { gte: monthStart, lt: nextMonthStart } },
+        where: { spaceId: input.spaceId, status: ExpenseStatus.posted, expenseDate: { gte: monthStart, lt: nextMonthStart } },
         include: { category: { include: { parentCategory: true } }, createdByUser: { select: { name: true, email: true } } },
         orderBy: { expenseDate: "desc" },
       }),
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId, status: ExpenseStatus.posted, expenseDate: { gte: previousMonthStart, lt: monthStart } },
+        where: { spaceId: input.spaceId, status: ExpenseStatus.posted, expenseDate: { gte: previousMonthStart, lt: monthStart } },
         select: { workspaceAmountMinor: true },
       }),
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId, expenseDate: { gte: monthStart, lt: nextMonthStart } },
+        where: { spaceId: input.spaceId, expenseDate: { gte: monthStart, lt: nextMonthStart } },
         select: { workspaceAmountMinor: true, status: true, expenseDate: true },
       }),
       db.expense.findMany({
-        where: { workspaceId: input.workspaceId },
+        where: { spaceId: input.spaceId },
         include: { category: { include: { parentCategory: true } }, createdByUser: { select: { name: true, email: true } } },
         orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
         take: 8,
       }),
       db.recurringExpenseTemplate.findMany({
-        where: { workspaceId: input.workspaceId, kind: RecurringTemplateKind.fixed_amount, isActive: true },
+        where: { spaceId: input.spaceId, kind: RecurringTemplateKind.fixed_amount, isActive: true },
         include: { category: { include: { parentCategory: true } } },
         orderBy: { nextOccurrenceDate: "asc" },
         take: 5,
       }),
       db.recurringExpenseTemplate.findMany({
         where: {
-          workspaceId: input.workspaceId,
+          spaceId: input.spaceId,
           kind: RecurringTemplateKind.variable_amount,
           isActive: true,
           nextOccurrenceDate: { lte: now },
@@ -399,7 +443,7 @@ export const reportingService = {
         take: 5,
       }),
       db.debtAccount.findMany({
-        where: { workspaceId: input.workspaceId, isActive: true },
+        where: { spaceId: input.spaceId, isActive: true },
         orderBy: { currentBalanceMinor: "desc" },
         take: 5,
       }),

@@ -17,7 +17,7 @@ import {
   FormError,
   StatusSelect,
 } from "@/components/form-fields";
-import { saveAttachmentsAction } from "@/app/(app)/workspaces/[workspaceSlug]/expenses/attachment-action";
+import { saveAttachmentsAction } from "@/app/(app)/expenses/attachment-action";
 import { BulkExpenseCard, type BulkItemStatus, type BulkCardHandle } from "@/components/quick-add/bulk-expense-card";
 import type { ExpenseExtractionResult } from "@/server/services/document-extraction-service";
 
@@ -28,12 +28,14 @@ type Category = {
 };
 
 type QuickAddExpenseFormProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   categories: Category[];
   currencies: readonly string[];
   createExpense: (formData: FormData) => Promise<{ id: string } | { error: string }>;
   createCategory?: (formData: FormData) => Promise<{ id: string }>;
+  members?: Array<{ userId: string; name: string }>;
+  currentUserId?: string;
   submitLabel?: string;
   onSuccess?: () => void;
 };
@@ -50,15 +52,20 @@ const expenseFormSchema = z.object({
 });
 
 export function QuickAddExpenseForm({
-  workspaceSlug,
+  spaceSlug,
   baseCurrencyCode,
   categories,
   currencies,
   createExpense,
   createCategory,
+  members,
+  currentUserId,
   submitLabel = "Add Expense",
   onSuccess,
 }: QuickAddExpenseFormProps) {
+  const showSplitting = members && members.length > 1;
+  const [paidByUserId, setPaidByUserId] = useState(currentUserId ?? members?.[0]?.userId ?? "");
+  const [splitEqually, setSplitEqually] = useState(true);
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -81,7 +88,7 @@ export function QuickAddExpenseForm({
       setFormError(null);
 
       const formData = new FormData();
-      formData.set("workspaceSlug", workspaceSlug);
+      formData.set("spaceSlug", spaceSlug);
       formData.set("title", value.title);
       formData.set("amount", String(value.amount));
       formData.set("expenseDate", value.expenseDate);
@@ -91,6 +98,13 @@ export function QuickAddExpenseForm({
       }
       formData.set("currencyCode", value.currencyCode);
       formData.set("description", value.description ?? "");
+
+      if (showSplitting && paidByUserId) {
+        formData.set("paidByUserId", paidByUserId);
+      }
+      if (showSplitting && splitEqually) {
+        formData.set("splitEqually", "on");
+      }
 
       startTransition(async () => {
         const result = await createExpense(formData);
@@ -146,7 +160,7 @@ export function QuickAddExpenseForm({
     try {
       const body = new FormData();
       body.set("file", scannedFile);
-      body.set("workspaceSlug", workspaceSlug);
+      body.set("spaceSlug", spaceSlug);
       const res = await fetch("/api/scan-bulk", { method: "POST", body });
       const result = await res.json();
 
@@ -194,7 +208,7 @@ export function QuickAddExpenseForm({
       try {
         const values = formHelpers.getValues();
         const formData = new FormData();
-        formData.set("workspaceSlug", workspaceSlug);
+        formData.set("spaceSlug", spaceSlug);
         formData.set("title", String(values.title));
         formData.set("amount", String(values.amount));
         formData.set("expenseDate", String(values.expenseDate));
@@ -228,7 +242,7 @@ export function QuickAddExpenseForm({
     setIsSubmittingAll(false);
     router.refresh();
     onSuccess?.();
-  }, [bulkItems, createExpense, workspaceSlug, router, onSuccess]);
+  }, [bulkItems, createExpense, spaceSlug, router, onSuccess]);
 
   async function handleReceiptScan(scannedFile: File) {
     setIsScanning(true);
@@ -236,7 +250,7 @@ export function QuickAddExpenseForm({
     try {
       const body = new FormData();
       body.set("file", scannedFile);
-      body.set("workspaceSlug", workspaceSlug);
+      body.set("spaceSlug", spaceSlug);
       const res = await fetch("/api/scan-receipt", { method: "POST", body });
       const result = await res.json();
 
@@ -312,7 +326,7 @@ export function QuickAddExpenseForm({
               baseCurrencyCode={baseCurrencyCode}
               categories={categories}
               currencies={currencies}
-              workspaceSlug={workspaceSlug}
+              spaceSlug={spaceSlug}
               createCategory={createCategory}
               onRemove={() => removeBulkItem(item.id)}
               formRef={(handle) => {
@@ -486,7 +500,7 @@ export function QuickAddExpenseForm({
                 onParentChange={parentField.handleChange}
                 categoryId={categoryField.state.value}
                 onCategoryChange={categoryField.handleChange}
-                workspaceSlug={workspaceSlug}
+                spaceSlug={spaceSlug}
                 createCategory={createCategory}
                 parentError={parentField.state.meta.errors.length > 0 ? parentField.state.meta.errors[0]?.message : undefined}
                 categoryError={categoryField.state.meta.errors.length > 0 ? categoryField.state.meta.errors[0]?.message : undefined}
@@ -505,6 +519,34 @@ export function QuickAddExpenseForm({
           />
         )}
       </form.Field>
+
+      {showSplitting && (
+        <div className="grid gap-1.5">
+          <Label htmlFor="paidByUserId">Paid by</Label>
+          <select
+            id="paidByUserId"
+            value={paidByUserId}
+            onChange={(e) => setPaidByUserId(e.target.value)}
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+          >
+            {members.map((m) => (
+              <option key={m.userId} value={m.userId}>{m.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {showSplitting && (
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={splitEqually}
+            onChange={(e) => setSplitEqually(e.target.checked)}
+            className="rounded border-border"
+          />
+          <span className="text-body">Split equally among all members</span>
+        </label>
+      )}
 
       <form.Field name="description">
         {(field) => (

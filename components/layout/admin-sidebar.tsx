@@ -31,7 +31,7 @@ type AdminSidebarProps = {
 const adminNavItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   { label: "Users", icon: Users, href: "/admin/users" },
-  { label: "Workspaces", icon: Building2, href: "/admin/workspaces" },
+  { label: "Spaces", icon: Building2, href: "/admin/spaces" },
   { label: "Categories", icon: FolderTree, href: "/admin/categories" },
 ] as const;
 
@@ -85,7 +85,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
         <div className="border-t border-border pt-3 mb-6">
           <Link
-            href={routes.workspaces}
+            href={routes.spaces}
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-body transition hover:bg-surface-secondary hover:text-heading"
           >
             <ArrowLeft size={16} />
@@ -131,7 +131,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
               <DropdownMenuContent side="top" sideOffset={8} className="min-w-[220px]">
                 <DropdownMenuGroup>
-                  <DropdownMenuItem render={<Link href={routes.workspaces} />}>
+                  <DropdownMenuItem render={<Link href={routes.spaces} />}>
                     <ArrowLeft size={14} />
                     Back to App
                   </DropdownMenuItem>

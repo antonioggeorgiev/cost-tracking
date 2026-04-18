@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { QuickAddExpenseForm } from "@/components/quick-add/quick-add-expense-form";
 import { QuickAddDebtForm } from "@/components/quick-add/quick-add-debt-form";
 import { TypeSelector, type QuickAddType } from "@/components/quick-add/type-selector";
 import { RecurringTemplateForm } from "@/components/recurring/recurring-template-form";
+import { switchSpace } from "@/app/(app)/actions";
+import { Label } from "@/components/ui/label";
 
 type Category = {
   id: string;
@@ -13,7 +16,7 @@ type Category = {
 };
 
 type QuickAddPanelProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   categories: Category[];
   currencies: readonly string[];
@@ -21,10 +24,13 @@ type QuickAddPanelProps = {
   createCategory?: (formData: FormData) => Promise<{ id: string }>;
   createRecurring: (formData: FormData) => Promise<{ success: true } | { error: string }>;
   createDebtAccount: (formData: FormData) => Promise<void>;
+  members?: Array<{ userId: string; name: string }>;
+  currentUserId?: string;
+  availableSpaces?: Array<{ slug: string; name: string }>;
 };
 
 export function QuickAddPanel({
-  workspaceSlug,
+  spaceSlug,
   baseCurrencyCode,
   categories,
   currencies,
@@ -32,8 +38,17 @@ export function QuickAddPanel({
   createCategory,
   createRecurring,
   createDebtAccount,
+  members,
+  currentUserId,
+  availableSpaces,
 }: QuickAddPanelProps) {
   const [type, setType] = useState<QuickAddType>("expense");
+  const router = useRouter();
+
+  async function handleSpaceChange(slug: string) {
+    await switchSpace(slug);
+    router.refresh();
+  }
 
   return (
     <>
@@ -53,9 +68,26 @@ export function QuickAddPanel({
           </p>
         </div>
 
+        {/* Space selector — shown when in All Spaces mode */}
+        {availableSpaces && availableSpaces.length > 1 && (
+          <div className="mb-6 grid gap-1.5">
+            <Label htmlFor="space-select">Space</Label>
+            <select
+              id="space-select"
+              value={spaceSlug}
+              onChange={(e) => handleSpaceChange(e.target.value)}
+              className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-heading outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+            >
+              {availableSpaces.map((s) => (
+                <option key={s.slug} value={s.slug}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {type === "recurring" ? (
           <RecurringTemplateForm
-            workspaceSlug={workspaceSlug}
+            spaceSlug={spaceSlug}
             baseCurrencyCode={baseCurrencyCode}
             categories={categories}
             currencies={currencies}
@@ -65,19 +97,21 @@ export function QuickAddPanel({
           />
         ) : type === "debt" ? (
           <QuickAddDebtForm
-            workspaceSlug={workspaceSlug}
+            spaceSlug={spaceSlug}
             baseCurrencyCode={baseCurrencyCode}
             currencies={currencies}
             createDebtAccount={createDebtAccount}
           />
         ) : (
           <QuickAddExpenseForm
-            workspaceSlug={workspaceSlug}
+            spaceSlug={spaceSlug}
             baseCurrencyCode={baseCurrencyCode}
             categories={categories}
             currencies={currencies}
             createExpense={createExpense}
             createCategory={createCategory}
+            members={members}
+            currentUserId={currentUserId}
           />
         )}
       </section>

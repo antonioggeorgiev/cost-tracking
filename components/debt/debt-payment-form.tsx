@@ -23,7 +23,7 @@ type DebtAccountOption = {
 };
 
 type DebtPaymentFormProps = {
-  workspaceSlug: string;
+  spaceSlug: string;
   baseCurrencyCode: string;
   currencies: readonly string[];
   debtAccounts: DebtAccountOption[];
@@ -33,7 +33,7 @@ type DebtPaymentFormProps = {
 };
 
 export function DebtPaymentForm({
-  workspaceSlug,
+  spaceSlug,
   baseCurrencyCode,
   currencies,
   debtAccounts,
@@ -95,7 +95,7 @@ export function DebtPaymentForm({
         setFormError(null);
 
         const formData = new FormData();
-        formData.set("workspaceSlug", workspaceSlug);
+        formData.set("spaceSlug", spaceSlug);
         formData.set("debtAccountId", debtAccountId);
         formData.set("amount", String(amount));
         formData.set("currencyCode", currencyCode);
