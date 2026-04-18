@@ -1,5 +1,6 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { SpendingChart } from "@/components/charts/spending-chart";
 import { formatMoney } from "@/lib/money";
@@ -72,11 +73,20 @@ export default async function OverviewPage() {
   }
 
   const caller = await getServerCaller();
-  const [space, data, settlements] = await Promise.all([
-    caller.spaces.bySlug({ spaceSlug }),
-    caller.reporting.overview({ spaceSlug }),
-    caller.expenses.settlements({ spaceSlug }),
-  ]);
+
+  let space, data, settlements;
+  try {
+    [space, data, settlements] = await Promise.all([
+      caller.spaces.bySlug({ spaceSlug }),
+      caller.reporting.overview({ spaceSlug }),
+      caller.expenses.settlements({ spaceSlug }),
+    ]);
+  } catch {
+    // Stale cookie — clear it and redirect to show all-spaces view
+    const cookieStore = await cookies();
+    cookieStore.delete("selectedSpace");
+    redirect("/overview");
+  }
 
   if (!space) {
     notFound();

@@ -57,18 +57,62 @@ export const inviteService = {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const acceptUrl = `${process.env.APP_BASE_URL}${routes.acceptInvite(input.token)}`;
 
-    await resend.emails.send({
-      from: "Cost Tracking <onboarding@resend.dev>",
+    const { data, error } = await resend.emails.send({
+      from: "Cost Tracking <noreply@trakk-map.com>",
       to: input.recipientEmail,
       subject: `Join ${input.spaceName} on Cost Tracking`,
       html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #111827;">
-          <h1 style="font-size: 20px;">You're invited to join ${input.spaceName}</h1>
-          <p>Open the link below to accept the space invite.</p>
-          <p><a href="${acceptUrl}">${acceptUrl}</a></p>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#F8F9FA;font-family:'Inter',system-ui,-apple-system,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F9FA;padding:40px 20px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background-color:#FFFFFF;border:1px solid #E3E9EC;border-radius:16px;overflow:hidden;">
+        <!-- Header -->
+        <tr><td style="background-color:#1A1A2E;padding:32px 40px;text-align:center;">
+          <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.6);">You're invited</p>
+          <h1 style="margin:12px 0 0;font-size:24px;font-weight:700;color:#FFFFFF;line-height:1.3;">Join ${input.spaceName}</h1>
+        </td></tr>
+        <!-- Body -->
+        <tr><td style="padding:32px 40px;">
+          <p style="margin:0 0 20px;font-size:15px;color:#64748B;line-height:1.6;">
+            You've been invited to collaborate on <strong style="color:#1A1A2E;">${input.spaceName}</strong> on Cost Tracking. Accept the invite to start tracking expenses together.
+          </p>
+          <!-- Button -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center" style="padding:8px 0 24px;">
+              <a href="${acceptUrl}" style="display:inline-block;background-color:#1A1A2E;color:#FFFFFF;font-size:15px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px;">
+                Accept invite
+              </a>
+            </td></tr>
+          </table>
+          <!-- Fallback link -->
+          <p style="margin:0;font-size:12px;color:#94A3B8;line-height:1.5;word-break:break-all;">
+            Or copy this link: <a href="${acceptUrl}" style="color:#64748B;text-decoration:underline;">${acceptUrl}</a>
+          </p>
+        </td></tr>
+        <!-- Footer -->
+        <tr><td style="border-top:1px solid #E3E9EC;padding:20px 40px;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#94A3B8;line-height:1.5;">
+            This invite expires in 7 days. If you didn't expect this email, you can safely ignore it.
+          </p>
+        </td></tr>
+      </table>
+      <!-- Branding -->
+      <p style="margin:24px 0 0;font-size:11px;color:#94A3B8;text-align:center;">Cost Tracking</p>
+    </td></tr>
+  </table>
+</body>
+</html>
       `,
     });
+
+    if (error) {
+      console.error("[Invite Email] Failed to send:", error);
+    } else {
+      console.log("[Invite Email] Sent to", input.recipientEmail, "id:", data?.id);
+    }
   },
 
   async getInviteByToken(token: string) {

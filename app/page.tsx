@@ -1,9 +1,15 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs/server";
 import { routes } from "@/lib/routes";
 import { getServerCaller } from "@/server/trpc-caller";
 
 export default async function HomePage() {
+  const user = await currentUser();
+  if (!user) {
+    redirect(routes.signIn);
+  }
+
   const caller = await getServerCaller();
   const spaces = await caller.spaces.listMine();
 
