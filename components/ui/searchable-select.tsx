@@ -20,7 +20,7 @@ export type SearchableSelectItem = {
 };
 
 type SearchableSelectProps = {
-  items: SearchableSelectItem[];
+  items: readonly SearchableSelectItem[];
   value: string;
   onValueChange: (value: string) => void;
   placeholder?: string;

@@ -84,7 +84,7 @@ export function RecurringTemplateDetailClient({
 
   // Edit form state
   const [title, setTitle] = useState(template.title);
-  const [amount, setAmount] = useState(template.originalAmountMinor != null ? template.originalAmountMinor / 100 : "");
+  const [amount, setAmount] = useState<number | "">(template.originalAmountMinor != null ? template.originalAmountMinor / 100 : "");
   const [currencyCode, setCurrencyCode] = useState(template.originalCurrencyCode);
   const [parentCategoryId, setParentCategoryId] = useState(template.parentCategoryId ?? "");
   const [categoryId, setCategoryId] = useState(template.categoryId ?? "");

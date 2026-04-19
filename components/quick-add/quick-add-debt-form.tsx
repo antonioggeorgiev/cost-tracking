@@ -140,7 +140,7 @@ export function QuickAddDebtForm({
       <div className="grid gap-1.5">
         <Label>Type</Label>
         <div className="grid grid-cols-3 gap-2">
-          {kindItems.map((item) => (
+          {debtKindItems.map((item) => (
             <button
               key={item.value}
               type="button"
@@ -165,7 +165,7 @@ export function QuickAddDebtForm({
       <div className="grid gap-1.5">
         <Label>Direction</Label>
         <div className="grid grid-cols-2 gap-2">
-          {directionItems.map((item) => (
+          {debtDirectionItems.map((item) => (
             <button
               key={item.value}
               type="button"

@@ -120,10 +120,10 @@ export function DebtAccountDetailClient({
   const [alreadyPaid, setAlreadyPaid] = useState((debt.originalAmountMinor - debt.currentBalanceMinor) / 100);
   const [currencyCode, setCurrencyCode] = useState(debt.currencyCode);
   const [openedAt, setOpenedAt] = useState(debt.openedAt);
-  const [interestRateBps, setInterestRateBps] = useState(debt.interestRateBps != null ? debt.interestRateBps / 100 : "");
-  const [termMonths, setTermMonths] = useState(debt.termMonths ?? "");
-  const [monthlyAmount, setMonthlyAmount] = useState(debt.monthlyAmountMinor != null ? debt.monthlyAmountMinor / 100 : "");
-  const [residualValue, setResidualValue] = useState(debt.residualValueMinor != null ? debt.residualValueMinor / 100 : "");
+  const [interestRateBps, setInterestRateBps] = useState<number | "">(debt.interestRateBps != null ? debt.interestRateBps / 100 : "");
+  const [termMonths, setTermMonths] = useState<number | "">(debt.termMonths ?? "");
+  const [monthlyAmount, setMonthlyAmount] = useState<number | "">(debt.monthlyAmountMinor != null ? debt.monthlyAmountMinor / 100 : "");
+  const [residualValue, setResidualValue] = useState<number | "">(debt.residualValueMinor != null ? debt.residualValueMinor / 100 : "");
   const [notes, setNotes] = useState(debt.notes ?? "");
 
   // Payment form state
@@ -296,7 +296,7 @@ export function DebtAccountDetailClient({
               monthlyAmount={monthlyAmount}
               residualValue={residualValue}
               notes={notes}
-              kindItems={kindItems}
+              kindItems={debtKindItems}
               directionItems={debtDirectionItems}
               currencyItems={currencyItems}
               calendarOpen={calendarOpen}
