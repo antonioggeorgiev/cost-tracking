@@ -1,7 +1,8 @@
 import { SignIn } from "@clerk/nextjs";
 import { isClerkConfigured } from "@/lib/clerk";
+import { platformConfigService } from "@/server/services/platform-config-service";
 
-export default function SignInPage() {
+export default async function SignInPage() {
   if (!isClerkConfigured) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
@@ -12,9 +13,17 @@ export default function SignInPage() {
     );
   }
 
+  const config = await platformConfigService.getConfig();
+
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
-      <SignIn />
+      <SignIn
+        appearance={
+          !config.signupsEnabled
+            ? { elements: { footerAction: { display: "none" } } }
+            : undefined
+        }
+      />
     </main>
   );
 }
